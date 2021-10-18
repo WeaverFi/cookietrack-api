@@ -1,19 +1,2 @@
-<script>
-
-	// Imports:
-	// <TODO>
-
-	// Initializations:
-	// <TODO
-
-</script>
-
-<!-- #################################################################################################### -->
-
-<!-- Dynamic Svelte Header -->
-<svelte:head>
-	<title>CookieTrack API | ?</title>
-</svelte:head>
-
-<!-- Output -->
-test output
+<svelte:head><title>CookieTrack API</title></svelte:head>
+<p>Click <a href="https://github.com/Ncookiez/cookietrack-api">here</a> to see the docs and endpoints available.</p>
