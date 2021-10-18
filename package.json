@@ -1,11 +1,11 @@
 {
   "name": "cookietrack-api",
   "description": "The API that powers CookieTrack.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "scripts": {
     "dev": "sapper dev",
     "build": "sapper build --legacy",
-    "export": "sapper export --legacy --entry '/'",
+    "export": "sapper export --legacy --entry '/ /avalanche/wallet'",
     "start": "node __sapper__/build"
   },
   "dependencies": {
