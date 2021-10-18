@@ -1,4 +1,4 @@
-![alt text][logo]
+![CookieTrack Logo][logo]
 # CookieTrack API
 
 The API that powers CookieTrack.
@@ -19,4 +19,4 @@ To run the project locally:
 npm run dev
 ```
 
-[logo]: https://github.com/Ncookiez/cookietrack-api/blob/main/static/favicon.svg "CookieTrack"
+[logo]: https://github.com/Ncookiez/cookietrack-api/blob/master/static/favicon.svg "CookieTrack"
