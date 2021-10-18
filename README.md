@@ -5,7 +5,7 @@ The API that powers CookieTrack.
 
 ---
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/46431838-ccd6-4fd8-a188-8015514947e8/deploy-status)](https://app.netlify.com/sites/cookietrack/deploys)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/b1d81e7d-19e4-4326-a2db-5bd62540c58f/deploy-status)](https://app.netlify.com/sites/compassionate-roentgen-43e54a/deploys)
 
 ---
 
