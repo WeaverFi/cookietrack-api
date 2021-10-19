@@ -10,7 +10,7 @@ The API that powers CookieTrack.
 ---
 
 ## Endpoints
-- None
+- **/avalanche/wallet?address=\<wallet_address\>** - Returns a wallet's token balances on the Avalanche Chain.
 
 ---
 
