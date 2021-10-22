@@ -1,6 +1,6 @@
 
 // Tracked Tokens List:
-export const ftm_tokens = [
+exports.ftm_tokens = [
   { address: '0x04068da6c83afcfa0e13ba15a6696662335d5b75', symbol: 'USDC' },
   { address: '0xb3654dc3d10ea7645f8319668e8f54d2574fbdc8', symbol: 'LINK' },
   { address: '0x321162Cd933E2Be498Cd2267a90534A804051b11', symbol: 'BTC' },
@@ -39,7 +39,7 @@ export const ftm_tokens = [
 ];
 
 // Token Logos:
-export const ftm_token_logos = {
+exports.ftm_token_logos = {
   'FTM':            'https://etherscan.io/token/images/fantomtoken_32.png',
   'USDC':           'https://ftmscan.com/token/images/USDC_32.png',
   'LINK':           'https://ftmscan.com/token/images/chainlink_32.png',
@@ -86,7 +86,7 @@ export const ftm_token_logos = {
 }
 
 // Token Blacklist:
-export const ftm_token_blacklist = [
+exports.ftm_token_blacklist = [
   '0x95ce7b991cfc7e3ad8466ac20746b9bed7713b0a',
   '0x8e4a2fa6e651df75f7f4e9e9ac81f8f9347a4add'
 ];

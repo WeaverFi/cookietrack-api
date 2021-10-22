@@ -1,6 +1,6 @@
 
 // Tracked Tokens List:
-export const bsc_tokens = [
+exports.bsc_tokens = [
   { address: '0x8076c74c5e3f5852037f31ff0093eeb8c8add8d3', symbol: 'SAFEMOON' },
   { address: '0xe9e7cea3dedca5984780bafc599bd69add087d56', symbol: 'BUSD' },
   { address: '0x55d398326f99059ff775485246999027b3197955', symbol: 'USDT' },
@@ -101,7 +101,7 @@ export const bsc_tokens = [
 ];
 
 // Token Logos:
-export const bsc_token_logos = {
+exports.bsc_token_logos = {
   'BNB':                'https://etherscan.io/token/images/bnb_28_2.png',
   'SAFEMOON':           'https://bscscan.com/token/images/safemoon2_32.png',
   'BUSD':               'https://bscscan.com/token/images/busd_32.png',
@@ -232,7 +232,7 @@ export const bsc_token_logos = {
 }
 
 // Token Blacklist:
-export const bsc_token_blacklist = [
+exports.bsc_token_blacklist = [
   '0xb0557906c617f0048a700758606f64b33d0c41a6',
   '0x68d1569d1a6968f194b4d93f8d0b416c123a599f',
   '0x119e2ad8f0c85c6f61afdf0df69693028cdc10be',

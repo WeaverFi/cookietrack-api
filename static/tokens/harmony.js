@@ -1,6 +1,6 @@
 
 // Tracked Tokens List:
-export const one_tokens = [
+exports.one_tokens = [
   { address: '0xcf664087a5bb0237a0bad6742852ec6c8d69a27a', symbol: 'WONE' },
   { address: '0xea589e93ff18b1a1f1e9bac7ef3e86ab62addc79', symbol: 'VIPER' },
   { address: '0x72cb10c6bfa5624dd07ef608027e366bd690048f', symbol: 'JEWEL' },
@@ -38,7 +38,7 @@ export const one_tokens = [
 ];
 
 // Token Logos:
-export const one_token_logos = {
+exports.one_token_logos = {
   'ONE':      'https://etherscan.io/token/images/harmonyone_32.png',
   'WONE':     'https://etherscan.io/token/images/harmonyone_32.png',
   'VIPER':    'https://assets.coingecko.com/coins/images/15305/small/0c4b902b40f14db918f4500956386414ab7ebcfe.jpeg?1620371961',
@@ -77,4 +77,4 @@ export const one_token_logos = {
 }
 
 // Token Blacklist:
-export const one_token_blacklist = [];
+exports.one_token_blacklist = [];

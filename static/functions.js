@@ -3,14 +3,14 @@
 const { ethers } = require('ethers');
 const axios = require('axios');
 
-// Imports:
-import { minABI } from './ABIs.js';
-import { eth_token_logos } from './tokens/ethereum.js';
-import { bsc_token_logos } from './tokens/bsc.js';
-import { poly_token_logos } from './tokens/polygon.js';
-import { ftm_tokens, ftm_token_logos } from './tokens/fantom.js';
-import { avax_tokens, avax_token_logos } from './tokens/avalanche.js';
-import { one_tokens, one_token_logos } from './tokens/harmony.js';
+// Required Variables:
+const { minABI } = require('./ABIs.js');
+const { eth_token_logos } = require('./tokens/ethereum.js');
+const { bsc_token_logos } = require('./tokens/bsc.js');
+const { poly_token_logos } = require('./tokens/polygon.js');
+const { ftm_tokens, ftm_token_logos } = require('./tokens/fantom.js');
+const { avax_tokens, avax_token_logos } = require('./tokens/avalanche.js');
+const { one_tokens, one_token_logos } = require('./tokens/harmony.js');
 
 // Initializations:
 let ethTokenPrices = [];
@@ -23,7 +23,7 @@ let oneTokenPrices = [];
 /* ========================================================================================================================================================================= */
 
 // Function to get native token info:
-export const addNativeToken = async (chain, balance, owner) => {
+exports.addNativeToken = async (chain, balance, owner) => {
 
   // Initializing New Token:
   let newToken = {
@@ -86,7 +86,7 @@ export const addNativeToken = async (chain, balance, owner) => {
 /* ========================================================================================================================================================================= */
 
 // Function to get token info:
-export const addToken = async (chain, location, address, balance, owner, ethers_provider) => {
+exports.addToken = async (chain, location, address, balance, owner, ethers_provider) => {
     
   // Initializing New Token:
   let newToken = {
@@ -191,7 +191,7 @@ export const addToken = async (chain, location, address, balance, owner, ethers_
 /* ========================================================================================================================================================================= */
 
 // Function to get a token's logo:
-export const getTokenLogo = (chain, symbol) => {
+const getTokenLogo = (chain, symbol) => {
 
   // Initializing Default Logo:
   let logo = 'https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@d5c68edec1f5eaec59ac77ff2b48144679cebca1/32/icon/generic.png';
@@ -239,7 +239,7 @@ export const getTokenLogo = (chain, symbol) => {
 /* ========================================================================================================================================================================= */
 
 // Function to get a token's current price:
-export const getTokenPrice = async (chain, address, decimals) => {
+const getTokenPrice = async (chain, address, decimals) => {
 
   try {
 

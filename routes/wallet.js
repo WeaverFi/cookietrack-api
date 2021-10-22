@@ -2,11 +2,13 @@
 // Required Packages:
 const { ethers } = require('ethers');
 
-// Imports:
-import { rpc_avax } from '../../RPCs.js';
-import { minABI } from '../../ABIs.js';
-import { avax_tokens } from '../../tokens/avalanche.js';
-import { addNativeToken, addToken } from '../../functions.js';
+// Required Variables:
+const { rpc_avax } = require('../static/RPCs.js');
+const { minABI } = require('../static/ABIs.js');
+const { avax_tokens } = require('../static/tokens/avalanche.js');
+
+// Required Functions:
+const { addNativeToken, addToken } = require('../static/functions.js');
 
 // Initializations:
 const chain = 'avax';
@@ -14,7 +16,7 @@ const chain = 'avax';
 /* ========================================================================================================================================================================= */
 
 // GET Function:
-export const get = async (req, res) => {
+exports.get = async (req) => {
 
   // Initializing Response:
   let response = {
@@ -46,8 +48,8 @@ export const get = async (req, res) => {
     response.data = [{error: 'No Wallet Address in Request'}];
   }
 
-  // Sending Response:
-  res.end(JSON.stringify(response));
+  // Returning Response:
+  return JSON.stringify(response);
 }
 
 /* ========================================================================================================================================================================= */

@@ -1,6 +1,6 @@
 
 // Tracked Tokens List:
-export const avax_tokens = [
+exports.avax_tokens = [
   { address: '0xA7D7079b0FEaD91F3e65f86E8915Cb59c1a4C664', symbol: 'USDC.e' },
   { address: '0x50b7545627a5162F82A992c33b87aDc75187B218', symbol: 'WBTC.e' },
   { address: '0xd586E7F844cEa2F87f50152665BCbc2C279D8d70', symbol: 'DAI.e' },
@@ -49,7 +49,7 @@ export const avax_tokens = [
 ];
 
 // Token Logos:
-export const avax_token_logos = {
+exports.avax_token_logos = {
   'AVAX':               'https://bscscan.com/token/images/avax_32.png',
   'USDC.e':             'https://cryptologos.cc/logos/usd-coin-usdc-logo.png',
   'WBTC.e':             'https://avascan.info/cdn/images/addresses/WBTC.png',
@@ -118,4 +118,4 @@ export const avax_token_logos = {
 }
 
 // Token Blacklist:
-export const avax_token_blacklist = [];
+exports.avax_token_blacklist = [];

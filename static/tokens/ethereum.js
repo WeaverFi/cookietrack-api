@@ -1,6 +1,6 @@
 
 // Tracked Tokens List:
-export const eth_tokens = [
+exports.eth_tokens = [
   { address: '0xdac17f958d2ee523a2206206994597c13d831ec7', symbol: 'USDT' },
   { address: '0xB8c77482e45F1F44dE1745F52C74426C631bDD52', symbol: 'BNB' },
   { address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48', symbol: 'USDC' },
@@ -75,7 +75,7 @@ export const eth_tokens = [
 ];
 
 // Token Logos:
-export const eth_token_logos = {
+exports.eth_token_logos = {
   'ETH':              'https://bscscan.com/token/images/ethereum_32.png',
   'USDT':             'https://etherscan.io/token/images/tether_32.png',
   'BNB':              'https://etherscan.io/token/images/bnb_28_2.png',
@@ -177,7 +177,7 @@ export const eth_token_logos = {
 }
 
 // Token Blacklist:
-export const eth_token_blacklist = [
+exports.eth_token_blacklist = [
   '0x616fe98349783f1975361d5eb827ef31f90b47b6',
   '0x82dfdb2ec1aa6003ed4acba663403d7c2127ff67',
   '0xd4de05944572d142fbf70f3f010891a35ac15188',

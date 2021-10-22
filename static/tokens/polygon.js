@@ -1,6 +1,6 @@
 
 // Tracked Tokens List:
-export const poly_tokens = [
+exports.poly_tokens = [
   { address: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619', symbol: 'WETH' },
   { address: '0x3BA4c387f786bFEE076A58914F5Bd38d668B42c3', symbol: 'BNB' },
   { address: '0xc2132d05d31c914a87c6611c10748aeb04b58e8f', symbol: 'USDT' },
@@ -60,7 +60,7 @@ export const poly_tokens = [
 ];
 
 // Token Logos:
-export const poly_token_logos = {
+exports.poly_token_logos = {
   'MATIC':              'https://bscscan.com/token/images/matic_32.png',
   'WETH':               'https://polygonscan.com/token/images/wETH_32.png',
   'BNB':                'https://polygonscan.com/token/images/bnb_28_2.png',
@@ -141,7 +141,7 @@ export const poly_token_logos = {
 }
 
 // Token Blacklist:
-export const poly_token_blacklist = [
+exports.poly_token_blacklist = [
   '0xe4fb1bb8423417a460286b0ed44b64e104c5fae5',
   '0x442407e94a771d60c0adcd4b8217131b65b73199',
   '0x1cc384b6f900a947eb3bbfc47417afeee7599e24',

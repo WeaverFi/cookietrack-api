@@ -16,13 +16,7 @@ The API that powers CookieTrack.
 
 To run the project locally:
 ```
-npm run dev
-```
-
-To export and run project as deployed:
-```
-npm run export
-npx serve __sapper__/export
+npm start
 ```
 
 [logo]: https://github.com/Ncookiez/cookietrack-api/blob/master/static/favicon.svg "CookieTrack"
