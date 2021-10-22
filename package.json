@@ -3,7 +3,7 @@
   "description": "The API that powers CookieTrack.",
   "version": "0.1.0",
   "scripts": {
-    "start": "node server.js"
+    "start": "node functions/index.js"
   },
   "dependencies": {
     "axios": "^0.23.0",
