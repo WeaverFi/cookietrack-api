@@ -2,12 +2,14 @@
 // Required Packages:
 const functions = require('firebase-functions');
 const express = require('express');
+const cors = require('cors');
 
 // Required Routes:
-const wallet = require('../routes/wallet.js');
+const wallet = require('./routes/wallet.js');
 
 // Initializing Express Server:
 const app = express();
+app.use(cors());
 
 // Default Endpoint:
 app.get('/', (req, res) => {

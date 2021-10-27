@@ -22,4 +22,4 @@ cd..
 npm start
 ```
 
-[logo]: https://github.com/Ncookiez/cookietrack-api/blob/master/static/favicon.svg "CookieTrack"
+[logo]: https://github.com/Ncookiez/cookietrack-api/blob/master/favicon.svg "CookieTrack"
