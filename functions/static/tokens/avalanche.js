@@ -118,4 +118,6 @@ exports.avax_token_logos = {
 }
 
 // Token Blacklist:
-exports.avax_token_blacklist = [];
+exports.avax_token_blacklist = [
+  '0xd17584633bc8d190e5a14502976dad9640456d6d'
+];
