@@ -16,7 +16,7 @@ The API that powers CookieTrack.
 
 ### Project Balances
 
-**/\<chain\>/\<project\>?address=\<wallet_address\>** - Returns a wallet's token balances.
+**/\<chain\>/\<project\>?address=\<wallet_address\>** - Returns a wallet's token balances in a specific project.
 
 **Projects available:**
 - `snowball`
