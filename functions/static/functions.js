@@ -371,7 +371,6 @@ const getTokenPrice = async (chain, address, decimals) => {
           tokens.forEach(token => {
             avaxTokenPrices.push({token: token.toLowerCase(), price: result.data[token.toLowerCase()].usd});
           });
-          return 0;
         } catch {
           return 0;
         }
