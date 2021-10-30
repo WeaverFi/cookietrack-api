@@ -25,7 +25,7 @@ The API that powers CookieTrack.
 
 ## Local Development:
 
-Uncomment line 28 on `functions/index.js`.
+Uncomment the line after 'Starting Local Server' on `functions/index.js`.
 
 ```
 npm i
