@@ -4,7 +4,7 @@ const { ethers } = require('ethers');
 const axios = require('axios');
 
 // Required Variables:
-const { minABI } = require('./ABIs.js');
+const { minABI, lpABI, snowball, traderJoe } = require('./ABIs.js');
 const { eth_token_logos } = require('./tokens/ethereum.js');
 const { bsc_token_logos } = require('./tokens/bsc.js');
 const { poly_token_logos } = require('./tokens/polygon.js');
@@ -39,48 +39,33 @@ exports.addNativeToken = async (chain, balance, owner) => {
     logo: ''
   }
 
-  // ETH:
-  if(chain === 'eth') {
-    newToken.symbol = 'ETH';
-    newToken.logo = getTokenLogo(chain, newToken.symbol);
-    newToken.price = await getTokenPrice(chain, newToken.address, newToken.decimals);
-    return newToken;
-
-  // BNB:
-  } else if(chain === 'bsc') {
-    newToken.symbol = 'BNB';
-    newToken.logo = getTokenLogo(chain, newToken.symbol);
-    newToken.price = await getTokenPrice(chain, newToken.address, newToken.decimals);
-    return newToken;
-
-  // MATIC:
-  } else if(chain === 'poly') {
-    newToken.symbol = 'MATIC';
-    newToken.logo = getTokenLogo(chain, newToken.symbol);
-    newToken.price = await getTokenPrice(chain, newToken.address, newToken.decimals);
-    return newToken;
-
-  // FTM:
-  } else if(chain === 'ftm') {
-    newToken.symbol = 'FTM';
-    newToken.logo = getTokenLogo(chain, newToken.symbol);
-    newToken.price = await getTokenPrice(chain, newToken.address, newToken.decimals);
-    return newToken;
-
-  // AVAX:
-  } else if(chain === 'avax') {
-    newToken.symbol = 'AVAX';
-    newToken.logo = getTokenLogo(chain, newToken.symbol);
-    newToken.price = await getTokenPrice(chain, newToken.address, newToken.decimals);
-    return newToken;
-
-  // ONE:
-  } else if(chain === 'one') {
-    newToken.symbol = 'ONE';
-    newToken.logo = getTokenLogo(chain, newToken.symbol);
-    newToken.price = await getTokenPrice(chain, newToken.address, newToken.decimals);
-    return newToken;
+  // Assigning Token Symbol:
+  switch(chain) {
+    case 'eth':
+      newToken.symbol = 'ETH';
+      break;
+    case 'bsc':
+      newToken.symbol = 'BNB';
+      break;
+    case 'poly':
+      newToken.symbol = 'MATIC';
+      break;
+    case 'ftm':
+      newToken.symbol = 'FTM';
+      break;
+    case 'avax':
+      newToken.symbol = 'AVAX';
+      break;
+    case 'one':
+      newToken.symbol = 'ONE';
+      break;
   }
+
+  // Getting Missing Token Info:
+  newToken.logo = getTokenLogo(chain, newToken.symbol);
+  newToken.price = await getTokenPrice(chain, newToken.address, newToken.decimals);
+
+  return newToken;
 }
 
 /* ========================================================================================================================================================================= */
@@ -102,90 +87,92 @@ exports.addToken = async (chain, location, address, balance, owner, ethers_provi
     logo: ''
   }
 
-  // Ethereum Token:
-  if(chain === 'eth') {
-    if(address.toLowerCase() === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
-      newToken.symbol = 'ETH';
-      newToken.decimals = 18;
-    } else {
-      let contract = new ethers.Contract(address, minABI, ethers_provider);
-      newToken.symbol = await contract.symbol();
-      newToken.decimals = parseInt(await contract.decimals());
+  // Native Tokens:
+  if(address.toLowerCase() === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
+    switch(chain) {
+      case 'eth':
+        newToken.symbol = 'ETH';
+        break;
+      case 'bsc':
+        newToken.symbol = 'BNB';
+        break;
+      case 'poly':
+        newToken.symbol = 'MATIC';
+        break;
+      case 'ftm':
+        newToken.symbol = 'FTM';
+        break;
+      case 'avax':
+        newToken.symbol = 'AVAX';
+        break;
+      case 'one':
+        newToken.symbol = 'ONE';
+        break;
     }
-    newToken.logo = getTokenLogo(chain, newToken.symbol);
-    newToken.price = await getTokenPrice(chain, address, newToken.decimals);
-    return newToken;
-  
-  // Binance Smart Chain Token:
-  } else if(chain === 'bsc') {
-    if(address.toLowerCase() === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
-      newToken.symbol = 'BNB';
-      newToken.decimals = 18;
-    } else {
-      let contract = new ethers.Contract(address, minABI, ethers_provider);
-      newToken.symbol = await contract.symbol();
-      newToken.decimals = parseInt(await contract.decimals());
-    }
-    newToken.logo = getTokenLogo(chain, newToken.symbol);
-    newToken.price = await getTokenPrice(chain, address, newToken.decimals);
-    return newToken;
+    newToken.decimals = 18;
 
-  // Polygon Token:
-  } else if(chain === 'poly') {
-    if(address.toLowerCase() === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
-      newToken.symbol = 'MATIC';
-      newToken.decimals = 18;
-    } else {
-      let contract = new ethers.Contract(address, minABI, ethers_provider);
-      newToken.symbol = await contract.symbol();
-      newToken.decimals = parseInt(await contract.decimals());
-    }
-    newToken.logo = getTokenLogo(chain, newToken.symbol);
-    newToken.price = await getTokenPrice(chain, address, newToken.decimals);
-    return newToken;
-
-  // Fantom Token:
-  } else if(chain === 'ftm') {
-    if(address.toLowerCase() === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
-      newToken.symbol = 'FTM';
-      newToken.decimals = 18;
-    } else {
-      let contract = new ethers.Contract(address, minABI, ethers_provider);
-      newToken.symbol = await contract.symbol();
-      newToken.decimals = parseInt(await contract.decimals());
-    }
-    newToken.logo = getTokenLogo(chain, newToken.symbol);
-    newToken.price = await getTokenPrice(chain, address, newToken.decimals);
-    return newToken;
-
-  // Avalanche Token:
-  } else if(chain === 'avax') {
-    if(address.toLowerCase() === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
-      newToken.symbol = 'AVAX';
-      newToken.decimals = 18;
-    } else {
-      let contract = new ethers.Contract(address, minABI, ethers_provider);
-      newToken.symbol = await contract.symbol();
-      newToken.decimals = parseInt(await contract.decimals());
-    }
-    newToken.logo = getTokenLogo(chain, newToken.symbol);
-    newToken.price = await getTokenPrice(chain, address, newToken.decimals);
-    return newToken;
-
-  // Harmony Token:
-  } else if(chain === 'one') {
-    if(address.toLowerCase() === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
-      newToken.symbol = 'ONE';
-      newToken.decimals = 18;
-    } else {
-      let contract = new ethers.Contract(address, minABI, ethers_provider);
-      newToken.symbol = await contract.symbol();
-      newToken.decimals = parseInt(await contract.decimals());
-    }
-    newToken.logo = getTokenLogo(chain, newToken.symbol);
-    newToken.price = await getTokenPrice(chain, address, newToken.decimals);
-    return newToken;
+  // Other tokens:
+  } else {
+    let contract = new ethers.Contract(address, minABI, ethers_provider);
+    newToken.symbol = await contract.symbol();
+    newToken.decimals = parseInt(await contract.decimals());
   }
+
+  // Getting Missing Token Info:
+  newToken.logo = getTokenLogo(chain, newToken.symbol);
+  newToken.price = await getTokenPrice(chain, address, newToken.decimals);
+
+  return newToken;
+}
+
+/* ========================================================================================================================================================================= */
+
+// Function to get LP token info:
+exports.addLPToken = async (chain, location, address, balance, owner, ethers_provider) => {
+      
+  // Initializing New Token:
+  let newToken = {
+    type: 'lpToken',
+    chain: chain,
+    location: location,
+    owner: owner,
+    symbol: '',
+    address: address,
+    decimals: 18,
+    balance: balance,
+    token0: { symbol: '', address: '', decimals: 18, balance: 0, price: 0, logo: '' },
+    token1: { symbol: '', address: '', decimals: 18, balance: 0, price: 0, logo: '' }
+  }
+
+  // LP Token Info:
+  let contract = new ethers.Contract(address, minABI, ethers_provider);
+  newToken.symbol = await contract.symbol();
+  newToken.decimals = parseInt(await contract.decimals());
+  let lpTokenContract = new ethers.Contract(address, lpABI, ethers_provider);
+  let lpTokenReserves = await lpTokenContract.getReserves();
+  let lpTokenSupply = await lpTokenContract.totalSupply() / (10 ** newToken.decimals);
+
+  // First Paired Token:
+  newToken.token0.address = await lpTokenContract.token0();
+  let token0_contract = new ethers.Contract(newToken.token0.address, minABI, ethers_provider);
+  newToken.token0.symbol = await token0_contract.symbol();
+  newToken.token0.decimals = parseInt(await token0_contract.decimals());
+  newToken.token0.price = await getTokenPrice(chain, newToken.token0.address, newToken.token0.decimals);
+  let supply0 = lpTokenReserves[0] / (10 ** newToken.decimals);
+  newToken.token0.balance = supply0 * (balance / lpTokenSupply);
+  newToken.token0.logo = getTokenLogo(chain, newToken.token0.symbol);
+
+  // Second Paired Token:
+  newToken.token1.address = await lpTokenContract.token1();
+  let token1_contract = new ethers.Contract(newToken.token1.address, minABI, ethers_provider);
+  newToken.token1.symbol = await token1_contract.symbol();
+  newToken.token1.decimals = parseInt(await token1_contract.decimals());
+  newToken.token1.price = await getTokenPrice(chain, newToken.token1.address, newToken.token1.decimals);
+  let supply1 = lpTokenReserves[1] / (10 ** newToken.decimals);
+  newToken.token1.balance = supply1 * (balance / lpTokenSupply);
+  newToken.token1.logo = getTokenLogo(chain, newToken.token1.symbol);
+
+  return newToken;
 }
 
 /* ========================================================================================================================================================================= */
@@ -258,14 +245,12 @@ const getTokenPrice = async (chain, address, decimals) => {
           let price = result.data.toTokenAmount / 10e5;
           if(usdToken === '0x6b175474e89094c44da98b954eedeac495271d0f') { price /= 10e11; } // Correcting price for DAI price fetching.
           if(result.data.protocols.length > 4) {
-            console.error('1inch API error: 1inch is having issues on their end - refresh or wait a couple minutes.');
             return 0;
           } else {
             ethTokenPrices.push({token: address.toLowerCase(), price});
             return price;
           }
         } catch {
-          console.error('1inch API error: Could not get price for Ethereum token:', address);
           return 0;
         }
       }
@@ -283,14 +268,12 @@ const getTokenPrice = async (chain, address, decimals) => {
           let result = await axios.get(apiQuery);
           let price = result.data.toTokenAmount / 10e17;
           if(result.data.protocols.length > 4) {
-            console.error('1inch API error: 1inch is having issues on their end - refresh or wait a couple minutes.');
             return 0;
           } else {
             bscTokenPrices.push({token: address.toLowerCase(), price});
             return price;
           }
         } catch {
-          console.error('1inch API error: Could not get price for BSC token:', address);
           return 0;
         }
       }
@@ -308,14 +291,12 @@ const getTokenPrice = async (chain, address, decimals) => {
           let result = await axios.get(apiQuery);
           let price = result.data.toTokenAmount / 10e5;
           if(result.data.protocols.length > 4) {
-            console.error('1inch API error: 1inch is having issues on their end - refresh or wait a couple minutes.');
             return 0;
           } else {
             polyTokenPrices.push({token: address.toLowerCase(), price});
             return price;
           }
         } catch {
-          console.error('1inch API error: Could not get price for Polygon token:', address);
           return 0;
         }
       }
@@ -337,7 +318,6 @@ const getTokenPrice = async (chain, address, decimals) => {
             ftmTokenPrices.push({token: token.toLowerCase(), price: result.data[token.toLowerCase()].usd});
           });
         } catch {
-          console.error('CoinGecko API Error: Unable to fetch Fantom token prices.');
           return 0;
         }
       }
@@ -371,7 +351,6 @@ const getTokenPrice = async (chain, address, decimals) => {
         } else if(address.toLowerCase() === '0x260b3e40c714ce8196465ec824cd8bb915081812'.toLowerCase()) { // IronICE
           return getTokenPrice('poly', '0x4A81f8796e0c6Ad4877A51C86693B0dE8093F2ef', 18);
         } else {
-          console.error('Could not find price for Fantom token:', address);
           return 0;
         }
       }
@@ -394,7 +373,6 @@ const getTokenPrice = async (chain, address, decimals) => {
           });
           return 0;
         } catch {
-          console.error('CoinGecko API Error: Unable to fetch Avalanche token prices.');
           return 0;
         }
       }
@@ -420,7 +398,6 @@ const getTokenPrice = async (chain, address, decimals) => {
         } else if(address.toLowerCase() === '0xDBf31dF14B66535aF65AaC99C32e9eA844e14501'.toLowerCase()) { // renBTC
           return getTokenPrice('poly', '0xdbf31df14b66535af65aac99c32e9ea844e14501', 8);
         } else {
-          console.error('Could not find price for Avalanche token:', address);
           return 0;
         }
       }
@@ -445,7 +422,6 @@ const getTokenPrice = async (chain, address, decimals) => {
             oneTokenPrices.push({token: token.toLowerCase(), price: result.data[token.toLowerCase()].usd});
           });
         } catch {
-          console.error('CoinGecko API Error: Unable to fetch Harmony token prices.');
           return 0;
         }
       }
@@ -483,13 +459,77 @@ const getTokenPrice = async (chain, address, decimals) => {
         } else if(address.toLowerCase() === '0xe064a68994e9380250cfee3e8c0e2ac5c0924548'.toLowerCase()) { // xVIPER
           return getViperTokenPrice();
         } else {
-          console.error('Could not find price for Harmony token:', address);
           return 0;
         }
       }
     }
-  } catch (error) {
-    console.error(error);
+  } catch {
     return 0;
   }
+}
+
+/* ========================================================================================================================================================================= */
+
+// Function to get S4D token info:
+exports.addS4DToken = async (chain, location, address, balance, owner, ethers_provider) => {
+  
+  // Initializing New Token:
+  let newToken = {
+    type: 'token',
+    chain: chain,
+    location: location,
+    owner: owner,
+    symbol: '',
+    address: address,
+    decimals: 18,
+    balance: balance,
+    price: 0,
+    logo: ''
+  }
+  
+  // Getting Missing Token Info:
+  let contract = new ethers.Contract(address, minABI, ethers_provider);
+  newToken.symbol = await contract.symbol();
+  newToken.decimals = parseInt(await contract.decimals());
+  let tokenContract = new ethers.Contract(address, snowball.s4dABI, ethers_provider);
+  let controller = await tokenContract.owner();
+  let controllerContract = new ethers.Contract(controller, snowball.s4dControllerABI, ethers_provider);
+  newToken.price = parseInt(await controllerContract.getVirtualPrice()) / (10 ** newToken.decimals);
+  newToken.logo = getTokenLogo(chain, newToken.symbol);
+
+  return newToken;
+}
+
+/* ========================================================================================================================================================================= */
+
+// Function to get Trader Joe token info (xJOE):
+exports.addTraderJoeToken = async (chain, location, address, balance, owner, ethers_provider) => {
+  
+  // Initializing New Token:
+  let newToken = {
+    type: 'token',
+    chain: chain,
+    location: location,
+    owner: owner,
+    symbol: '',
+    address: address,
+    decimals: 18,
+    balance: balance,
+    price: 0,
+    logo: ''
+  }
+
+  // Getting Missing Token Info:
+  let contract = new ethers.Contract(address, traderJoe.joeABI, ethers_provider);
+  let underlyingToken = await contract.joe();
+  let joeContract = new ethers.Contract(underlyingToken, minABI, ethers_provider);
+  let joeStaked = parseInt(await joeContract.balanceOf(address));
+  let xjoeSupply = parseInt(await contract.totalSupply());
+  let multiplier = joeStaked / xjoeSupply;
+  newToken.decimals = parseInt(await contract.decimals());
+  newToken.symbol = await contract.symbol();
+  newToken.price = multiplier * (await getTokenPrice(chain, underlyingToken, newToken.decimals));
+  newToken.logo = getTokenLogo(chain, newToken.symbol);
+  
+  return newToken;
 }

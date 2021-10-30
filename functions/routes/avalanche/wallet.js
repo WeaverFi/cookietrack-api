@@ -3,12 +3,12 @@
 const { ethers } = require('ethers');
 
 // Required Variables:
-const { rpc_avax } = require('../static/RPCs.js');
-const { minABI } = require('../static/ABIs.js');
-const { avax_tokens } = require('../static/tokens/avalanche.js');
+const { rpc_avax } = require('../../static/RPCs.js');
+const { minABI } = require('../../static/ABIs.js');
+const { avax_tokens } = require('../../static/tokens/avalanche.js');
 
 // Required Functions:
-const { addNativeToken, addToken } = require('../static/functions.js');
+const { addNativeToken, addToken } = require('../../static/functions.js');
 
 // Initializations:
 const chain = 'avax';
@@ -33,8 +33,11 @@ exports.get = async (req) => {
     if(ethers.utils.isAddress(wallet)) {
       try {
         const avax = new ethers.providers.JsonRpcProvider(rpc_avax);
-        response.data.push(await getAVAX(avax, wallet));
-        response.data.push(await getTokenBalances(avax, wallet));
+        let avaxBalance = await getAVAX(avax, wallet);
+        if(avaxBalance) {
+          response.data.push(avaxBalance);
+        }
+        response.data.push(...(await getTokenBalances(avax, wallet)));
       } catch {
         response.status = 'error';
         response.data = [{error: 'Internal API Error'}];
@@ -54,7 +57,7 @@ exports.get = async (req) => {
 
 /* ========================================================================================================================================================================= */
 
-// Function to fetch native wallet balance:
+// Function to get native wallet balance:
 const getAVAX = async (avax, wallet) => {
   let balance = parseInt(await avax.getBalance(wallet));
   if(balance > 0) {
@@ -63,7 +66,7 @@ const getAVAX = async (avax, wallet) => {
   }
 }
 
-// Function to fetch token balances:
+// Function to get token balances:
 const getTokenBalances = async (avax, wallet) => {
   let tokens = [];
   let promises = avax_tokens.map(token => (async () => {
