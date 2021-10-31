@@ -179,7 +179,7 @@ exports.addLPToken = async (chain, location, address, balance, owner, ethers_pro
 /* ========================================================================================================================================================================= */
 
 // Function to get a token's logo:
-const getTokenLogo = (chain, symbol) => {
+exports.getTokenLogo = (chain, symbol) => {
 
   // Initializing Default Logo:
   let logo = 'https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@d5c68edec1f5eaec59ac77ff2b48144679cebca1/32/icon/generic.png';
@@ -227,7 +227,7 @@ const getTokenLogo = (chain, symbol) => {
 /* ========================================================================================================================================================================= */
 
 // Function to get a token's current price:
-const getTokenPrice = async (chain, address, decimals) => {
+exports.getTokenPrice = async (chain, address, decimals) => {
 
   try {
 
