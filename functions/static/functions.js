@@ -4,7 +4,7 @@ const { ethers } = require('ethers');
 const axios = require('axios');
 
 // Required Variables:
-const { minABI, lpABI, snowball, traderJoe } = require('./ABIs.js');
+const { minABI, lpABI, aave, balancer, snowball, traderJoe } = require('./ABIs.js');
 const { eth_token_logos } = require('./tokens/ethereum.js');
 const { bsc_token_logos } = require('./tokens/bsc.js');
 const { poly_token_logos } = require('./tokens/polygon.js');
@@ -172,6 +172,65 @@ exports.addLPToken = async (chain, location, address, balance, owner, ethers_pro
   newToken.token1.price = await exports.getTokenPrice(chain, newToken.token1.address, decimals1);
   newToken.token1.balance = (supply1 * (balance / lpTokenSupply)) / (10 ** decimals1);
   newToken.token1.logo = exports.getTokenLogo(chain, newToken.token1.symbol);
+
+  return newToken;
+}
+
+/* ========================================================================================================================================================================= */
+
+// Function to get debt token info:
+exports.addDebtToken = async (chain, location, address, balance, owner, ethers_provider) => {
+
+  // Initializing New Token:
+  let newToken = {
+    type: 'debt',
+    chain: chain,
+    location: location,
+    owner: owner,
+    symbol: '',
+    address: address,
+    balance: 0,
+    price: 0,
+    logo: ''
+  }
+
+  // Initializing Decimals:
+  let decimals = 18;
+
+  // Native Tokens:
+  if(address.toLowerCase() === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
+    switch(chain) {
+      case 'eth':
+        newToken.symbol = 'ETH';
+        break;
+      case 'bsc':
+        newToken.symbol = 'BNB';
+        break;
+      case 'poly':
+        newToken.symbol = 'MATIC';
+        break;
+      case 'ftm':
+        newToken.symbol = 'FTM';
+        break;
+      case 'avax':
+        newToken.symbol = 'AVAX';
+        break;
+      case 'one':
+        newToken.symbol = 'ONE';
+        break;
+    }
+
+  // Other tokens:
+  } else {
+    let contract = new ethers.Contract(address, minABI, ethers_provider);
+    newToken.symbol = await contract.symbol();
+    decimals = parseInt(await contract.decimals());
+  }
+
+  // Getting Missing Token Info:
+  newToken.balance = balance / (10 ** decimals);
+  newToken.logo = exports.getTokenLogo(chain, newToken.symbol);
+  newToken.price = await exports.getTokenPrice(chain, address, decimals);
 
   return newToken;
 }
@@ -531,5 +590,58 @@ exports.addTraderJoeToken = async (chain, location, address, balance, owner, eth
   newToken.price = multiplier * (await exports.getTokenPrice(chain, underlyingToken, decimals));
   newToken.logo = exports.getTokenLogo(chain, newToken.symbol);
   
+  return newToken;
+}
+
+/* ========================================================================================================================================================================= */
+
+// Function to get Aave BLP token info:
+exports.addAaveBLPToken = async (chain, location, address, balance, owner, ethers_provider) => {
+
+  // Getting actual address:
+  let contract = new ethers.Contract(address, aave.lpABI, ethers_provider);
+  let actualAddress = await contract.bPool();
+    
+  // Initializing New Token:
+  let newToken = {
+    type: 'lpToken',
+    chain: chain,
+    location: location,
+    owner: owner,
+    symbol: '',
+    address: actualAddress,
+    balance: 0,
+    token0: { symbol: '', address: '', balance: 0, price: 0, logo: '' },
+    token1: { symbol: '', address: '', balance: 0, price: 0, logo: '' }
+  }
+
+  // LP Token Info:
+  let decimals = parseInt(await contract.decimals());
+  newToken.balance = balance / (10 ** decimals);
+  newToken.symbol = await contract.symbol();
+  let lpTokenContract = new ethers.Contract(actualAddress, balancer.tokenABI, ethers_provider);
+  let lpTokenSupply = await contract.totalSupply() / (10 ** decimals);
+  let lpTokenAddresses = await lpTokenContract.getCurrentTokens();
+
+  // First Paired Token:
+  newToken.token0.address = lpTokenAddresses[0];
+  let token0_contract = new ethers.Contract(newToken.token0.address, minABI, ethers_provider);
+  let decimals0 = parseInt(await token0_contract.decimals());
+  let supply0 = await lpTokenContract.getBalance(newToken.token0.address) / (10 ** decimals0);
+  newToken.token0.symbol = await token0_contract.symbol();
+  newToken.token0.price = await exports.getTokenPrice(chain, newToken.token0.address, decimals0);
+  newToken.token0.balance = supply0 * (balance / lpTokenSupply);
+  newToken.token0.logo = exports.getTokenLogo(chain, newToken.token0.symbol);
+
+  // Second Paired Token:
+  newToken.token1.address = lpTokenAddresses[1];
+  let token1_contract = new ethers.Contract(newToken.token1.address, minABI, ethers_provider);
+  let decimals1 = parseInt(await token1_contract.decimals());
+  let supply1 = await lpTokenContract.getBalance(newToken.token1.address) / (10 ** decimals1);
+  newToken.token1.symbol = await token1_contract.symbol();
+  newToken.token1.price = await exports.getTokenPrice(chain, newToken.token1.address, decimals1);
+  newToken.token1.balance = supply1 * (balance / lpTokenSupply);
+  newToken.token1.logo = exports.getTokenLogo(chain, newToken.token1.symbol);
+
   return newToken;
 }

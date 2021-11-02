@@ -17,6 +17,31 @@ exports.lpABI = [
 
 /* ========================================================================================================================================================================= */
 
+// Aave ABIs:
+exports.aave = {
+  stakingABI: [
+    { constant: true, inputs: [{ name: "account", type: "address" }], name: "balanceOf", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [], name: "STAKED_TOKEN", outputs: [{ name: "", type: "address" }], type: "function" }
+  ],
+  incentivesABI: [
+    { constant: true, inputs: [{ name: "_user", type: "address" }], name: "getUserUnclaimedRewards", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ],
+  lpABI: [
+    { constant: true, inputs: [], name: "bPool", outputs: [{ name: "", type: "address" }], type: "function" },
+    { constant: true, inputs: [], name: "symbol", outputs: [{ name: "", type: "string" }], type: "function" },
+    { constant: true, inputs: [], name: "decimals", outputs: [{ name: "", type: "uint8" }], type: "function" },
+    { constant: true, inputs: [], name: "totalSupply", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ]
+}
+
+// Balancer ABIs:
+exports.balancer = {
+  tokenABI: [
+    { constant: true, inputs: [], name: "getCurrentTokens", outputs: [{ name: "", type: "address[]" }], type: "function" },
+    { constant: true, inputs: [{ name: "token", type: "address" }], name: "getBalance", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ]
+}
+
 // Snowball ABIs:
 exports.snowball = {
   registryABI: [
@@ -42,8 +67,6 @@ exports.snowball = {
     { constant: true, inputs: [], name: "getVirtualPrice", outputs: [{ name: "", type: "uint256" }], type: "function" }
   ]
 }
-
-/* ========================================================================================================================================================================= */
 
 // Trader Joe ABIs:
 exports.traderJoe = {

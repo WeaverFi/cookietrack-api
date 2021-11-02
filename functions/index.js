@@ -6,6 +6,7 @@ const cors = require('cors');
 
 // Ethereum Routes:
 const eth_wallet = require('./routes/ethereum/wallet.js');
+const eth_aave = require('./routes/ethereum/aave.js');
 
 // BSC Routes:
 const bsc_wallet = require('./routes/bsc/wallet.js');
@@ -76,6 +77,10 @@ app.get('/harmony/wallet', async (req, res) => {
 /* ========================================================================================================================================================================= */
 
 // Aave (Ethereum):
+app.get('/ethereum/aave', async (req, res) => {
+  res.end(await eth_aave.get(req));
+});
+
 // Aave (Polygon):
 // Aave (Avalanche):
 // PancakeSwap (BSC):
