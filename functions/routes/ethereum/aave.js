@@ -1,6 +1,7 @@
 
 // Required Packages:
 const { ethers } = require('ethers');
+const axios = require('axios');
 
 // Required Variables:
 const { rpc_eth } = require('../../static/RPCs.js');
@@ -45,7 +46,7 @@ exports.get = async (req) => {
         if(stakedLP) {
           response.data.push(stakedLP);
         }
-        let markets = (await (await fetch('https://aave.github.io/aave-addresses/mainnet.json')).json()).proto;
+        let markets = (await axios.get('https://aave.github.io/aave-addresses/mainnet.json')).data.proto;
         response.data.push(...(await getMarketBalances(eth, wallet, markets)));
         response.data.push(...(await getMarketDebt(eth, wallet, markets)));
         let unclaimedIncentives = await getIncentives(eth, wallet);
