@@ -36,6 +36,8 @@ exports.ftm_tokens = [
   { address: '0x260b3E40c714Ce8196465Ec824Cd8Bb915081812', symbol: 'IronICE' },
   { address: '0xd8321aa83fb0a4ecd6348d4577431310a6e0814d', symbol: 'GEIST' },
   { address: '0x468003b688943977e6130f4f68f23aad939a1040', symbol: 'SPELL' },
+  { address: '0x7BEB05cf5681f402E762F8569c2Fc138a2172978', symbol: 'BHC' },
+  { address: '0x6c021Ae822BEa943b2E66552bDe1D2696a53fbB7', symbol: 'TOMB' },
   { address: '0x37F70aa9fEfc8971117BD53A1Ddc2372aa7Eec41', symbol: 'BOUJE' },
 ];
 
@@ -84,7 +86,11 @@ exports.ftm_token_logos = {
   'IS3USD':         'https://polygonscan.com/token/images/iron_32.png',
   'GEIST':          'https://assets.coingecko.com/coins/images/18832/small/GEIST-token.png?1633560935',
   'SPELL':          'https://assets.coingecko.com/coins/images/15861/small/abracadabra-3.png?1622544862',
-  'BOUJE':          'https://assets.coingecko.com/coins/images/19588/small/logo_%283%29.png?1635472943'
+  'BHC':            'https://ftmscan.com/token/images/billionhappiness_32.png',
+  'TOMB':           'https://ftmscan.com/token/images/tomb_32.png',
+  'g3CRV':          'https://assets.coingecko.com/coins/images/18832/small/GEIST-token.png?1633560935',
+  'BOUJE':          'https://assets.coingecko.com/coins/images/19588/small/logo_%283%29.png?1635472943',
+  'SPIRIT-LP':      'https://ftmscan.com/token/images/spiritswap_32.png'
 }
 
 // Token Blacklist:

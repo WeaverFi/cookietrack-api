@@ -45,7 +45,18 @@ exports.avax_tokens = [
   { address: '0xce1bffbd5374dac86a2893119683f4911a2f7814', symbol: 'SPELL' },
   { address: '0xB00F1ad977a949a3CCc389Ca1D1282A2946963b0', symbol: 'BOOFI' },
   { address: '0x47536F17F4fF30e64A96a7555826b8f9e66ec468', symbol: 'CRV' },
-  { address: '0xDBf31dF14B66535aF65AaC99C32e9eA844e14501', symbol: 'renBTC' }
+  { address: '0xDBf31dF14B66535aF65AaC99C32e9eA844e14501', symbol: 'renBTC' },
+  { address: '0x1f1E7c893855525b303f99bDF5c3c05Be09ca251', symbol: 'SYN' },
+  { address: '0x264c1383EA520f73dd837F915ef3a732e204a493', symbol: 'BNB' },
+  { address: '0x130966628846BFd36ff31a822705796e8cb8C18D', symbol: 'MIM' },
+  { address: '0xDC42728B0eA910349ed3c6e1c9Dc06b5FB591f98', symbol: 'FRAX' },
+  { address: '0xB1466d4cf0DCfC0bCdDcf3500F473cdACb88b56D', symbol: 'WET' },
+  { address: '0xAcD7B3D9c10e97d0efA418903C0c7669E702E4C0', symbol: 'ELE' },
+  { address: '0x65378b697853568dA9ff8EaB60C13E1Ee9f4a654', symbol: 'HUSKY' },
+  { address: '0x488F73cddDA1DE3664775fFd91623637383D6404', symbol: 'YTS' },
+  { address: '0xb27c8941a7Df8958A1778c0259f76D1F8B711C35', symbol: 'KLO' },
+  { address: '0x397bbd6a0e41bdf4c3f971731e180db8ad06ebc1', symbol: 'AVXT' },
+  { address: '0x9a928D7dcD8D7E5Cb6860B7768eC2D87B8934267', symbol: 'BAMBOO-V2' }
 ];
 
 // Token Logos:
@@ -114,7 +125,19 @@ exports.avax_token_logos = {
   'SPELL':              'https://assets.coingecko.com/coins/images/15861/small/abracadabra-3.png?1622544862',
   'BOOFI':              'https://assets.coingecko.com/coins/images/18727/small/xrbdgaJc_400x400.jpg?1633191904',
   'CRV':                'https://assets.coingecko.com/coins/images/12124/small/Curve.png?1597369484',
-  'renBTC':             'https://assets.coingecko.com/coins/images/11370/small/Bitcoin.jpg?1628072791'
+  'renBTC':             'https://assets.coingecko.com/coins/images/11370/small/Bitcoin.jpg?1628072791',
+  'SYN':                'https://assets.coingecko.com/coins/images/18024/small/syn.PNG?1630288945',
+  'BNB':                'https://assets.coingecko.com/coins/images/825/small/binance-coin-logo.png?1547034615',
+  'MIM':                'https://assets.coingecko.com/coins/images/16786/small/mimlogopng.png?1624979612',
+  'FRAX':               'https://assets.coingecko.com/coins/images/13422/small/frax_logo.png?1608476506',
+  'WET':                'https://assets.coingecko.com/coins/images/17353/small/cropped-logo-wombat.png?1627368904',
+  'ELE':                'https://assets.coingecko.com/coins/images/14541/small/elelogo_resized.png?1631114051',
+  'HUSKY':              'https://assets.coingecko.com/coins/images/17812/small/husky.png?1629721413',
+  'YTS':                'https://assets.coingecko.com/coins/images/14382/small/YTSCoin.png?1615786247',
+  'KLO':                'https://assets.coingecko.com/coins/images/18641/small/KALAO.jpg?1632752637',
+  'AVXT':               'https://assets.coingecko.com/coins/images/18336/small/avxt.PNG',
+  'BAMBOO-V2':          'https://assets.coingecko.com/coins/images/14558/small/bamboo.c043fd90.png?1617006262',
+  'Lydia-LP':           'https://assets.coingecko.com/coins/images/15195/small/512_pure_logo.png?1620083279'
 }
 
 // Token Blacklist:

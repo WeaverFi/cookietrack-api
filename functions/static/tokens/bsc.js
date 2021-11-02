@@ -96,7 +96,24 @@ exports.bsc_tokens = [
   { address: '0x20f663cea80face82acdfa3aae6862d246ce0333', symbol: 'DRIP' },
   { address: '0xD9A88f9b7101046786490bAF433f0f6aB3D753E2', symbol: 'BBQ' },
   { address: '0x03ff0ff224f904be3118461335064bb48df47938', symbol: 'ONE' },
-  { address: '0x7859B01BbF675d67Da8cD128a50D155cd881B576', symbol: 'XMS' }
+  { address: '0x7859B01BbF675d67Da8cD128a50D155cd881B576', symbol: 'XMS' },
+  { address: '0x2859e4544C4bB03966803b044A93563Bd2D0DD4D', symbol: 'SHIB' },
+  { address: '0xAD29AbB318791D579433D831ed122aFeAf29dcfe', symbol: 'FTM' },
+  { address: '0x04C747b40Be4D535fC83D09939fb0f626F32800B', symbol: 'ITAM' },
+  { address: '0x3203c9E46cA618C8C1cE5dC67e7e9D75f5da2377', symbol: 'MBOX' },
+  { address: '0x715D400F88C167884bbCc41C5FeA407ed4D2f8A0', symbol: 'AXS' },
+  { address: '0x4FA7163E153419E0E1064e418dd7A99314Ed27b6', symbol: 'HOTCROSS' },
+  { address: '0x4691937a7508860F876c9c0a2a617E7d9E945D4B', symbol: 'WOO' },
+  { address: '0x5A3010d4d8D3B5fB49f8B6E57FB9E48063f16700', symbol: 'BSCPAD' },
+  { address: '0x78650B139471520656b9E7aA7A5e9276814a38e9', symbol: 'BTCST' },
+  { address: '0xaEC945e04baF28b135Fa7c640f624f8D90F1C3a6', symbol: 'C98' },
+  { address: '0x1633b7157e7638C4d6593436111Bf125Ee74703F', symbol: 'SPS' },
+  { address: '0x20de22029ab63cf9A7Cf5fEB2b737Ca1eE4c82A6', symbol: 'CHESS' },
+  { address: '0x5a16E8cE8cA316407c6E6307095dc9540a8D62B3', symbol: 'BTR' },
+  { address: '0x039cB485212f996A9DBb85A9a75d898F94d38dA6', symbol: 'DEXE' },
+  { address: '0x928e55daB735aa8260AF3cEDadA18B5f70C72f1b', symbol: 'FRONT' },
+  { address: '0x2eD9a5C8C13b93955103B9a7C167B67Ef4d568a3', symbol: 'MASK' },
+  { address: '0x98936Bde1CF1BFf1e7a8012Cee5e2583851f2067', symbol: 'ANN' }
 ];
 
 // Token Logos:
@@ -228,7 +245,26 @@ exports.bsc_token_logos = {
   'DRIP':               'https://bscscan.com/token/images/driptoken_32.png',
   'BBQ':                'https://bscscan.com/token/images/barbequeswap_32.png',
   'ONE':                'https://etherscan.io/token/images/harmonyone_32.png',
-  'XMS':                'https://bscscan.com/token/images/marsecosystemtoken_32.png'
+  'XMS':                'https://bscscan.com/token/images/marsecosystemtoken_32.png',
+  'SHIB':               'https://bscscan.com/token/images/shibatoken_32.png',
+  'FTM':                'https://bscscan.com/token/images/ftm_32.png?=v2',
+  'ITAM':               'https://bscscan.com/token/images/itamgames_32.png',
+  'MBOX':               'https://bscscan.com/token/images/mobox_32.png',
+  'AXS':                'https://bscscan.com/token/images/axieinfinity_32.png',
+  'HOTCROSS':           'https://bscscan.com/token/images/hotcross_32.png',
+  'WOO':                'https://assets.coingecko.com/coins/images/12921/small/w2UiemF__400x400.jpg?1603670367',
+  'BSCPAD':             'https://bscscan.com/token/images/bscpad_32.png',
+  'BTCST':              'https://bscscan.com/token/images/btcst_32.png',
+  'C98':                'https://bscscan.com/token/images/coin98bsc_32.png',
+  'SPS':                'https://assets.coingecko.com/coins/images/17332/small/splinter.PNG?1627339560',
+  'CHESS':              'https://bscscan.com/token/images/tranchess_32.png',
+  'BTR':                'https://bscscan.com/token/images/bitruetoken_32.png',
+  'DEXE':               'https://bscscan.com/token/images/dexe_32.png',
+  'FRONT':              'https://bscscan.com/token/images/frontier_32.png?=v1',
+  'MASK':               'https://bscscan.com/token/images/mask_32.png',
+  'ANN':                'https://bscscan.com/token/images/annexfinance_32.png',
+  'APE-LP':             'https://bscscan.com/token/images/apeswap_32.png',
+  'WINGS-LP':           'https://bscscan.com/token/images/jetswap_32.png'
 }
 
 // Token Blacklist:
@@ -261,5 +297,6 @@ exports.bsc_token_blacklist = [
   '0x442b656f5a5c3dd09790951810c5a15ea5295b51',
   '0x58c10c8e2b80fdb5613778125ddd1c93f8cc8983',
   '0x4827405d992d4d42f9ff4bb9d13ec9b616a75278',
-  '0x0198be93b7cae38da7e2fd966946412cc36447bf'
+  '0x0198be93b7cae38da7e2fd966946412cc36447bf',
+  '0x5e48c354a5da2b0a8c203518d0fc7b9c58cc9329'
 ];

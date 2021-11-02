@@ -55,7 +55,18 @@ exports.poly_tokens = [
   { address: '0x385eeac5cb85a38a9a07a70c73e0a3271cfb54a7', symbol: 'GHST' },
   { address: '0x9a71012b13ca4d3d0cdc72a177df3ef03b0e76a3', symbol: 'BAL' },
   { address: '0x25788a1a171ec66da6502f9975a15b609ff54cf6', symbol: 'POOL' },
-  { address: '0x5d47baba0d66083c52009271faf3f50dcc01023c', symbol: 'BANANA' }
+  { address: '0x5d47baba0d66083c52009271faf3f50dcc01023c', symbol: 'BANANA' },
+  { address: '0x596eBE76e2DB4470966ea395B0d063aC6197A8C5', symbol: 'JRT' },
+  { address: '0x840195888Db4D6A99ED9F73FcD3B225Bb3cB1A79', symbol: 'SX' },
+  { address: '0x2Ab4f9aC80F33071211729e45Cfc346C1f8446d5', symbol: 'CGG' },
+  { address: '0x5a3064CbDCCF428ae907796cF6aD5a664CD7F3d8', symbol: 'PYQ' },
+  { address: '0xaECeBfcF604AD245Eaf0D5BD68459C3a7A6399c2', symbol: 'RAMP' },
+  { address: '0x9C78EE466D6Cb57A4d01Fd887D2b5dFb2D46288f', symbol: 'MUST' },
+  { address: '0x28C388FB1F4fa9F9eB445f0579666849EE5eeb42', symbol: 'BEL' },
+  { address: '0x2C89bbc92BD86F8075d1DEcc58C7F4E0107f286b', symbol: 'AVAX' },
+  { address: '0x7DfF46370e9eA5f0Bad3C4E29711aD50062EA7A4', symbol: 'SOL' },
+  { address: '0x61BDD9C7d4dF4Bf47A4508c0c8245505F2Af5b7b', symbol: 'AXS' },
+  { address: '0xe1c8f3d529bea8e3fa1fac5b416335a2f998ee1c', symbol: 'ELK' }
 ];
 
 // Token Logos:
@@ -137,7 +148,21 @@ exports.poly_token_logos = {
   'mooCurveAm3CRV':     'https://polygonscan.com/token/images/aave_32.png',
   'DFYN':               'https://polygonscan.com/token/images/dfyn_32.png',
   'BANANA':             'https://bscscan.com/token/images/apeswap_32.png',
-  'mooSushiUSDC-DAI':   'https://polygonscan.com/token/images/sushiswap-sushi_32.png'
+  'mooSushiUSDC-DAI':   'https://polygonscan.com/token/images/sushiswap-sushi_32.png',
+  'JRT':                'https://polygonscan.com/token/images/jarvis_28.png',
+  'SX':                 'https://polygonscan.com/token/images/sportx_32.png?v=3',
+  'CGG':                'https://assets.coingecko.com/coins/images/14326/small/cgg_logo.png?1615429976',
+  'PYQ':                'https://polygonscan.com/token/images/polyquity-pyq_32.png',
+  'RAMP':               'https://assets.coingecko.com/coins/images/12837/small/RAMP-Logo-v2-1000pxsq.png?1617952606',
+  'MUST':               'https://polygonscan.com/token/images/cometh_32.png',
+  'BEL':                'https://assets.coingecko.com/coins/images/12478/small/Bella.png?1602230054',
+  'AVAX':               'https://assets.coingecko.com/coins/images/12559/small/coin-round-red.png?1604021818',
+  'SOL':                'https://assets.coingecko.com/coins/images/4128/small/coinmarketcap-solana-200.png?1616489452',
+  'AXS':                'https://assets.coingecko.com/coins/images/13029/small/axie_infinity_logo.png?1604471082',
+  'PTaUSDC':            'https://polygonscan.com/token/images/centre-usdc_32.png',
+  'APE-LP':             'https://bscscan.com/token/images/apeswap_32.png',
+  'ELK':                'https://assets.coingecko.com/coins/images/17813/small/elk.png?1629336971',
+  'UNI-V2':             'https://polygonscan.com/token/images/uniswap_32.png'
 }
 
 // Token Blacklist:

@@ -173,7 +173,8 @@ exports.eth_token_logos = {
   'LPT':              'https://etherscan.io/token/images/livepeer_28.png',
   'POOL':             'https://etherscan.io/token/images/pooltogether_32.png',
   'CRV':              'https://etherscan.io/token/images/Curvefi_32.png',
-  'SPELL':            'https://assets.coingecko.com/coins/images/15861/small/abracadabra-3.png?1622544862'
+  'SPELL':            'https://assets.coingecko.com/coins/images/15861/small/abracadabra-3.png?1622544862',
+  'UNI-V2':           'https://etherscan.io/token/images/uniswap_32.png'
 }
 
 // Token Blacklist:
