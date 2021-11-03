@@ -162,4 +162,4 @@ app.get('/snowball/strats', async (req, res) => {
 // app.listen(3000, () => { console.log('\nAPI Up on 127.0.0.1:3000'); });
 
 // Exporting Express App:
-exports.app = functions.https.onRequest(app);
+exports.app = functions.runWith({ memory: '256MB', timeoutSeconds: 120 }).https.onRequest(app);
