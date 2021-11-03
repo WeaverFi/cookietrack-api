@@ -36,10 +36,7 @@ exports.get = async (req) => {
     if(ethers.utils.isAddress(wallet)) {
       try {
         const avax = new ethers.providers.JsonRpcProvider(rpc_avax);
-        let stakedBalance = await getStakedSNOB(avax, wallet);
-        if(stakedBalance) {
-          response.data.push(stakedBalance);
-        }
+        response.data.push(...(await getStakedSNOB(avax, wallet)));
         response.data.push(...(await getFarmBalances(avax, wallet)));
       } catch {
         response.status = 'error';
@@ -67,7 +64,9 @@ const getStakedSNOB = async (avax, wallet) => {
   let balance = parseInt(locked.amount);
   if(balance > 0) {
     let newToken = await addToken(chain, project, snob, balance, wallet, avax);
-    return newToken;
+    return [newToken];
+  } else {
+    return [];
   }
 }
 

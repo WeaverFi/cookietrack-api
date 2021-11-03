@@ -33,10 +33,7 @@ exports.get = async (req) => {
     if(ethers.utils.isAddress(wallet)) {
       try {
         const poly = new ethers.providers.JsonRpcProvider(rpc_poly);
-        let polyBalance = await getMATIC(poly, wallet);
-        if(polyBalance) {
-          response.data.push(polyBalance);
-        }
+        response.data.push(...(await getMATIC(poly, wallet)));
         response.data.push(...(await getTokenBalances(poly, wallet)));
       } catch {
         response.status = 'error';
@@ -62,7 +59,9 @@ const getMATIC = async (poly, wallet) => {
   let balance = parseInt(await poly.getBalance(wallet));
   if(balance > 0) {
     let newToken = await addNativeToken(chain, balance, wallet);
-    return newToken;
+    return [newToken];
+  } else {
+    return [];
   }
 }
 

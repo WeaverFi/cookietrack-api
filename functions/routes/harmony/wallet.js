@@ -33,10 +33,7 @@ exports.get = async (req) => {
     if(ethers.utils.isAddress(wallet)) {
       try {
         const one = new ethers.providers.JsonRpcProvider(rpc_one);
-        let oneBalance = await getONE(one, wallet);
-        if(oneBalance) {
-          response.data.push(oneBalance);
-        }
+        response.data.push(...(await getONE(one, wallet)));
         response.data.push(...(await getTokenBalances(one, wallet)));
       } catch {
         response.status = 'error';
@@ -62,7 +59,9 @@ const getONE = async (one, wallet) => {
   let balance = parseInt(await one.getBalance(wallet));
   if(balance > 0) {
     let newToken = await addNativeToken(chain, balance, wallet);
-    return newToken;
+    return [newToken];
+  } else {
+    return [];
   }
 }
 

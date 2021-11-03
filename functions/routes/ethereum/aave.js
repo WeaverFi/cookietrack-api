@@ -38,21 +38,12 @@ exports.get = async (req) => {
     if(ethers.utils.isAddress(wallet)) {
       try {
         const eth = new ethers.providers.JsonRpcProvider(rpc_eth);
-        let stakedAAVE = await getStakedAAVE(eth, wallet);
-        if(stakedAAVE) {
-          response.data.push(stakedAAVE);
-        }
-        let stakedLP = await getStakedLP(eth, wallet);
-        if(stakedLP) {
-          response.data.push(stakedLP);
-        }
+        response.data.push(...(await getStakedAAVE(eth, wallet)));
+        response.data.push(...(await getStakedLP(eth, wallet)));
         let markets = (await axios.get('https://aave.github.io/aave-addresses/mainnet.json')).data.proto;
         response.data.push(...(await getMarketBalances(eth, wallet, markets)));
         response.data.push(...(await getMarketDebt(eth, wallet, markets)));
-        let unclaimedIncentives = await getIncentives(eth, wallet);
-        if(unclaimedIncentives) {
-          response.data.push(unclaimedIncentives);
-        }
+        response.data.push(...(await getIncentives(eth, wallet)));
       } catch {
         response.status = 'error';
         response.data = [{error: 'Internal API Error'}];
@@ -78,7 +69,9 @@ const getStakedAAVE = async (eth, wallet) => {
   let balance = parseInt(await contract.balanceOf(wallet));
   if(balance > 0) {
     let newToken = await addToken(chain, project, aaveToken, balance, wallet, eth);
-    return newToken;
+    return [newToken];
+  } else {
+    return [];
   }
 }
 
@@ -89,7 +82,9 @@ const getStakedLP = async (eth, wallet) => {
   if(balance > 0) {
     let tokenAddress = await contract.STAKED_TOKEN();
     let newToken = await addAaveBLPToken(chain, project, tokenAddress, balance, wallet, eth);
-    return newToken;
+    return [newToken];
+  } else {
+    return [];
   }
 }
 
@@ -132,6 +127,8 @@ const getIncentives = async (eth, wallet) => {
   let rewards = parseInt(await incentivesContract.getUserUnclaimedRewards(wallet));
   if(rewards > 0) {
     let newToken = await addToken(chain, project, aaveToken, rewards, wallet, eth);
-    return newToken;
+    return [newToken];
+  } else {
+    return [];
   }
 }

@@ -33,10 +33,7 @@ exports.get = async (req) => {
     if(ethers.utils.isAddress(wallet)) {
       try {
         const ftm = new ethers.providers.JsonRpcProvider(rpc_ftm);
-        let ftmBalance = await getFTM(ftm, wallet);
-        if(ftmBalance) {
-          response.data.push(ftmBalance);
-        }
+        response.data.push(...(await getFTM(ftm, wallet)));
         response.data.push(...(await getTokenBalances(ftm, wallet)));
       } catch {
         response.status = 'error';
@@ -62,7 +59,9 @@ const getFTM = async (ftm, wallet) => {
   let balance = parseInt(await ftm.getBalance(wallet));
   if(balance > 0) {
     let newToken = await addNativeToken(chain, balance, wallet);
-    return newToken;
+    return [newToken];
+  } else {
+    return [];
   }
 }
 
