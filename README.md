@@ -21,7 +21,7 @@ The API that powers CookieTrack.
 
 ### Wallet Balances
 
-**/\<chain\>/wallet?address=\<wallet_address\>** - Returns a wallet's token balances.
+`/\<chain\>/wallet?address=\<wallet_address\>` - Returns a wallet's token balances.
 
 **Chains available:**
 - `ethereum`
@@ -33,7 +33,7 @@ The API that powers CookieTrack.
 
 ### Project Balances
 
-**/\<chain\>/\<project\>?address=\<wallet_address\>** - Returns a wallet's token balances in a specific project.
+`/\<chain\>/\<project\>?address=\<wallet_address\>` - Returns a wallet's token balances in a specific project.
 
 **Ethereum Projects available:**
 - `aave`
