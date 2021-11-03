@@ -21,7 +21,7 @@ The API that powers CookieTrack.
 
 ### Wallet Balances
 
-`/\<chain\>/wallet?address=\<wallet_address\>` - Returns a wallet's token balances.
+`/<chain>/wallet?address=<wallet_address>` - Returns a wallet's token balances.
 
 **Chains available:**
 - `ethereum`
@@ -31,9 +31,12 @@ The API that powers CookieTrack.
 - `avalanche`
 - `harmony`
 
+**Example:**
+`https://api.cookietrack.io/ethereum/wallet?address=0x143642531bA06843A70FB59B4455316c21036F7d`
+
 ### Project Balances
 
-`/\<chain\>/\<project\>?address=\<wallet_address\>` - Returns a wallet's token balances in a specific project.
+`/<chain>/<project>?address=<wallet_address>` - Returns a wallet's token balances in a specific project.
 
 **Ethereum Projects available:**
 - `aave`
@@ -55,6 +58,9 @@ The API that powers CookieTrack.
 
 **Solana Projects available:**
 - None.
+
+**Example:**
+`https://api.cookietrack.io/ethereum/aave?address=0x143642531bA06843A70FB59B4455316c21036F7d`
 
 ---
 
