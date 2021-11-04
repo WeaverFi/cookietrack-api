@@ -1,9 +1,10 @@
 {
   "name": "cookietrack-api",
   "description": "The API that powers CookieTrack.",
-  "version": "0.1.1",
+  "version": "0.1.3",
   "scripts": {
-    "start": "node functions/index.js"
+    "start": "node functions/index.js",
+    "update-snowball": "node functions/routes/partnerships/snowball/update.js"
   },
   "dependencies": {}
 }
