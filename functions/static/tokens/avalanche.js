@@ -57,7 +57,8 @@ exports.avax_tokens = [
   { address: '0xb27c8941a7Df8958A1778c0259f76D1F8B711C35', symbol: 'KLO' },
   { address: '0x397bbd6a0e41bdf4c3f971731e180db8ad06ebc1', symbol: 'AVXT' },
   { address: '0x9a928D7dcD8D7E5Cb6860B7768eC2D87B8934267', symbol: 'BAMBOO-V2' },
-  { address: '0x6e7f5c0b9f4432716bdd0a77a3601291b9d9e985', symbol: 'SPORE' }
+  { address: '0x6e7f5c0b9f4432716bdd0a77a3601291b9d9e985', symbol: 'SPORE' },
+  { address: '0xb2a85C5ECea99187A977aC34303b80AcbDdFa208', symbol: 'ROCO' }
 ];
 
 // Token Logos:
@@ -139,7 +140,8 @@ exports.avax_token_logos = {
   'AVXT':               'https://assets.coingecko.com/coins/images/18336/small/avxt.PNG',
   'BAMBOO-V2':          'https://assets.coingecko.com/coins/images/14558/small/bamboo.c043fd90.png?1617006262',
   'Lydia-LP':           'https://assets.coingecko.com/coins/images/15195/small/512_pure_logo.png?1620083279',
-  'SPORE':              'https://snowtrace.io/token/images/sporeearth_32.png'
+  'SPORE':              'https://snowtrace.io/token/images/sporeearth_32.png',
+  'ROCO':               'https://assets.coingecko.com/coins/images/19234/small/86109466.png?1634769540'
 }
 
 // Token Blacklist:
