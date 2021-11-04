@@ -56,7 +56,8 @@ exports.avax_tokens = [
   { address: '0x488F73cddDA1DE3664775fFd91623637383D6404', symbol: 'YTS' },
   { address: '0xb27c8941a7Df8958A1778c0259f76D1F8B711C35', symbol: 'KLO' },
   { address: '0x397bbd6a0e41bdf4c3f971731e180db8ad06ebc1', symbol: 'AVXT' },
-  { address: '0x9a928D7dcD8D7E5Cb6860B7768eC2D87B8934267', symbol: 'BAMBOO-V2' }
+  { address: '0x9a928D7dcD8D7E5Cb6860B7768eC2D87B8934267', symbol: 'BAMBOO-V2' },
+  { address: '0x6e7f5c0b9f4432716bdd0a77a3601291b9d9e985', symbol: 'SPORE' }
 ];
 
 // Token Logos:
@@ -137,7 +138,8 @@ exports.avax_token_logos = {
   'KLO':                'https://assets.coingecko.com/coins/images/18641/small/KALAO.jpg?1632752637',
   'AVXT':               'https://assets.coingecko.com/coins/images/18336/small/avxt.PNG',
   'BAMBOO-V2':          'https://assets.coingecko.com/coins/images/14558/small/bamboo.c043fd90.png?1617006262',
-  'Lydia-LP':           'https://assets.coingecko.com/coins/images/15195/small/512_pure_logo.png?1620083279'
+  'Lydia-LP':           'https://assets.coingecko.com/coins/images/15195/small/512_pure_logo.png?1620083279',
+  'SPORE':              'https://snowtrace.io/token/images/sporeearth_32.png'
 }
 
 // Token Blacklist:
