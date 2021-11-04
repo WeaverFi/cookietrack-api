@@ -3,6 +3,8 @@
 
 The API that powers CookieTrack.
 
+![CodeQL](https://github.com/Ncookiez/cookietrack-api/actions/workflows/codeql-analysis.yml/badge.svg)
+
 ---
 
 ## Tech Stack
