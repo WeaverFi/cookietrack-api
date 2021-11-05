@@ -27,6 +27,7 @@ const one_wallet = require('./routes/harmony/wallet.js');
 // Partnership Routes:
 const snowball_wallet = require('./routes/partnerships/snowball/wallet.js');
 const snowball_strats = require('./routes/partnerships/snowball/strats.js');
+const snowball_deposits = require('./routes/partnerships/snowball/deposits.js');
 
 // Initializing Express Server:
 const app = express();
@@ -154,6 +155,9 @@ app.get('/snowball/wallet', async (req, res) => {
 });
 app.get('/snowball/strats', async (req, res) => {
   res.end(await snowball_strats.get(req));
+});
+app.get('/snowball/deposits', async (req, res) => {
+  res.end(await snowball_deposits.get(req));
 });
 
 /* ========================================================================================================================================================================= */

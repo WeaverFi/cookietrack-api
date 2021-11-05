@@ -83,6 +83,7 @@ const getFarmBalances = async (avax, wallet) => {
           type: 'token',
           symbol: 's4D',
           address: farm.token,
+          frozenAddress: farm.token,
           balance: balance / (10**18),
           price: parseInt(await controllerContract.getVirtualPrice()) / (10**18),
           logo: getTokenLogo(chain, 's4D')
@@ -112,6 +113,7 @@ const getFarmBalances = async (avax, wallet) => {
             type: 'lpToken',
             symbol: await contract.symbol(),
             address: token,
+            frozenAddress: farm.token,
             balance: trueBalance / (10 ** decimals),
             token0: {
               symbol: symbol0,
@@ -142,6 +144,7 @@ const getFarmBalances = async (avax, wallet) => {
             type: 'token',
             symbol: symbol,
             address: token,
+            frozenAddress: farm.token,
             balance: (balance * (exchangeRatio / (10**18))) / (10 ** decimals),
             price: multiplier * (await getTokenPrice(chain, underlyingToken, decimals)),
             logo: getTokenLogo(chain, symbol)
@@ -155,6 +158,7 @@ const getFarmBalances = async (avax, wallet) => {
             type: 'token',
             symbol: symbol,
             address: token,
+            frozenAddress: farm.token,
             balance: (balance * (exchangeRatio / (10**18))) / (10 ** decimals),
             price: await getTokenPrice(chain, token, decimals),
             logo: getTokenLogo(chain, symbol)
