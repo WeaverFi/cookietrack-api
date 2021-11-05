@@ -59,7 +59,13 @@ The API that powers CookieTrack.
 
 ---
 
-## Local Development:
+## Contributing
+
+Contribution guidelines can be found [here](CONTRIBUTING.md).
+
+---
+
+## Local Development
 
 Uncomment the line after 'Starting Local Server' on `functions/index.js`.
 

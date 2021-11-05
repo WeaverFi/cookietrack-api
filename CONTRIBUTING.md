@@ -16,6 +16,8 @@ Want to create a new route for a dapp that is currently not supported? Feel free
 - Any static files such as ABIs or token logos updated for the new dapp.
 - A file in `/routes/` with your new API route, as a .js file.
 
+There is a route template at `/functions/routes/template.js` to help new contributors.
+
 If your PR isn't reviewed straight away, reach out in our [Discord server](https://discord.com/invite/DzADcq7y75)!
 
 ## Donations
