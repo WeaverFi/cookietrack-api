@@ -25,6 +25,7 @@ const avax_snowball = require('./routes/avalanche/snowball.js');
 const one_wallet = require('./routes/harmony/wallet.js');
 
 // Partnership Routes:
+const snowball_index = require('./routes/partnerships/snowball/index.js');
 const snowball_wallet = require('./routes/partnerships/snowball/wallet.js');
 const snowball_strats = require('./routes/partnerships/snowball/strats.js');
 const snowball_deposits = require('./routes/partnerships/snowball/deposits.js');
@@ -150,6 +151,9 @@ app.get('/avalanche/snowball', async (req, res) => {
 /* ========================================================================================================================================================================= */
 
 // Snowball Partnership Endpoints:
+app.get('/snowball', async (req, res) => {
+  res.end(await snowball_index.get(req));
+});
 app.get('/snowball/wallet', async (req, res) => {
   res.end(await snowball_wallet.get(req));
 });

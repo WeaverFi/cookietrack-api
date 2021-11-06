@@ -1,6 +1,7 @@
 
 // Required Packages:
 const { ethers } = require('ethers');
+const axios = require('axios');
 
 // Required Variables:
 const { rpc_avax } = require('../../../static/RPCs.js');
@@ -14,6 +15,8 @@ const farms = require('./farms.json').farms;
 
 // Initializations:
 const chain = 'avax';
+const snob = '0xC38f41A296A4493Ff429F1238e030924A1542e50';
+const xsnob = '0x83952E7ab4aca74ca96217D6F8f7591BEaD6D64E';
 
 /* ========================================================================================================================================================================= */
 
@@ -57,17 +60,42 @@ exports.get = async (req) => {
 
 // Function to get Snowball data:
 const getData = async (avax, wallet) => {
+  let balance = await getSNOB(avax, wallet);
+  let stakedSNOB = await getStakedSNOB(avax, wallet);
   let farmData = await getFarmBalances(avax, wallet);
   let data = {
+    snob: balance,
+    staked: {
+      amount: stakedSNOB.balance,
+      end: stakedSNOB.unlock
+    },
     strategyBalances: farmData.balances,
+    deposits: farmData.deposits,
     earnedSNOB: farmData.snobRewards
   }
   return data;
 }
 
+// Function to get wallet SNOB balance:
+const getSNOB = async (avax, wallet) => {
+  let tokenContract = new ethers.Contract(snob, minABI, avax);
+  let balance = parseInt(await tokenContract.balanceOf(wallet)) / (10**18);
+  return balance;
+}
+
+// Function to get staked SNOB balance:
+const getStakedSNOB = async (avax, wallet) => {
+  let stakingContract = new ethers.Contract(xsnob, snowball.stakingABI, avax);
+  let locked = await stakingContract.locked(wallet);
+  let balance = parseInt(locked.amount) / (10**18);
+  let unlock = parseInt(locked.end);
+  return { balance, unlock };
+}
+
 // Function to get farm balances:
 const getFarmBalances = async (avax, wallet) => {
   let balances = [];
+  let deposits = [];
   let snobRewards = 0;
   let promises = farms.map(farm => (async () => {
     let gaugeContract = new ethers.Contract(farm.gauge, snowball.gaugeABI, avax);
@@ -164,6 +192,17 @@ const getFarmBalances = async (avax, wallet) => {
           }
           balances.push(newToken);
         }
+        let deposit = {
+          asset: symbol,
+          frozenAddress: farm.token,
+          value: 0,
+          actions: []
+        }
+        deposit.actions = await getFarmTXs(wallet, deposit.frozenAddress, token);
+        deposit.actions.forEach(action => {
+          action.direction === 'deposit' ? deposit.value += action.value : deposit.value -= action.value;
+        });
+        deposits.push(deposit);
       }
       let rewards = parseInt(await gaugeContract.earned(wallet));
       if(rewards > 0) {
@@ -172,5 +211,41 @@ const getFarmBalances = async (avax, wallet) => {
     }
   })());
   await Promise.all(promises);
-  return { balances, snobRewards };
+  return { balances, deposits, snobRewards };
+}
+
+// Function to get farm transactions:
+const getFarmTXs = async (wallet, frozenAddress, underlyingAddress) => {
+  let txs = [];
+  let page = 0;
+  let hasNextPage = false;
+  do {
+    let apiQuery = 'https://api.covalenthq.com/v1/43114/address/' + wallet + '/transfers_v2/?contract-address=' + underlyingAddress + '&page-size=100&page-number=' + page++ + '&key=ckey_0b5c83bec14443ec943c27d7450';
+    let response = await axios.get(apiQuery);
+    if(!response.data.error) {
+      hasNextPage = response.data.data.pagination.has_more;
+      response.data.data.items.forEach(async (tx) => {
+        if(tx.successful) {
+          tx.transfers.forEach(transfer => {
+            if(transfer.transfer_type === 'OUT' && transfer.to_address.toLowerCase() === frozenAddress.toLowerCase()) {
+              txs.push({
+                direction: 'deposit',
+                hash: tx.tx_hash,
+                time: (new Date(tx.block_signed_at)).getTime() / 1000,
+                value: parseInt(transfer.delta) / (10 ** transfer.contract_decimals)
+              });
+            } else if(transfer.transfer_type === 'IN' && transfer.from_address.toLowerCase() === frozenAddress.toLowerCase()) {
+              txs.push({
+                direction: 'withdrawal',
+                hash: tx.tx_hash,
+                time: (new Date(tx.block_signed_at)).getTime() / 1000,
+                value: parseInt(transfer.delta) / (10 ** transfer.contract_decimals)
+              });
+            }
+          });
+        }
+      });
+    }
+  } while(hasNextPage);
+  return txs;
 }

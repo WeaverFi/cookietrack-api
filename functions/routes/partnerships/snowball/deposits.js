@@ -68,18 +68,20 @@ const getDeposits = async (avax, wallet) => {
     if(balance > 0) {
       let farmContract = new ethers.Contract(farm.token, snowball.farmABI, avax);
       let symbol = await farmContract.symbol();
-      let underlyingAddress = symbol === 's4D' ? farm.token : await farmContract.token();
-      let deposit = {
-        asset: symbol,
-        frozenAddress: farm.token,
-        value: 0,
-        actions: []
+      if(symbol != 's4D') {
+        let underlyingAddress = await farmContract.token();
+        let deposit = {
+          asset: symbol,
+          frozenAddress: farm.token,
+          value: 0,
+          actions: []
+        }
+        deposit.actions = await getFarmTXs(wallet, deposit.frozenAddress, underlyingAddress);
+        deposit.actions.forEach(action => {
+          action.direction === 'deposit' ? deposit.value += action.value : deposit.value -= action.value;
+        });
+        deposits.push(deposit);
       }
-      deposit.actions = await getFarmTXs(wallet, deposit.frozenAddress, underlyingAddress);
-      deposit.actions.forEach(action => {
-        action.direction === 'deposit' ? deposit.value += action.value : deposit.value -= action.value;
-      });
-      deposits.push(deposit);
     }
   })());
   await Promise.all(promises);
