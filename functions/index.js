@@ -105,29 +105,46 @@ app.get('/bsc/pancakeswap', async (req, res) => {
 // AutoFarm (Polygon):
 // AutoFarm (Fantom):
 // AutoFarm (Avalanche):
+
 // Compound (Ethereum):
+
 // Yearn (Ethereum):
+
 // Balancer (Ethereum):
 // Balancer (Polygon):
+
 // Belt (BSC):
+
 // Venus (BSC):
+
 // Beefy (BSC):
 // Beefy (Polygon):
 // Beefy (Fantom):
 // Beefy (Avalanche):
 // Beefy (Harmony):
+
 // Wault (BSC):
 // Wault (Polygon):
+
 // QuickSwap (Polygon):
+
 // SpookySwap (Fantom):
+
 // BenQi (Avalanche):
+
 // Pangolin (Avalanche):
+
 // HoneyFarm (BSC):
+
 // YieldYak (Avalanche):
+
 // Trader Joe (Avalanche):
+
 // mStable (Ethereum):
 // mStable (Polygon):
+
 // Penguin (Avalanche):
+
 // Scream (Fantom):
 
 // Snowball (Avalanche):
@@ -136,31 +153,42 @@ app.get('/avalanche/snowball', async (req, res) => {
 });
 
 // Cycle (Avalanche):
+
 // PoolTogether (Ethereum):
 // PoolTogether (BSC):
 // PoolTogether (Polygon):
+
 // Lydia (Avalanche):
+
 // Teddy (Avalanche):
+
 // Everest (Avalanche):
+
 // ApeSwap (BSC):
 // ApeSwap (Polygon):
+
 // SushiSwap (Ethereum):
 // SushiSwap (BSC):
 // SushiSwap (Polygon):
 // SushiSwap (Fantom):
 // SushiSwap (Avalanche):
 // SushiSwap (Harmony):
+
 // Cream (Ethereum):
 // Cream (BSC):
 // Cream (Polygon):
 // Cream (Fantom):
 // Cream (Avalanche):
+
 // Curve (Ethereum):
 // Curve (Polygon):
 // Curve (Fantom):
 // Curve (Avalanche):
+
 // Iron (Polygon):
+
 // Wonderland (Avalanche):
+
 // Bouje (Fantom):
 
 /* ========================================================================================================================================================================= */
