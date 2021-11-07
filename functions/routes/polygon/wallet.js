@@ -1,14 +1,10 @@
 
-// Required Packages:
+// Imports:
 const { ethers } = require('ethers');
-
-// Required Variables:
-const { rpc_poly } = require('../../static/RPCs.js');
+const { rpcs } = require('../../static/RPCs.js');
 const { minABI } = require('../../static/ABIs.js');
 const { poly_tokens } = require('../../static/tokens/polygon.js');
-
-// Required Functions:
-const { addNativeToken, addToken } = require('../../static/functions.js');
+const { query, addNativeToken, addToken } = require('../../static/functions.js');
 
 // Initializations:
 const chain = 'poly';
@@ -32,9 +28,8 @@ exports.get = async (req) => {
   if(wallet != undefined) {
     if(ethers.utils.isAddress(wallet)) {
       try {
-        const poly = new ethers.providers.JsonRpcProvider(rpc_poly);
-        response.data.push(...(await getMATIC(poly, wallet)));
-        response.data.push(...(await getTokenBalances(poly, wallet)));
+        response.data.push(...(await getMATIC(wallet)));
+        response.data.push(...(await getTokenBalances(wallet)));
       } catch {
         response.status = 'error';
         response.data = [{error: 'Internal API Error'}];
@@ -55,24 +50,35 @@ exports.get = async (req) => {
 /* ========================================================================================================================================================================= */
 
 // Function to get native wallet balance:
-const getMATIC = async (poly, wallet) => {
-  let balance = parseInt(await poly.getBalance(wallet));
-  if(balance > 0) {
-    let newToken = await addNativeToken(chain, balance, wallet);
-    return [newToken];
-  } else {
-    return [];
+const getMATIC = async (wallet) => {
+  try {
+    let poly = new ethers.providers.JsonRpcProvider(rpcs.poly);
+    let balance = parseInt(await poly.getBalance(wallet));
+    if(balance > 0) {
+      let newToken = await addNativeToken(chain, balance, wallet);
+      return [newToken];
+    } else {
+      return [];
+    }
+  } catch {
+    let poly = new ethers.providers.JsonRpcProvider(rpcs.backups.poly);
+    let balance = parseInt(await poly.getBalance(wallet));
+    if(balance > 0) {
+      let newToken = await addNativeToken(chain, balance, wallet);
+      return [newToken];
+    } else {
+      return [];
+    }
   }
 }
 
 // Function to get token balances:
-const getTokenBalances = async (poly, wallet) => {
+const getTokenBalances = async (wallet) => {
   let tokens = [];
   let promises = poly_tokens.map(token => (async () => {
-    let tokenContract = new ethers.Contract(token.address, minABI, poly);
-    let balance = parseInt(await tokenContract.balanceOf(wallet));
+    let balance = parseInt(await query(chain, token.address, minABI, 'balanceOf', [wallet]));
     if(balance > 0) {
-      let newToken = await addToken(chain, 'wallet', token.address, balance, wallet, poly);
+      let newToken = await addToken(chain, 'wallet', token.address, balance, wallet);
       tokens.push(newToken);
     }
   })());

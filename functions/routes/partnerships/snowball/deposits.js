@@ -1,14 +1,13 @@
 
-// Required Packages:
+// Imports:
 const { ethers } = require('ethers');
 const axios = require('axios');
-
-// Required Variables:
-const { rpc_avax } = require('../../../static/RPCs.js');
 const { snowball } = require('../../../static/ABIs.js');
-
-// Required Gauge List:
+const { query } = require('../../../static/functions.js');
 const farms = require('./farms.json').farms;
+
+// Initializations:
+const chain = 'avax';
 
 /* ========================================================================================================================================================================= */
 
@@ -29,8 +28,7 @@ exports.get = async (req) => {
   if(wallet != undefined) {
     if(ethers.utils.isAddress(wallet)) {
       try {
-        const avax = new ethers.providers.JsonRpcProvider(rpc_avax);
-        response.data.push(await getData(avax, wallet));
+        response.data.push(await getData(wallet));
       } catch {
         response.status = 'error';
         response.data = [{error: 'Internal API Error'}];
@@ -51,8 +49,8 @@ exports.get = async (req) => {
 /* ========================================================================================================================================================================= */
 
 // Function to get Snowball data:
-const getData = async (avax, wallet) => {
-  let deposits = await getDeposits(avax, wallet);
+const getData = async (wallet) => {
+  let deposits = await getDeposits(wallet);
   let data = {
     deposits
   }
@@ -60,16 +58,14 @@ const getData = async (avax, wallet) => {
 }
 
 // Function to get deposits in farms:
-const getDeposits = async (avax, wallet) => {
+const getDeposits = async (wallet) => {
   let deposits = [];
   let promises = farms.map(farm => (async () => {
-    let gaugeContract = new ethers.Contract(farm.gauge, snowball.gaugeABI, avax);
-    let balance = parseInt(await gaugeContract.balanceOf(wallet));
+    let balance = parseInt(await query(chain, farm.gauge, snowball.gaugeABI, 'balanceOf', [wallet]));
     if(balance > 0) {
-      let farmContract = new ethers.Contract(farm.token, snowball.farmABI, avax);
-      let symbol = await farmContract.symbol();
+      let symbol = await query(chain, farm.token, snowball.farmABI, 'symbol', []);
       if(symbol != 's4D') {
-        let underlyingAddress = await farmContract.token();
+        let underlyingAddress = await query(chain, farm.token, snowball.farmABI, 'token', []);
         let deposit = {
           asset: symbol,
           frozenAddress: farm.token,

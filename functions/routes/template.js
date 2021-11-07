@@ -1,22 +1,13 @@
 
-// Required Packages:
+// Imports:
 const { ethers } = require('ethers');
-
-// Required Variables:
-// <TODO - Change RPC required based on chain used, example: 'rpc_bsc', 'rpc_avax', etc>
-const { rpc_eth } = require('../../static/RPCs.js');
-// <TODO - Add any ABIs required, example below>
-const { minABI, aave } = require('../../static/ABIs.js');
-
-// Required Functions:
-// <TODO - Add any functions required, addToken and addLPToken are the most common ones>
-const { addToken, addLPToken } = require('../../static/functions.js');
+const { minABI, aave } = require('../../static/ABIs.js'); // <TODO> Edit to include all the ABIs you need.
+const { query, addToken, addLPToken } = require('../../static/functions.js'); // <TODO> Edit to include all functions you need.
 
 // Initializations:
-// <TODO - Change values according to the route being added>
-const chain = 'eth';
-const project = 'aave';
-// <TODO - Initialize any hard-coded addresses such as on-chain registries, token addresses, etc>
+const chain = 'eth'; // <TODO> Edit to be the chain the route is dependent on.
+const project = 'aave'; // <TODO> Edit to be the name of the dapp being added.
+// <TODO> Initialize any other hard-coded addresses such as on-chain registries, token addresses, etc.
 
 /* ========================================================================================================================================================================= */
 
@@ -37,10 +28,7 @@ exports.get = async (req) => {
   if(wallet != undefined) {
     if(ethers.utils.isAddress(wallet)) {
       try {
-        // <TODO - Change the next line with the appropriate ethers provider setup>
-        const eth = new ethers.providers.JsonRpcProvider(rpc_eth);
-        // <TODO - Add data to response, example below>
-        response.data.push(...(await getSomething(eth, wallet)));
+        response.data.push(...(await getSomething(wallet))); // <TODO> Edit to include all data necessary in response. You can have multiples of these.
       } catch {
         response.status = 'error';
         response.data = [{error: 'Internal API Error'}];
@@ -60,13 +48,11 @@ exports.get = async (req) => {
 
 /* ========================================================================================================================================================================= */
 
-// <TODO - Write the functions needed to fetch the route data here, example below - these should always return an array>
 // Example function:
-const getSomething = async (eth, wallet) => {
-  // let contract = new ethers.Contract(aaveStaking, minABI, eth);
-  // let balance = parseInt(await contract.balanceOf(wallet));
+const getSomething = async (wallet) => {
+  // let balance = parseInt(await query(chain, address, minABI, 'balanceOf', [wallet]));
   // if(balance > 0) {
-  //   let newToken = await addToken(chain, project, aaveToken, balance, wallet, eth);
+  //   let newToken = await addToken(chain, project, aaveToken, balance, wallet);
   //   return [newToken];
   // } else {
   //   return [];

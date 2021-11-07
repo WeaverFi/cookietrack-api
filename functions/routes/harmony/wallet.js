@@ -1,14 +1,10 @@
 
-// Required Packages:
+// Imports:
 const { ethers } = require('ethers');
-
-// Required Variables:
-const { rpc_one } = require('../../static/RPCs.js');
+const { rpcs } = require('../../static/RPCs.js');
 const { minABI } = require('../../static/ABIs.js');
 const { one_tokens } = require('../../static/tokens/harmony.js');
-
-// Required Functions:
-const { addNativeToken, addToken } = require('../../static/functions.js');
+const { query, addNativeToken, addToken } = require('../../static/functions.js');
 
 // Initializations:
 const chain = 'one';
@@ -32,9 +28,8 @@ exports.get = async (req) => {
   if(wallet != undefined) {
     if(ethers.utils.isAddress(wallet)) {
       try {
-        const one = new ethers.providers.JsonRpcProvider(rpc_one);
-        response.data.push(...(await getONE(one, wallet)));
-        response.data.push(...(await getTokenBalances(one, wallet)));
+        response.data.push(...(await getONE(wallet)));
+        response.data.push(...(await getTokenBalances(wallet)));
       } catch {
         response.status = 'error';
         response.data = [{error: 'Internal API Error'}];
@@ -55,24 +50,35 @@ exports.get = async (req) => {
 /* ========================================================================================================================================================================= */
 
 // Function to get native wallet balance:
-const getONE = async (one, wallet) => {
-  let balance = parseInt(await one.getBalance(wallet));
-  if(balance > 0) {
-    let newToken = await addNativeToken(chain, balance, wallet);
-    return [newToken];
-  } else {
-    return [];
+const getONE = async (wallet) => {
+  try {
+    let one = new ethers.providers.JsonRpcProvider(rpcs.one);
+    let balance = parseInt(await one.getBalance(wallet));
+    if(balance > 0) {
+      let newToken = await addNativeToken(chain, balance, wallet);
+      return [newToken];
+    } else {
+      return [];
+    }
+  } catch {
+    let one = new ethers.providers.JsonRpcProvider(rpcs.backups.one);
+    let balance = parseInt(await one.getBalance(wallet));
+    if(balance > 0) {
+      let newToken = await addNativeToken(chain, balance, wallet);
+      return [newToken];
+    } else {
+      return [];
+    }
   }
 }
 
 // Function to get token balances:
-const getTokenBalances = async (one, wallet) => {
+const getTokenBalances = async (wallet) => {
   let tokens = [];
   let promises = one_tokens.map(token => (async () => {
-    let tokenContract = new ethers.Contract(token.address, minABI, one);
-    let balance = parseInt(await tokenContract.balanceOf(wallet));
+    let balance = parseInt(await query(chain, token.address, minABI, 'balanceOf', [wallet]));
     if(balance > 0) {
-      let newToken = await addToken(chain, 'wallet', token.address, balance, wallet, one);
+      let newToken = await addToken(chain, 'wallet', token.address, balance, wallet);
       tokens.push(newToken);
     }
   })());

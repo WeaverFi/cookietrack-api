@@ -1,14 +1,9 @@
 
-// Required Packages:
+// Imports:
 const { ethers } = require('ethers');
 const axios = require('axios');
-
-// Required Variables:
-const { rpc_eth } = require('../../static/RPCs.js');
 const { minABI, aave } = require('../../static/ABIs.js');
-
-// Required Functions:
-const { addToken, addAaveBLPToken, addDebtToken } = require('../../static/functions.js');
+const { query, addToken, addAaveBLPToken, addDebtToken } = require('../../static/functions.js');
 
 // Initializations:
 const chain = 'eth';
@@ -37,13 +32,12 @@ exports.get = async (req) => {
   if(wallet != undefined) {
     if(ethers.utils.isAddress(wallet)) {
       try {
-        const eth = new ethers.providers.JsonRpcProvider(rpc_eth);
-        response.data.push(...(await getStakedAAVE(eth, wallet)));
-        response.data.push(...(await getStakedLP(eth, wallet)));
+        response.data.push(...(await getStakedAAVE(wallet)));
+        response.data.push(...(await getStakedLP(wallet)));
         let markets = (await axios.get('https://aave.github.io/aave-addresses/mainnet.json')).data.proto;
-        response.data.push(...(await getMarketBalances(eth, wallet, markets)));
-        response.data.push(...(await getMarketDebt(eth, wallet, markets)));
-        response.data.push(...(await getIncentives(eth, wallet)));
+        response.data.push(...(await getMarketBalances(wallet, markets)));
+        response.data.push(...(await getMarketDebt(wallet, markets)));
+        response.data.push(...(await getIncentives(wallet)));
       } catch {
         response.status = 'error';
         response.data = [{error: 'Internal API Error'}];
@@ -64,9 +58,8 @@ exports.get = async (req) => {
 /* ========================================================================================================================================================================= */
 
 // Function to get staked AAVE balance:
-const getStakedAAVE = async (eth, wallet) => {
-  let contract = new ethers.Contract(aaveStaking, minABI, eth);
-  let balance = parseInt(await contract.balanceOf(wallet));
+const getStakedAAVE = async (wallet) => {
+  let balance = parseInt(await query(chain, aaveStaking, minABI, 'balanceOf', [wallet]));
   if(balance > 0) {
     let newToken = await addToken(chain, project, aaveToken, balance, wallet, eth);
     return [newToken];
@@ -76,11 +69,10 @@ const getStakedAAVE = async (eth, wallet) => {
 }
 
 // Function to get staked LP balance:
-const getStakedLP = async (eth, wallet) => {
-  let contract = new ethers.Contract(lpStaking, aave.stakingABI, eth);
-  let balance = parseInt(await contract.balanceOf(wallet));
+const getStakedLP = async (wallet) => {
+  let balance = parseInt(await query(chain, lpStaking, aave.stakingABI, 'balanceOf', [wallet]));
   if(balance > 0) {
-    let tokenAddress = await contract.STAKED_TOKEN();
+    let tokenAddress = await query(chain, lpStaking, aave.stakingABI, 'STAKED_TOKEN', []);
     let newToken = await addAaveBLPToken(chain, project, tokenAddress, balance, wallet, eth);
     return [newToken];
   } else {
@@ -89,11 +81,10 @@ const getStakedLP = async (eth, wallet) => {
 }
 
 // Function to get lending market balances:
-const getMarketBalances = async (eth, wallet, markets) => {
+const getMarketBalances = async (wallet, markets) => {
   let balances = [];
   let promises = markets.map(market => (async () => {
-    let contract = new ethers.Contract(market.aTokenAddress, minABI, eth);
-    let balance = parseInt(await contract.balanceOf(wallet));
+    let balance = parseInt(await query(chain, market.aTokenAddress, minABI, 'balanceOf', [wallet]));
     if(balance > 0) {
       let newToken = await addToken(chain, project, market.address, balance, wallet, eth);
       balances.push(newToken);
@@ -104,13 +95,11 @@ const getMarketBalances = async (eth, wallet, markets) => {
 }
 
 // Function to get lending market debt:
-const getMarketDebt = async (eth, wallet, markets) => {
+const getMarketDebt = async (wallet, markets) => {
   let debt = [];
   let promises = markets.map(market => (async () => {
-    let stableContract = new ethers.Contract(market.stableDebtTokenAddress, minABI, eth);
-    let variableContract = new ethers.Contract(market.variableDebtTokenAddress, minABI, eth);
-    let stableDebt = parseInt(await stableContract.balanceOf(wallet));
-    let variableDebt = parseInt(await variableContract.balanceOf(wallet));
+    let stableDebt = parseInt(await query(chain, market.stableDebtTokenAddress, minABI, 'balanceOf', [wallet]));
+    let variableDebt = parseInt(await query(chain, market.variableDebtTokenAddress, minABI, 'balanceOf', [wallet]));
     let totalDebt = stableDebt + variableDebt;
     if(totalDebt > 0) {
       let newToken = await addDebtToken(chain, project, market.address, totalDebt, wallet, eth);
@@ -122,9 +111,8 @@ const getMarketDebt = async (eth, wallet, markets) => {
 }
 
 // Function to get unclaimed incentives:
-const getIncentives = async (eth, wallet) => {
-  let incentivesContract = new ethers.Contract(incentives, aave.incentivesABI, eth);
-  let rewards = parseInt(await incentivesContract.getUserUnclaimedRewards(wallet));
+const getIncentives = async (wallet) => {
+  let rewards = parseInt(await query(chain, incentives, aave.incentivesABI, 'getUserUnclaimedRewards', [wallet]));
   if(rewards > 0) {
     let newToken = await addToken(chain, project, aaveToken, rewards, wallet, eth);
     return [newToken];

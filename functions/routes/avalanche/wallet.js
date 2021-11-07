@@ -1,14 +1,10 @@
 
-// Required Packages:
+// Imports:
 const { ethers } = require('ethers');
-
-// Required Variables:
-const { rpc_avax } = require('../../static/RPCs.js');
+const { rpcs } = require('../../static/RPCs.js');
 const { minABI } = require('../../static/ABIs.js');
 const { avax_tokens } = require('../../static/tokens/avalanche.js');
-
-// Required Functions:
-const { addNativeToken, addToken } = require('../../static/functions.js');
+const { query, addNativeToken, addToken } = require('../../static/functions.js');
 
 // Initializations:
 const chain = 'avax';
@@ -32,9 +28,8 @@ exports.get = async (req) => {
   if(wallet != undefined) {
     if(ethers.utils.isAddress(wallet)) {
       try {
-        const avax = new ethers.providers.JsonRpcProvider(rpc_avax);
-        response.data.push(...(await getAVAX(avax, wallet)));
-        response.data.push(...(await getTokenBalances(avax, wallet)));
+        response.data.push(...(await getAVAX(wallet)));
+        response.data.push(...(await getTokenBalances(wallet)));
       } catch {
         response.status = 'error';
         response.data = [{error: 'Internal API Error'}];
@@ -55,24 +50,35 @@ exports.get = async (req) => {
 /* ========================================================================================================================================================================= */
 
 // Function to get native wallet balance:
-const getAVAX = async (avax, wallet) => {
-  let balance = parseInt(await avax.getBalance(wallet));
-  if(balance > 0) {
-    let newToken = await addNativeToken(chain, balance, wallet);
-    return [newToken];
-  } else {
-    return [];
+const getAVAX = async (wallet) => {
+  try {
+    let avax = new ethers.providers.JsonRpcProvider(rpcs.avax);
+    let balance = parseInt(await avax.getBalance(wallet));
+    if(balance > 0) {
+      let newToken = await addNativeToken(chain, balance, wallet);
+      return [newToken];
+    } else {
+      return [];
+    }
+  } catch {
+    let avax = new ethers.providers.JsonRpcProvider(rpcs.backups.avax);
+    let balance = parseInt(await avax.getBalance(wallet));
+    if(balance > 0) {
+      let newToken = await addNativeToken(chain, balance, wallet);
+      return [newToken];
+    } else {
+      return [];
+    }
   }
 }
 
 // Function to get token balances:
-const getTokenBalances = async (avax, wallet) => {
+const getTokenBalances = async (wallet) => {
   let tokens = [];
   let promises = avax_tokens.map(token => (async () => {
-    let tokenContract = new ethers.Contract(token.address, minABI, avax);
-    let balance = parseInt(await tokenContract.balanceOf(wallet));
+    let balance = parseInt(await query(chain, token.address, minABI, 'balanceOf', [wallet]));
     if(balance > 0) {
-      let newToken = await addToken(chain, 'wallet', token.address, balance, wallet, avax);
+      let newToken = await addToken(chain, 'wallet', token.address, balance, wallet);
       tokens.push(newToken);
     }
   })());

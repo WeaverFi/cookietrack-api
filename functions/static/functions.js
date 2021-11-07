@@ -4,6 +4,7 @@ const { ethers } = require('ethers');
 const axios = require('axios');
 
 // Required Variables:
+const { rpcs } = require('./RPCs.js');
 const { minABI, lpABI, aave, balancer, snowball, traderJoe } = require('./ABIs.js');
 const { eth_token_logos } = require('./tokens/ethereum.js');
 const { bsc_token_logos } = require('./tokens/bsc.js');
@@ -19,6 +20,23 @@ let polyTokenPrices = [];
 let ftmTokenPrices = [];
 let avaxTokenPrices = [];
 let oneTokenPrices = [];
+
+/* ========================================================================================================================================================================= */
+
+// Function to make blockchain queries:
+exports.query = async (chain, address, abi, method, args) => {
+  try {
+    let ethers_provider = new ethers.providers.JsonRpcProvider(rpcs[chain]);
+    let contract = new ethers.Contract(address, abi, ethers_provider);
+    let result = await contract[method](...args);
+    return result;
+  } catch {
+    let ethers_provider = new ethers.providers.JsonRpcProvider(rpcs.backups[chain]);
+    let contract = new ethers.Contract(address, abi, ethers_provider);
+    let result = await contract[method](...args);
+    return result;
+  }
+}
 
 /* ========================================================================================================================================================================= */
 
@@ -70,7 +88,7 @@ exports.addNativeToken = async (chain, balance, owner) => {
 /* ========================================================================================================================================================================= */
 
 // Function to get token info:
-exports.addToken = async (chain, location, address, balance, owner, ethers_provider) => {
+exports.addToken = async (chain, location, address, balance, owner) => {
     
   // Initializing New Token:
   let newToken = {
@@ -113,9 +131,8 @@ exports.addToken = async (chain, location, address, balance, owner, ethers_provi
 
   // Other tokens:
   } else {
-    let contract = new ethers.Contract(address, minABI, ethers_provider);
-    newToken.symbol = await contract.symbol();
-    decimals = parseInt(await contract.decimals());
+    newToken.symbol = await exports.query(chain, address, minABI, 'symbol', []);
+    decimals = parseInt(await exports.query(chain, address, minABI, 'decimals', []));
   }
 
   // Getting Missing Token Info:
@@ -129,7 +146,7 @@ exports.addToken = async (chain, location, address, balance, owner, ethers_provi
 /* ========================================================================================================================================================================= */
 
 // Function to get LP token info:
-exports.addLPToken = async (chain, location, address, balance, owner, ethers_provider) => {
+exports.addLPToken = async (chain, location, address, balance, owner) => {
       
   // Initializing New Token:
   let newToken = {
@@ -145,30 +162,26 @@ exports.addLPToken = async (chain, location, address, balance, owner, ethers_pro
   }
 
   // LP Token Info:
-  let contract = new ethers.Contract(address, minABI, ethers_provider);
-  let decimals = parseInt(await contract.decimals());
+  let decimals = parseInt(await exports.query(chain, address, minABI, 'decimals', []));
   newToken.balance = balance / (10 ** decimals);
-  newToken.symbol = await contract.symbol();
-  let lpTokenContract = new ethers.Contract(address, lpABI, ethers_provider);
-  let lpTokenReserves = await lpTokenContract.getReserves();
-  let lpTokenSupply = await lpTokenContract.totalSupply() / (10 ** decimals);
+  newToken.symbol = await exports.query(chain, address, minABI, 'symbol', []);
+  let lpTokenReserves = await exports.query(chain, address, lpABI, 'getReserves', []);
+  let lpTokenSupply = await exports.query(chain, address, lpABI, 'totalSupply', []) / (10 ** decimals);
 
   // First Paired Token:
-  newToken.token0.address = await lpTokenContract.token0();
-  let token0_contract = new ethers.Contract(newToken.token0.address, minABI, ethers_provider);
-  let decimals0 = parseInt(await token0_contract.decimals());
+  newToken.token0.address = await exports.query(chain, address, lpABI, 'token0', []);
+  let decimals0 = parseInt(await exports.query(chain, newToken.token0.address, minABI, 'decimals', []));
   let supply0 = lpTokenReserves[0] / (10 ** decimals);
-  newToken.token0.symbol = await token0_contract.symbol();
+  newToken.token0.symbol = await exports.query(chain, newToken.token0.address, minABI, 'symbol', []);
   newToken.token0.price = await exports.getTokenPrice(chain, newToken.token0.address, decimals0);
   newToken.token0.balance = (supply0 * (balance / lpTokenSupply)) / (10 ** decimals0);
   newToken.token0.logo = exports.getTokenLogo(chain, newToken.token0.symbol);
 
   // Second Paired Token:
-  newToken.token1.address = await lpTokenContract.token1();
-  let token1_contract = new ethers.Contract(newToken.token1.address, minABI, ethers_provider);
-  let decimals1 = parseInt(await token1_contract.decimals());
+  newToken.token1.address = await exports.query(chain, address, lpABI, 'token1', []);
+  let decimals1 = parseInt(await exports.query(chain, newToken.token1.address, minABI, 'decimals', []));
   let supply1 = lpTokenReserves[1] / (10 ** decimals);
-  newToken.token1.symbol = await token1_contract.symbol();
+  newToken.token1.symbol = await exports.query(chain, newToken.token1.address, minABI, 'symbol', []);
   newToken.token1.price = await exports.getTokenPrice(chain, newToken.token1.address, decimals1);
   newToken.token1.balance = (supply1 * (balance / lpTokenSupply)) / (10 ** decimals1);
   newToken.token1.logo = exports.getTokenLogo(chain, newToken.token1.symbol);
@@ -179,7 +192,7 @@ exports.addLPToken = async (chain, location, address, balance, owner, ethers_pro
 /* ========================================================================================================================================================================= */
 
 // Function to get debt token info:
-exports.addDebtToken = async (chain, location, address, balance, owner, ethers_provider) => {
+exports.addDebtToken = async (chain, location, address, balance, owner) => {
 
   // Initializing New Token:
   let newToken = {
@@ -222,9 +235,8 @@ exports.addDebtToken = async (chain, location, address, balance, owner, ethers_p
 
   // Other tokens:
   } else {
-    let contract = new ethers.Contract(address, minABI, ethers_provider);
-    newToken.symbol = await contract.symbol();
-    decimals = parseInt(await contract.decimals());
+    newToken.symbol = await exports.query(chain, address, minABI, 'symbol', []);
+    decimals = parseInt(await exports.query(chain, address, minABI, 'decimals', []));
   }
 
   // Getting Missing Token Info:
@@ -530,7 +542,7 @@ exports.getTokenPrice = async (chain, address, decimals) => {
 /* ========================================================================================================================================================================= */
 
 // Function to get S4D token info:
-exports.addS4DToken = async (chain, location, address, balance, owner, ethers_provider) => {
+exports.addS4DToken = async (chain, location, address, balance, owner) => {
   
   // Initializing New Token:
   let newToken = {
@@ -546,14 +558,11 @@ exports.addS4DToken = async (chain, location, address, balance, owner, ethers_pr
   }
   
   // Getting Missing Token Info:
-  let contract = new ethers.Contract(address, minABI, ethers_provider);
-  let decimals = parseInt(await contract.decimals());
+  let decimals = parseInt(await exports.query(chain, address, minABI, 'decimals', []));
   newToken.balance = balance / (10 ** decimals);
-  newToken.symbol = await contract.symbol();
-  let tokenContract = new ethers.Contract(address, snowball.s4dABI, ethers_provider);
-  let controller = await tokenContract.owner();
-  let controllerContract = new ethers.Contract(controller, snowball.s4dControllerABI, ethers_provider);
-  newToken.price = parseInt(await controllerContract.getVirtualPrice()) / (10 ** decimals);
+  newToken.symbol = await exports.query(chain, address, minABI, 'symbol', []);
+  let controller = await exports.query(chain, address, snowball.s4dABI, 'owner', []);
+  newToken.price = parseInt(await exports.query(chain, controller, snowball.s4dControllerABI, 'getVirtualPrice', [])) / (10 ** decimals);
   newToken.logo = exports.getTokenLogo(chain, newToken.symbol);
 
   return newToken;
@@ -562,7 +571,7 @@ exports.addS4DToken = async (chain, location, address, balance, owner, ethers_pr
 /* ========================================================================================================================================================================= */
 
 // Function to get Trader Joe token info (xJOE):
-exports.addTraderJoeToken = async (chain, location, address, balance, owner, ethers_provider) => {
+exports.addTraderJoeToken = async (chain, location, address, balance, owner) => {
   
   // Initializing New Token:
   let newToken = {
@@ -578,15 +587,13 @@ exports.addTraderJoeToken = async (chain, location, address, balance, owner, eth
   }
 
   // Getting Missing Token Info:
-  let contract = new ethers.Contract(address, traderJoe.joeABI, ethers_provider);
-  let underlyingToken = await contract.joe();
-  let joeContract = new ethers.Contract(underlyingToken, minABI, ethers_provider);
-  let joeStaked = parseInt(await joeContract.balanceOf(address));
-  let xjoeSupply = parseInt(await contract.totalSupply());
+  let underlyingToken = await exports.query(chain, address, traderJoe.joeABI, 'joe', []);
+  let joeStaked = parseInt(await exports.query(chain, underlyingToken, minABI, 'balanceOf', [address]));
+  let xjoeSupply = parseInt(await exports.query(chain, address, traderJoe.joeABI, 'totalSupply', []));
   let multiplier = joeStaked / xjoeSupply;
-  let decimals = parseInt(await contract.decimals());
+  let decimals = parseInt(await exports.query(chain, address, traderJoe.joeABI, 'decimals', []));
   newToken.balance = balance / (10 ** decimals);
-  newToken.symbol = await contract.symbol();
+  newToken.symbol = await exports.query(chain, address, traderJoe.joeABI, 'symbol', []);
   newToken.price = multiplier * (await exports.getTokenPrice(chain, underlyingToken, decimals));
   newToken.logo = exports.getTokenLogo(chain, newToken.symbol);
   
@@ -596,11 +603,10 @@ exports.addTraderJoeToken = async (chain, location, address, balance, owner, eth
 /* ========================================================================================================================================================================= */
 
 // Function to get Aave BLP token info:
-exports.addAaveBLPToken = async (chain, location, address, balance, owner, ethers_provider) => {
+exports.addAaveBLPToken = async (chain, location, address, balance, owner) => {
 
   // Getting actual address:
-  let contract = new ethers.Contract(address, aave.lpABI, ethers_provider);
-  let actualAddress = await contract.bPool();
+  let actualAddress = await exports.query(chain, address, aave.lpABI, 'bPool', []);
     
   // Initializing New Token:
   let newToken = {
@@ -616,29 +622,26 @@ exports.addAaveBLPToken = async (chain, location, address, balance, owner, ether
   }
 
   // LP Token Info:
-  let decimals = parseInt(await contract.decimals());
+  let decimals = parseInt(await exports.query(chain, address, aave.lpABI, 'decimals', []));
   newToken.balance = balance / (10 ** decimals);
-  newToken.symbol = await contract.symbol();
-  let lpTokenContract = new ethers.Contract(actualAddress, balancer.tokenABI, ethers_provider);
-  let lpTokenSupply = await contract.totalSupply() / (10 ** decimals);
-  let lpTokenAddresses = await lpTokenContract.getCurrentTokens();
+  newToken.symbol = await exports.query(chain, address, aave.lpABI, 'symbol', []);
+  let lpTokenSupply = await exports.query(chain, actualAddress, balancer.tokenABI, 'totalSupply', []) / (10 ** decimals);
+  let lpTokenAddresses = await exports.query(chain, actualAddress, balancer.tokenABI, 'getCurrentTokens', []);
 
   // First Paired Token:
   newToken.token0.address = lpTokenAddresses[0];
-  let token0_contract = new ethers.Contract(newToken.token0.address, minABI, ethers_provider);
-  let decimals0 = parseInt(await token0_contract.decimals());
-  let supply0 = await lpTokenContract.getBalance(newToken.token0.address) / (10 ** decimals0);
-  newToken.token0.symbol = await token0_contract.symbol();
+  let decimals0 = parseInt(await exports.query(chain, newToken.token0.address, minABI, 'decimals', []));
+  let supply0 = await exports.query(chain, actualAddress, balancer.tokenABI, 'getBalance', [newToken.token0.address]) / (10 ** decimals);
+  newToken.token0.symbol = await exports.query(chain, newToken.token0.address, minABI, 'symbol', []);
   newToken.token0.price = await exports.getTokenPrice(chain, newToken.token0.address, decimals0);
   newToken.token0.balance = supply0 * (balance / lpTokenSupply);
   newToken.token0.logo = exports.getTokenLogo(chain, newToken.token0.symbol);
 
   // Second Paired Token:
   newToken.token1.address = lpTokenAddresses[1];
-  let token1_contract = new ethers.Contract(newToken.token1.address, minABI, ethers_provider);
-  let decimals1 = parseInt(await token1_contract.decimals());
-  let supply1 = await lpTokenContract.getBalance(newToken.token1.address) / (10 ** decimals1);
-  newToken.token1.symbol = await token1_contract.symbol();
+  let decimals1 = parseInt(await exports.query(chain, newToken.token1.address, minABI, 'decimals', []));
+  let supply1 = await exports.query(chain, actualAddress, balancer.tokenABI, 'getBalance', [newToken.token1.address]) / (10 ** decimals);
+  newToken.token1.symbol = await exports.query(chain, newToken.token1.address, minABI, 'symbol', []);
   newToken.token1.price = await exports.getTokenPrice(chain, newToken.token1.address, decimals1);
   newToken.token1.balance = supply1 * (balance / lpTokenSupply);
   newToken.token1.logo = exports.getTokenLogo(chain, newToken.token1.symbol);

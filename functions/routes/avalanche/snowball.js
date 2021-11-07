@@ -1,13 +1,8 @@
 
-// Required Packages:
+// Imports:
 const { ethers } = require('ethers');
-
-// Required Variables:
-const { rpc_avax } = require('../../static/RPCs.js');
 const { snowball } = require('../../static/ABIs.js');
-
-// Required Functions:
-const { addToken, addLPToken, addS4DToken, addTraderJoeToken } = require('../../static/functions.js');
+const { query, addToken, addLPToken, addS4DToken, addTraderJoeToken } = require('../../static/functions.js');
 
 // Initializations:
 const chain = 'avax';
@@ -35,9 +30,8 @@ exports.get = async (req) => {
   if(wallet != undefined) {
     if(ethers.utils.isAddress(wallet)) {
       try {
-        const avax = new ethers.providers.JsonRpcProvider(rpc_avax);
-        response.data.push(...(await getStakedSNOB(avax, wallet)));
-        response.data.push(...(await getFarmBalances(avax, wallet)));
+        response.data.push(...(await getStakedSNOB(wallet)));
+        response.data.push(...(await getFarmBalances(wallet)));
       } catch {
         response.status = 'error';
         response.data = [{error: 'Internal API Error'}];
@@ -58,12 +52,11 @@ exports.get = async (req) => {
 /* ========================================================================================================================================================================= */
 
 // Function to get staked SNOB balance:
-const getStakedSNOB = async (avax, wallet) => {
-  let stakingContract = new ethers.Contract(xsnob, snowball.stakingABI, avax);
-  let locked = await stakingContract.locked(wallet);
+const getStakedSNOB = async (wallet) => {
+  let locked = await query(chain, xsnob, snowball.stakingABI, 'locked', [wallet]);
   let balance = parseInt(locked.amount);
   if(balance > 0) {
-    let newToken = await addToken(chain, project, snob, balance, wallet, avax);
+    let newToken = await addToken(chain, project, snob, balance, wallet);
     return [newToken];
   } else {
     return [];
@@ -71,37 +64,34 @@ const getStakedSNOB = async (avax, wallet) => {
 }
 
 // Function to get farm balances:
-const getFarmBalances = async (avax, wallet) => {
+const getFarmBalances = async (wallet) => {
   let balances = [];
-  let registryContract = new ethers.Contract(registry, snowball.registryABI, avax);
-  let farms = await registryContract.tokens();
+  let farms = await query(chain, registry, snowball.registryABI, 'tokens', []);
   let snobRewards = 0;
   let promises = farms.map(farm => (async () => {
-    let gauge = await registryContract.getGauge(farm);
+    let gauge = await query(chain, registry, snowball.registryABI, 'getGauge', [farm]);
     if(gauge != '0x0000000000000000000000000000000000000000') {
-      let gaugeContract = new ethers.Contract(gauge, snowball.gaugeABI, avax);
-      let balance = parseInt(await gaugeContract.balanceOf(wallet));
+      let balance = parseInt(await query(chain, gauge, snowball.gaugeABI, 'balanceOf', [wallet]));
       if(balance > 0) {
-        let farmContract = new ethers.Contract(farm, snowball.farmABI, avax);
-        let symbol = await farmContract.symbol();
+        let symbol = await query(chain, farm, snowball.farmABI, 'symbol', []);
         if(symbol === 's4D') {
-          let newToken = await addS4DToken(chain, project, farm, balance, wallet, avax);
+          let newToken = await addS4DToken(chain, project, farm, balance, wallet);
           balances.push(newToken);
         } else {
-          let token = await farmContract.token();
-          let exchangeRatio = parseInt(await farmContract.getRatio());
+          let token = await query(chain, farm, snowball.farmABI, 'token', []);
+          let exchangeRatio = parseInt(await query(chain, farm, snowball.farmABI, 'getRatio', []));
           if(symbol.includes('PGL') || symbol.includes('JLP')) {
-            let newToken = await addLPToken(chain, project, token, balance * (exchangeRatio / (10**18)), wallet, avax);
+            let newToken = await addLPToken(chain, project, token, balance * (exchangeRatio / (10**18)), wallet);
             balances.push(newToken);
           } else if(symbol.includes('xJOE')) {
-            let newToken = await addTraderJoeToken(chain, project, token, balance * (exchangeRatio / (10**18)), wallet, avax);
+            let newToken = await addTraderJoeToken(chain, project, token, balance * (exchangeRatio / (10**18)), wallet);
             balances.push(newToken);
           } else {
-            let newToken = await addToken(chain, project, token, balance * (exchangeRatio / (10**18)), wallet, avax);
+            let newToken = await addToken(chain, project, token, balance * (exchangeRatio / (10**18)), wallet);
             balances.push(newToken);
           }
         }
-        let rewards = parseInt(await gaugeContract.earned(wallet));
+        let rewards = parseInt(await query(chain, gauge, snowball.gaugeABI, 'earned', [wallet]));
         if(rewards > 0) {
           snobRewards += rewards;
         }
@@ -110,7 +100,7 @@ const getFarmBalances = async (avax, wallet) => {
   })());
   await Promise.all(promises);
   if(snobRewards > 0) {
-    let newToken = await addToken(chain, project, snob, snobRewards, wallet, avax);
+    let newToken = await addToken(chain, project, snob, snobRewards, wallet);
     balances.push(newToken);
   }
   return balances;

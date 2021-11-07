@@ -1,14 +1,10 @@
 
-// Required Packages:
+// Imports:
 const { ethers } = require('ethers');
-
-// Required Variables:
-const { rpc_bsc } = require('../../static/RPCs.js');
+const { rpcs } = require('../../static/RPCs.js');
 const { minABI } = require('../../static/ABIs.js');
 const { bsc_tokens } = require('../../static/tokens/bsc.js');
-
-// Required Functions:
-const { addNativeToken, addToken } = require('../../static/functions.js');
+const { query, addNativeToken, addToken } = require('../../static/functions.js');
 
 // Initializations:
 const chain = 'bsc';
@@ -32,9 +28,8 @@ exports.get = async (req) => {
   if(wallet != undefined) {
     if(ethers.utils.isAddress(wallet)) {
       try {
-        const bsc = new ethers.providers.JsonRpcProvider(rpc_bsc);
-        response.data.push(...(await getBNB(bsc, wallet)));
-        response.data.push(...(await getTokenBalances(bsc, wallet)));
+        response.data.push(...(await getBNB(wallet)));
+        response.data.push(...(await getTokenBalances(wallet)));
       } catch {
         response.status = 'error';
         response.data = [{error: 'Internal API Error'}];
@@ -55,24 +50,35 @@ exports.get = async (req) => {
 /* ========================================================================================================================================================================= */
 
 // Function to get native wallet balance:
-const getBNB = async (bsc, wallet) => {
-  let balance = parseInt(await bsc.getBalance(wallet));
-  if(balance > 0) {
-    let newToken = await addNativeToken(chain, balance, wallet);
-    return [newToken];
-  } else {
-    return [];
+const getBNB = async (wallet) => {
+  try {
+    let bsc = new ethers.providers.JsonRpcProvider(rpcs.bsc);
+    let balance = parseInt(await bsc.getBalance(wallet));
+    if(balance > 0) {
+      let newToken = await addNativeToken(chain, balance, wallet);
+      return [newToken];
+    } else {
+      return [];
+    }
+  } catch {
+    let bsc = new ethers.providers.JsonRpcProvider(rpcs.backups.bsc);
+    let balance = parseInt(await bsc.getBalance(wallet));
+    if(balance > 0) {
+      let newToken = await addNativeToken(chain, balance, wallet);
+      return [newToken];
+    } else {
+      return [];
+    }
   }
 }
 
 // Function to get token balances:
-const getTokenBalances = async (bsc, wallet) => {
+const getTokenBalances = async (wallet) => {
   let tokens = [];
   let promises = bsc_tokens.map(token => (async () => {
-    let tokenContract = new ethers.Contract(token.address, minABI, bsc);
-    let balance = parseInt(await tokenContract.balanceOf(wallet));
+    let balance = parseInt(await query(chain, token.address, minABI, 'balanceOf', [wallet]));
     if(balance > 0) {
-      let newToken = await addToken(chain, 'wallet', token.address, balance, wallet, bsc);
+      let newToken = await addToken(chain, 'wallet', token.address, balance, wallet);
       tokens.push(newToken);
     }
   })());
