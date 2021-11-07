@@ -10,6 +10,7 @@ const eth_aave = require('./routes/ethereum/aave.js');
 
 // BSC Routes:
 const bsc_wallet = require('./routes/bsc/wallet.js');
+const bsc_pancakeswap = require('./routes/bsc/pancakeswap.js');
 
 // Polygon Routes:
 const poly_wallet = require('./routes/polygon/wallet.js');
@@ -96,6 +97,10 @@ app.get('/avalanche/aave', async (req, res) => {
 });
 
 // PancakeSwap (BSC):
+app.get('/bsc/pancakeswap', async (req, res) => {
+  res.end(await bsc_pancakeswap.get(req));
+});
+
 // AutoFarm (BSC):
 // AutoFarm (Polygon):
 // AutoFarm (Fantom):

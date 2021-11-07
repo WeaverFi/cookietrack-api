@@ -65,11 +65,15 @@ const getMarketBalances = async (wallet) => {
   let balances = [];
   let promises = tokens.map(token => (async () => {
     let addresses = await query(chain, registry, aave.registryABI, 'getReserveTokensAddresses', [token]);
+
+    // Lending Balances:
     let balance = parseInt(await query(chain, addresses.aTokenAddress, minABI, 'balanceOf', [wallet]));
     if(balance > 0) {
       let newToken = await addToken(chain, project, token, balance, wallet);
       balances.push(newToken);
     }
+
+    // Borrowing Balances:
     let stableDebt = parseInt(await query(chain, addresses.stableDebtTokenAddress, minABI, 'balanceOf', [wallet]));
     let variableDebt = parseInt(await query(chain, addresses.variableDebtTokenAddress, minABI, 'balanceOf', [wallet]));
     let totalDebt = stableDebt + variableDebt;

@@ -74,23 +74,35 @@ const getFarmBalances = async (wallet) => {
       let balance = parseInt(await query(chain, gauge, snowball.gaugeABI, 'balanceOf', [wallet]));
       if(balance > 0) {
         let symbol = await query(chain, farm, snowball.farmABI, 'symbol', []);
+
+        // s4D StableVault:
         if(symbol === 's4D') {
           let newToken = await addS4DToken(chain, project, farm, balance, wallet);
           balances.push(newToken);
+
+        // All Other Farms:
         } else {
           let token = await query(chain, farm, snowball.farmABI, 'token', []);
           let exchangeRatio = parseInt(await query(chain, farm, snowball.farmABI, 'getRatio', []));
+
+          // Pangolin & Trader Joe Liquidity Pools:
           if(symbol.includes('PGL') || symbol.includes('JLP')) {
             let newToken = await addLPToken(chain, project, token, balance * (exchangeRatio / (10**18)), wallet);
             balances.push(newToken);
+
+          // xJOE Trader Joe Pool:
           } else if(symbol.includes('xJOE')) {
             let newToken = await addTraderJoeToken(chain, project, token, balance * (exchangeRatio / (10**18)), wallet);
             balances.push(newToken);
+
+          // All Other Single-Asset Pools:
           } else {
             let newToken = await addToken(chain, project, token, balance * (exchangeRatio / (10**18)), wallet);
             balances.push(newToken);
           }
         }
+
+        // Pending SNOB Rewards:
         let rewards = parseInt(await query(chain, gauge, snowball.gaugeABI, 'earned', [wallet]));
         if(rewards > 0) {
           snobRewards += rewards;

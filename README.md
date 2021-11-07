@@ -37,7 +37,7 @@ The API that powers CookieTrack.
 - `aave`
 
 **BSC Projects available:**
-- None.
+- `pancakeswap`
 
 **Polygon Projects available:**
 - `aave`
