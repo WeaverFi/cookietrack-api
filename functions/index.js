@@ -13,12 +13,14 @@ const bsc_wallet = require('./routes/bsc/wallet.js');
 
 // Polygon Routes:
 const poly_wallet = require('./routes/polygon/wallet.js');
+const poly_aave = require('./routes/polygon/aave.js');
 
 // Fantom Routes:
 const ftm_wallet = require('./routes/fantom/wallet.js');
 
 // Avalanche Routes:
 const avax_wallet = require('./routes/avalanche/wallet.js');
+const avax_aave = require('./routes/avalanche/aave.js');
 const avax_snowball = require('./routes/avalanche/snowball.js');
 
 // Harmony Routes:
@@ -84,7 +86,15 @@ app.get('/ethereum/aave', async (req, res) => {
 });
 
 // Aave (Polygon):
+app.get('/polygon/aave', async (req, res) => {
+  res.end(await poly_aave.get(req));
+});
+
 // Aave (Avalanche):
+app.get('/avalanche/aave', async (req, res) => {
+  res.end(await avax_aave.get(req));
+});
+
 // PancakeSwap (BSC):
 // AutoFarm (BSC):
 // AutoFarm (Polygon):

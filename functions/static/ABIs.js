@@ -31,6 +31,9 @@ exports.aave = {
     { constant: true, inputs: [], name: "symbol", outputs: [{ name: "", type: "string" }], type: "function" },
     { constant: true, inputs: [], name: "decimals", outputs: [{ name: "", type: "uint8" }], type: "function" },
     { constant: true, inputs: [], name: "totalSupply", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ],
+  registryABI: [
+    { constant: true, inputs: [{ name: "asset", type: "address" }], name: "getReserveTokensAddresses", outputs: [{ name: "aTokenAddress", type: "address" }, { name: "stableDebtTokenAddress", type: "address" }, { name: "variableDebtTokenAddress", type: "address" }], type: "function" }
   ]
 }
 

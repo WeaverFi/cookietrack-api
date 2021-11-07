@@ -40,12 +40,13 @@ The API that powers CookieTrack.
 - None.
 
 **Polygon Projects available:**
-- None.
+- `aave`
 
 **Fantom Projects available:**
 - None.
 
 **Avalanche Projects available:**
+- `aave`
 - `snowball`
 
 **Harmony Projects available:**

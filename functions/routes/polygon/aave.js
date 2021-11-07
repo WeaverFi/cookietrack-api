@@ -3,15 +3,13 @@
 const { ethers } = require('ethers');
 const axios = require('axios');
 const { minABI, aave } = require('../../static/ABIs.js');
-const { query, addToken, addAaveBLPToken, addDebtToken } = require('../../static/functions.js');
+const { query, addToken, addDebtToken } = require('../../static/functions.js');
 
 // Initializations:
-const chain = 'eth';
+const chain = 'poly';
 const project = 'aave';
-const aaveStaking = '0x4da27a545c0c5B758a6BA100e3a049001de870f5';
-const lpStaking = '0xa1116930326D21fB917d5A27F1E9943A9595fb47';
-const incentives = '0xd784927Ff2f95ba542BfC824c8a8a98F3495f6b5';
-const aaveToken = '0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9';
+const incentives = '0x357D51124f59836DeD84c8a1730D72B749d8BC23';
+const wmatic = '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270';
 
 /* ========================================================================================================================================================================= */
 
@@ -32,9 +30,7 @@ exports.get = async (req) => {
   if(wallet != undefined) {
     if(ethers.utils.isAddress(wallet)) {
       try {
-        response.data.push(...(await getStakedAAVE(wallet)));
-        response.data.push(...(await getStakedLP(wallet)));
-        let markets = (await axios.get('https://aave.github.io/aave-addresses/mainnet.json')).data.proto;
+        let markets = (await axios.get('https://aave.github.io/aave-addresses/polygon.json')).data.matic;
         response.data.push(...(await getMarketBalances(wallet, markets)));
         response.data.push(...(await getMarketDebt(wallet, markets)));
         response.data.push(...(await getIncentives(wallet)));
@@ -56,29 +52,6 @@ exports.get = async (req) => {
 }
 
 /* ========================================================================================================================================================================= */
-
-// Function to get staked AAVE balance:
-const getStakedAAVE = async (wallet) => {
-  let balance = parseInt(await query(chain, aaveStaking, minABI, 'balanceOf', [wallet]));
-  if(balance > 0) {
-    let newToken = await addToken(chain, project, aaveToken, balance, wallet);
-    return [newToken];
-  } else {
-    return [];
-  }
-}
-
-// Function to get staked LP balance:
-const getStakedLP = async (wallet) => {
-  let balance = parseInt(await query(chain, lpStaking, aave.stakingABI, 'balanceOf', [wallet]));
-  if(balance > 0) {
-    let tokenAddress = await query(chain, lpStaking, aave.stakingABI, 'STAKED_TOKEN', []);
-    let newToken = await addAaveBLPToken(chain, project, tokenAddress, balance, wallet);
-    return [newToken];
-  } else {
-    return [];
-  }
-}
 
 // Function to get lending market balances:
 const getMarketBalances = async (wallet, markets) => {
@@ -114,7 +87,7 @@ const getMarketDebt = async (wallet, markets) => {
 const getIncentives = async (wallet) => {
   let rewards = parseInt(await query(chain, incentives, aave.incentivesABI, 'getUserUnclaimedRewards', [wallet]));
   if(rewards > 0) {
-    let newToken = await addToken(chain, project, aaveToken, rewards, wallet);
+    let newToken = await addToken(chain, project, wmatic, rewards, wallet);
     return [newToken];
   } else {
     return [];
