@@ -1,7 +1,7 @@
 
 // Imports:
 const { ethers } = require('ethers');
-const { snowball } = require('../../static/ABIs.js');
+const { minABI, snowball } = require('../../static/ABIs.js');
 const { query, addToken, addLPToken, addS4DToken, addTraderJoeToken } = require('../../static/functions.js');
 
 // Initializations:
@@ -71,9 +71,9 @@ const getFarmBalances = async (wallet) => {
   let promises = farms.map(farm => (async () => {
     let gauge = await query(chain, registry, snowball.registryABI, 'getGauge', [farm]);
     if(gauge != '0x0000000000000000000000000000000000000000') {
-      let balance = parseInt(await query(chain, gauge, snowball.gaugeABI, 'balanceOf', [wallet]));
+      let balance = parseInt(await query(chain, gauge, minABI, 'balanceOf', [wallet]));
       if(balance > 0) {
-        let symbol = await query(chain, farm, snowball.farmABI, 'symbol', []);
+        let symbol = await query(chain, farm, minABI, 'symbol', []);
 
         // s4D StableVault:
         if(symbol === 's4D') {

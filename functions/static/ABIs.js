@@ -20,17 +20,13 @@ exports.lpABI = [
 // Aave ABIs:
 exports.aave = {
   stakingABI: [
-    { constant: true, inputs: [{ name: "account", type: "address" }], name: "balanceOf", outputs: [{ name: "", type: "uint256" }], type: "function" },
     { constant: true, inputs: [], name: "STAKED_TOKEN", outputs: [{ name: "", type: "address" }], type: "function" }
   ],
   incentivesABI: [
     { constant: true, inputs: [{ name: "_user", type: "address" }], name: "getUserUnclaimedRewards", outputs: [{ name: "", type: "uint256" }], type: "function" }
   ],
   lpABI: [
-    { constant: true, inputs: [], name: "bPool", outputs: [{ name: "", type: "address" }], type: "function" },
-    { constant: true, inputs: [], name: "symbol", outputs: [{ name: "", type: "string" }], type: "function" },
-    { constant: true, inputs: [], name: "decimals", outputs: [{ name: "", type: "uint8" }], type: "function" },
-    { constant: true, inputs: [], name: "totalSupply", outputs: [{ name: "", type: "uint256" }], type: "function" }
+    { constant: true, inputs: [], name: "bPool", outputs: [{ name: "", type: "address" }], type: "function" }
   ],
   registryABI: [
     { constant: true, inputs: [{ name: "asset", type: "address" }], name: "getReserveTokensAddresses", outputs: [{ name: "aTokenAddress", type: "address" }, { name: "stableDebtTokenAddress", type: "address" }, { name: "variableDebtTokenAddress", type: "address" }], type: "function" }
@@ -52,13 +48,11 @@ exports.snowball = {
     { constant: true, inputs: [{ name: "_token", type: "address" }], name: "getGauge", outputs: [{ name: "", type: "address" }], type: "function" }
   ],
   gaugeABI: [
-    { constant: true, inputs: [{ name: "account", type: "address" }], name: "balanceOf", outputs: [{ name: "", type: "uint256" }], type: "function" },
     { constant: true, inputs: [{ name: "account", type: "address" }], name: "earned", outputs: [{ name: "", type: "uint256" }], type: "function" }
   ],
   farmABI: [
     { constant: true, inputs: [], name: "getRatio", outputs: [{ name: "", type: "uint256" }], type: "function" },
-    { constant: true, inputs: [], name: "token", outputs: [{ name: "", type: "address" }], type: "function" },
-    { constant: true, inputs: [], name: "symbol", outputs: [{ name: "", type: "string" }], type: "function" }
+    { constant: true, inputs: [], name: "token", outputs: [{ name: "", type: "address" }], type: "function" }
   ],
   stakingABI: [
     { constant: true, inputs: [{ name: "arg0", type: "address" }], name: "locked", outputs: [{ name: "amount", type: "uint128" }, { name: "end", type: "uint256" }], type: "function" }
@@ -74,11 +68,7 @@ exports.snowball = {
 // Trader Joe ABIs:
 exports.traderJoe = {
   joeABI: [
-    { constant: true, inputs: [], name: "joe", outputs: [{ name: "", type: "address" }], type: "function" },
-    { constant: true, inputs: [{ name: "account", type: "address" }], name: "balanceOf", outputs: [{ name: "", type: "uint256" }], type: "function" },
-    { constant: true, inputs: [], name: "totalSupply", outputs: [{ name: "", type: "uint256" }], type: "function" },
-    { constant: true, inputs: [], name: "decimals", outputs: [{ name: "", type: "uint8" }], type: "function" },
-    { constant: true, inputs: [], name: "symbol", outputs: [{ name: "", type: "string" }], type: "function" }
+    { constant: true, inputs: [], name: "joe", outputs: [{ name: "", type: "address" }], type: "function" }
   ]
 }
 

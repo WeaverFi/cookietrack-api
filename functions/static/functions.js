@@ -589,11 +589,11 @@ exports.addTraderJoeToken = async (chain, location, address, balance, owner) => 
   // Getting Missing Token Info:
   let underlyingToken = await exports.query(chain, address, traderJoe.joeABI, 'joe', []);
   let joeStaked = parseInt(await exports.query(chain, underlyingToken, minABI, 'balanceOf', [address]));
-  let xjoeSupply = parseInt(await exports.query(chain, address, traderJoe.joeABI, 'totalSupply', []));
+  let xjoeSupply = parseInt(await exports.query(chain, address, minABI, 'totalSupply', []));
   let multiplier = joeStaked / xjoeSupply;
-  let decimals = parseInt(await exports.query(chain, address, traderJoe.joeABI, 'decimals', []));
+  let decimals = parseInt(await exports.query(chain, address, minABI, 'decimals', []));
   newToken.balance = balance / (10 ** decimals);
-  newToken.symbol = await exports.query(chain, address, traderJoe.joeABI, 'symbol', []);
+  newToken.symbol = await exports.query(chain, address, minABI, 'symbol', []);
   newToken.price = multiplier * (await exports.getTokenPrice(chain, underlyingToken, decimals));
   newToken.logo = exports.getTokenLogo(chain, newToken.symbol);
   
@@ -622,9 +622,9 @@ exports.addAaveBLPToken = async (chain, location, address, balance, owner) => {
   }
 
   // LP Token Info:
-  let decimals = parseInt(await exports.query(chain, address, aave.lpABI, 'decimals', []));
+  let decimals = parseInt(await exports.query(chain, address, minABI, 'decimals', []));
   newToken.balance = balance / (10 ** decimals);
-  newToken.symbol = await exports.query(chain, address, aave.lpABI, 'symbol', []);
+  newToken.symbol = await exports.query(chain, address, minABI, 'symbol', []);
   let lpTokenSupply = await exports.query(chain, actualAddress, balancer.tokenABI, 'totalSupply', []) / (10 ** decimals);
   let lpTokenAddresses = await exports.query(chain, actualAddress, balancer.tokenABI, 'getCurrentTokens', []);
 
