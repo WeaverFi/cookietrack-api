@@ -88,7 +88,7 @@ const getFarmBalances = async (wallet) => {
   return balances;
 }
 
-// Function to get CAKE into auto-compounding pool:
+// Function to get CAKE in auto-compounding pool:
 const getAutoCakePoolBalance = async (wallet) => {
   let balance = parseInt((await query(chain, autoCakePool, pancakeSwap.autoCakePoolABI, 'userInfo', [wallet]))[0]);
   if(balance > 0) {

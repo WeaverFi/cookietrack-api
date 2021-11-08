@@ -102,6 +102,10 @@ app.get('/bsc/pancakeswap', async (req, res) => {
 });
 
 // AutoFarm (BSC):
+app.get('/bsc/autofarm', async (req, res) => {
+  res.end(await bsc_autofarm.get(req));
+});
+
 // AutoFarm (Polygon):
 // AutoFarm (Fantom):
 // AutoFarm (Avalanche):

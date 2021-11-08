@@ -5,7 +5,7 @@ const axios = require('axios');
 
 // Required Variables:
 const { rpcs } = require('./RPCs.js');
-const { minABI, lpABI, aave, balancer, snowball, traderJoe } = require('./ABIs.js');
+const { minABI, lpABI, aave, balancer, snowball, traderJoe, belt, alpaca } = require('./ABIs.js');
 const { eth_token_logos } = require('./tokens/ethereum.js');
 const { bsc_token_logos } = require('./tokens/bsc.js');
 const { poly_token_logos } = require('./tokens/polygon.js');
@@ -645,6 +645,94 @@ exports.addAaveBLPToken = async (chain, location, address, balance, owner) => {
   newToken.token1.price = await exports.getTokenPrice(chain, newToken.token1.address, decimals1);
   newToken.token1.balance = supply1 * (balance / lpTokenSupply);
   newToken.token1.logo = exports.getTokenLogo(chain, newToken.token1.symbol);
+
+  return newToken;
+}
+
+/* ========================================================================================================================================================================= */
+
+// Function to get 4Belt token info:
+exports.add4BeltToken = async (chain, location, address, balance, owner) => {
+  
+  // Initializing New Token:
+  let newToken = {
+    type: 'token',
+    chain: chain,
+    location: location,
+    owner: owner,
+    symbol: '4Belt',
+    address: address,
+    balance: 0,
+    price: 1,
+    logo: ''
+  }
+  
+  // Getting Missing Token Info:
+  let decimals = parseInt(await exports.query(chain, address, minABI, 'decimals', []));
+  newToken.balance = balance / (10 ** decimals);
+  newToken.logo = exports.getTokenLogo(chain, newToken.symbol);
+
+  return newToken;
+}
+
+/* ========================================================================================================================================================================= */
+
+// Function to get Belt token info:
+exports.addBeltToken = async (chain, location, address, balance, owner) => {
+  
+  // Initializing New Token:
+  let newToken = {
+    type: 'token',
+    chain: chain,
+    location: location,
+    owner: owner,
+    symbol: '',
+    address: address,
+    balance: 0,
+    price: 0,
+    logo: ''
+  }
+  
+  // Getting Missing Token Info:
+  let decimals = parseInt(await exports.query(chain, address, minABI, 'decimals', []));
+  newToken.balance = balance / (10 ** decimals);
+  newToken.symbol = await exports.query(chain, address, minABI, 'symbol', []);
+  let multiplier = parseInt(await exports.query(chain, address, belt.tokenABI, 'getPricePerFullShare', [])) / (10 ** decimals);
+  let underlyingToken = await exports.query(chain, address, belt.tokenABI, 'token', []);
+  newToken.price = multiplier * (await exports.getTokenPrice(chain, underlyingToken, decimals));
+  newToken.logo = exports.getTokenLogo(chain, newToken.symbol);
+
+  return newToken;
+}
+
+/* ========================================================================================================================================================================= */
+
+// Function to get Alpaca token info:
+exports.addAlpacaToken = async (chain, location, address, balance, owner) => {
+  
+  // Initializing New Token:
+  let newToken = {
+    type: 'token',
+    chain: chain,
+    location: location,
+    owner: owner,
+    symbol: '',
+    address: address,
+    balance: 0,
+    price: 0,
+    logo: ''
+  }
+  
+  // Getting Missing Token Info:
+  let decimals = parseInt(await exports.query(chain, address, minABI, 'decimals', []));
+  newToken.balance = balance / (10 ** decimals);
+  newToken.symbol = await exports.query(chain, address, minABI, 'symbol', []);
+  let totalToken = parseInt(await exports.query(chain, address, alpaca.tokenABI, 'totalToken', []));
+  let totalSupply = parseInt(await exports.query(chain, address, minABI, 'totalSupply', []));
+  let multiplier = totalToken / totalSupply;
+  let underlyingToken = await exports.query(chain, address, alpaca.tokenABI, 'token', []);
+  newToken.price = multiplier * (await exports.getTokenPrice(chain, underlyingToken, decimals));
+  newToken.logo = exports.getTokenLogo(chain, newToken.symbol);
 
   return newToken;
 }
