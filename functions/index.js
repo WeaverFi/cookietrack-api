@@ -11,6 +11,7 @@ const eth_aave = require('./routes/ethereum/aave.js');
 // BSC Routes:
 const bsc_wallet = require('./routes/bsc/wallet.js');
 const bsc_pancakeswap = require('./routes/bsc/pancakeswap.js');
+const bsc_autofarm = require('./routes/bsc/autofarm.js');
 
 // Polygon Routes:
 const poly_wallet = require('./routes/polygon/wallet.js');
