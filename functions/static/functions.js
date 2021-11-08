@@ -5,7 +5,7 @@ const axios = require('axios');
 
 // Required Variables:
 const { rpcs } = require('./RPCs.js');
-const { minABI, lpABI, aave, balancer, snowball, traderJoe, belt, alpaca } = require('./ABIs.js');
+const { minABI, lpABI, aave, balancer, snowball, traderJoe, belt, alpaca, curve } = require('./ABIs.js');
 const { eth_token_logos } = require('./tokens/ethereum.js');
 const { bsc_token_logos } = require('./tokens/bsc.js');
 const { poly_token_logos } = require('./tokens/polygon.js');
@@ -31,10 +31,15 @@ exports.query = async (chain, address, abi, method, args) => {
     let result = await contract[method](...args);
     return result;
   } catch {
-    let ethers_provider = new ethers.providers.JsonRpcProvider(rpcs.backups[chain]);
-    let contract = new ethers.Contract(address, abi, ethers_provider);
-    let result = await contract[method](...args);
-    return result;
+    try {
+      console.log(`Using backup ${chain.toUpperCase()} RPC...`);
+      let ethers_provider = new ethers.providers.JsonRpcProvider(rpcs.backups[chain]);
+      let contract = new ethers.Contract(address, abi, ethers_provider);
+      let result = await contract[method](...args);
+      return result;
+    } catch {
+      console.log(`ERROR: Calling ${method}(${args}) on ${address} (Chain: ${chain.toUpperCase()})`);
+    }
   }
 }
 
@@ -731,6 +736,178 @@ exports.addAlpacaToken = async (chain, location, address, balance, owner) => {
   let totalSupply = parseInt(await exports.query(chain, address, minABI, 'totalSupply', []));
   let multiplier = totalToken / totalSupply;
   let underlyingToken = await exports.query(chain, address, alpaca.tokenABI, 'token', []);
+  newToken.price = multiplier * (await exports.getTokenPrice(chain, underlyingToken, decimals));
+  newToken.logo = exports.getTokenLogo(chain, newToken.symbol);
+
+  return newToken;
+}
+
+/* ========================================================================================================================================================================= */
+
+// Function to get Curve token info:
+exports.addCurveToken = async (chain, location, address, balance, owner) => {
+  
+  // Ethereum Token:
+  if(chain === 'eth') {
+    // <TODO>
+
+  // Polygon Token:
+  } else if(chain === 'poly') {
+    
+    // crvUSDBTCETH (Atricrypto V3):
+    if(address.toLowerCase() === '0xdAD97F7713Ae9437fa9249920eC8507e5FbB23d3'.toLowerCase()) {
+
+      // Initializing New Token:
+      let newToken = {
+        type: 'token',
+        chain: chain,
+        location: location,
+        owner: owner,
+        symbol: '',
+        address: address,
+        balance: 0,
+        price: 0,
+        logo: ''
+      }
+
+      // LP Token Info:
+      let decimals = parseInt(await exports.query(chain, address, minABI, 'decimals', []));
+      newToken.balance = balance / (10 ** decimals);
+      newToken.symbol = await exports.query(chain, address, minABI, 'symbol', []);
+      newToken.logo = exports.getTokenLogo(chain, newToken.symbol);
+      let lpTokenSupply = await exports.query(chain, address, minABI, 'totalSupply', []) / (10 ** decimals);
+      let minter = await exports.query(chain, address, curve.polyTokenABI, 'minter', []);
+      let multiplier = parseInt(await exports.query(chain, minter, curve.minterABI, 'get_virtual_price', [])) / (10 ** decimals);
+
+      // 1st Token Info:
+      let address0 = await exports.query(chain, minter, curve.minterABI, 'coins', [0]);
+      let token0 = await exports.addCurveToken(chain, location, address0, 0, address);
+      let supply0 = parseInt(await exports.query(chain, minter, curve.minterABI, 'balances', [0])) / (10**18);
+      let price0 = token0.price;
+
+      // 2nd Token Info:
+      let address1 = await exports.query(chain, minter, curve.minterABI, 'coins', [1]);
+      let token1 = await exports.query(chain, address1, curve.intermediaryABI, 'UNDERLYING_ASSET_ADDRESS', []);
+      let decimals1 = parseInt(await exports.query(chain, token1, minABI, 'decimals', []));
+      let supply1 = await exports.query(chain, minter, curve.minterABI, 'balances', [1]) / (10 ** decimals1);
+      let price1 = await exports.getTokenPrice(chain, token1, decimals1);
+
+      // 3rd Token Info:
+      let address2 = await exports.query(chain, minter, curve.minterABI, 'coins', [2]);
+      let token2 = await exports.query(chain, address2, curve.intermediaryABI, 'UNDERLYING_ASSET_ADDRESS', []);
+      let decimals2 = parseInt(await exports.query(chain, token2, minABI, 'decimals', []));
+      let supply2 = await exports.query(chain, minter, curve.minterABI, 'balances', [2]) / (10 ** decimals2);
+      let price2 = await exports.getTokenPrice(chain, token2, decimals2);
+
+      // Calculated Token Price:
+      newToken.price = multiplier * (((supply0 * price0) + (supply1 * price1) + (supply2 * price2)) / lpTokenSupply);
+
+      return newToken;
+
+    // am3CRV (Aave):
+    } else if(address.toLowerCase() === '0xE7a24EF0C5e95Ffb0f6684b813A78F2a3AD7D171'.toLowerCase()) {
+
+      // Initializing New Token:
+      let newToken = {
+        type: 'token',
+        chain: chain,
+        location: location,
+        owner: owner,
+        symbol: '',
+        address: address,
+        balance: 0,
+        price: 0,
+        logo: ''
+      }
+
+      // Getting Missing Token Info:
+      let decimals = parseInt(await exports.query(chain, address, minABI, 'decimals', []));
+      newToken.balance = balance / (10 ** decimals);
+      newToken.symbol = await exports.query(chain, address, minABI, 'symbol', []);
+      let minter = await exports.query(chain, address, curve.polyTokenABI, 'minter', []);
+      newToken.price = parseInt(await exports.query(chain, minter, curve.minterABI, 'get_virtual_price', [])) / (10 ** decimals);
+      newToken.logo = exports.getTokenLogo(chain, newToken.symbol);
+
+      return newToken;
+
+    // btcCRV (Ren):
+    } else if(address.toLowerCase() === '0xf8a57c1d3b9629b77b6726a042ca48990A84Fb49'.toLowerCase()) {
+
+      // Initializing New Token:
+      let newToken = {
+        type: 'lpToken',
+        chain: chain,
+        location: location,
+        owner: owner,
+        symbol: '',
+        address: address,
+        balance: 0,
+        token0: { symbol: '', address: '', balance: 0, price: 0, logo: '' },
+        token1: { symbol: '', address: '', balance: 0, price: 0, logo: '' }
+      }
+
+      // LP Token Info:
+      let decimals = parseInt(await exports.query(chain, address, minABI, 'decimals', []));
+      newToken.balance = balance / (10 ** decimals);
+      newToken.symbol = await exports.query(chain, address, minABI, 'symbol', []);
+      let lpTokenSupply = await exports.query(chain, address, lpABI, 'totalSupply', []) / (10 ** decimals);
+      let minter = await exports.query(chain, address, curve.polyTokenABI, 'minter', []);
+
+      // First Paired Token:
+      newToken.token0.address = await exports.query(chain, minter, curve.minterABI, 'underlying_coins', [0]);
+      newToken.token0.symbol = await exports.query(chain, newToken.token0.address, minABI, 'symbol', []);
+      let decimals0 = parseInt(await exports.query(chain, newToken.token0.address, minABI, 'decimals', []));
+      newToken.token0.price = await exports.getTokenPrice(chain, newToken.token0.address, decimals0);
+      let supply0 = await exports.query(chain, minter, curve.minterABI, 'balances', [0]) / (10 ** decimals);
+      newToken.token0.balance = (supply0 * (balance / lpTokenSupply)) / (10 ** decimals0);
+      newToken.token0.logo = exports.getTokenLogo(chain, newToken.token0.symbol);
+
+      // Second Paired Token:
+      newToken.token1.address = await exports.query(chain, minter, curve.minterABI, 'underlying_coins', [1]);
+      newToken.token1.symbol = await exports.query(chain, newToken.token1.address, minABI, 'symbol', []);
+      let decimals1 = parseInt(await exports.query(chain, newToken.token1.address, minABI, 'decimals', []));
+      newToken.token1.price = await exports.getTokenPrice(chain, newToken.token1.address, decimals1);
+      let supply1 = await exports.query(chain, minter, curve.minterABI, 'balances', [1]) / (10 ** decimals);
+      newToken.token1.balance = (supply1 * (balance / lpTokenSupply)) / (10 ** decimals1);
+      newToken.token1.logo = exports.getTokenLogo(chain, newToken.token1.symbol);
+
+      return newToken;
+    }
+
+  // Fantom Token:
+  } else if(chain === 'ftm') {
+    // <TODO>
+
+  // Avalanche Token:
+  } else if(chain === 'avax') {
+    // <TODO>
+  }
+}
+
+/* ========================================================================================================================================================================= */
+
+// Function to get BZX token info:
+exports.addBZXToken = async (chain, location, address, balance, owner) => {
+  
+  // Initializing New Token:
+  let newToken = {
+    type: 'token',
+    chain: chain,
+    location: location,
+    owner: owner,
+    symbol: '',
+    address: address,
+    balance: 0,
+    price: 0,
+    logo: ''
+  }
+  
+  // Getting Missing Token Info:
+  let decimals = parseInt(await exports.query(chain, address, minABI, 'decimals', []));
+  newToken.balance = balance / (10 ** decimals);
+  newToken.symbol = await exports.query(chain, address, minABI, 'symbol', []);
+  let multiplier = parseInt(await exports.query(chain, address, bzx.tokenABI, 'tokenPrice', [])) / (10 ** decimals);
+  let underlyingToken = await exports.query(chain, address, bzx.tokenABI, 'loanTokenAddress', []);
   newToken.price = multiplier * (await exports.getTokenPrice(chain, underlyingToken, decimals));
   newToken.logo = exports.getTokenLogo(chain, newToken.symbol);
 

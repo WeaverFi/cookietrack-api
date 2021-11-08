@@ -16,6 +16,7 @@ const bsc_autofarm = require('./routes/bsc/autofarm.js');
 // Polygon Routes:
 const poly_wallet = require('./routes/polygon/wallet.js');
 const poly_aave = require('./routes/polygon/aave.js');
+const poly_autofarm = require('./routes/polygon/autofarm.js');
 
 // Fantom Routes:
 const ftm_wallet = require('./routes/fantom/wallet.js');
@@ -108,6 +109,10 @@ app.get('/bsc/autofarm', async (req, res) => {
 });
 
 // AutoFarm (Polygon):
+app.get('/polygon/autofarm', async (req, res) => {
+  res.end(await poly_autofarm.get(req));
+});
+
 // AutoFarm (Fantom):
 // AutoFarm (Avalanche):
 
