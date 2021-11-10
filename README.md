@@ -42,13 +42,15 @@ The API that powers CookieTrack.
 
 **Polygon Projects Available:**
 - `aave`
+- `autofarm`
 
 **Fantom Projects Available:**
-- None.
+- `autofarm`
 
 **Avalanche Projects Available:**
 - `aave`
 - `snowball`
+- `autofarm`
 
 **Harmony Projects Available:**
 - None.

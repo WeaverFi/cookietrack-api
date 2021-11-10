@@ -749,7 +749,109 @@ exports.addCurveToken = async (chain, location, address, balance, owner) => {
   
   // Ethereum Token:
   if(chain === 'eth') {
-    // <TODO>
+    let registry = '0x90E00ACe148ca3b23Ac1bC8C240C2a7Dd9c2d7f5';
+    let decimals = parseInt(await exports.query(chain, address, minABI, 'decimals', []));
+    let actualBalance = balance / (10 ** decimals);
+    let symbol = await exports.query(chain, address, minABI, 'symbol', []);
+    let lpTokenSupply = await exports.query(chain, address, minABI, 'totalSupply', []) / (10 ** decimals);
+    let poolAddress = await exports.query(chain, registry, curve.registryABI, 'get_pool_from_lp_token', [address]);
+    let tokens = (await exports.query(chain, registry, curve.registryABI, 'get_underlying_coins', [poolAddress])).filter(token => token != '0x0000000000000000000000000000000000000000');
+    let reserves = await exports.query(chain, registry, curve.registryABI, 'get_balances', [poolAddress]).filter(balance => balance != 0);
+    let multiplier = parseInt(await exports.query(chain, registry, curve.registryABI, 'get_virtual_price_from_lp_token', [address])) / (10 ** decimals);
+
+    // Function to redirect synthetic asset price fetching:
+    const getPrice = async (chain, address, decimals) => {
+      if(address.toLowerCase() === '0xbBC455cb4F1B9e4bFC4B73970d360c8f032EfEE6'.toLowerCase()) { // sLINK
+        return await exports.getTokenPrice(chain, '0x514910771af9ca656af840dff83e8264ecf986ca', decimals);
+      } else if(address.toLowerCase() === '0xfE18be6b3Bd88A2D2A7f928d00292E7a9963CfC6'.toLowerCase()) { // sBTC
+        return await exports.getTokenPrice(chain, '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599', decimals);
+      } else if(address.toLowerCase() === '0xd71ecff9342a5ced620049e616c5035f1db98620'.toLowerCase()) { // sEUR
+        return await exports.getTokenPrice(chain, '0xdb25f211ab05b1c97d595516f45794528a807ad8', decimals);
+      } else {
+        return await exports.getTokenPrice(chain, address, decimals);
+      }
+    }
+
+    // 3+ Asset Tokens:
+    if(tokens.length > 2) {
+
+      // Initializing New Token:
+      let newToken = {
+        type: 'token',
+        chain: chain,
+        location: location,
+        owner: owner,
+        symbol: symbol,
+        address: address,
+        balance: actualBalance,
+        price: 0,
+        logo: ''
+      }
+
+      // Getting Missing Token Info:
+      let priceSum = 0;
+      for(let i = 0; i < tokens.length; i++) {
+        let tokenDecimals = parseInt(await exports.query(chain, tokens[i], minABI, 'decimals', []));
+        let tokenPrice = await getPrice(chain, tokens[i], tokenDecimals);
+        priceSum += (parseInt(reserves[i]) / (10 ** tokenDecimals)) * tokenPrice;
+      }
+      priceSum /= lpTokenSupply;
+      priceSum *= multiplier;
+      newToken.price = priceSum;
+      newToken.logo = exports.getTokenLogo(chain, newToken.symbol);
+
+      return newToken;
+
+    // Standard LP Tokens:
+    } else if(tokens.length === 2) {
+
+      // Initializing New Token:
+      let newToken = {
+        type: 'lpToken',
+        chain: chain,
+        location: location,
+        owner: owner,
+        symbol: symbol,
+        address: address,
+        balance: actualBalance,
+        token0: { symbol: '', address: '', balance: 0, price: 0, logo: '' },
+        token1: { symbol: '', address: '', balance: 0, price: 0, logo: '' }
+      }
+
+      // First Paired Token:
+      if(tokens[0].toLowerCase() === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
+        newToken.token0.address = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
+        newToken.token0.symbol = 'ETH';
+        newToken.token0.price = await getPrice(chain, newToken.token0.address, 18);
+        newToken.token0.balance = parseInt(reserves[0]) * ((newToken.balance / (10 ** decimals)) / lpTokenSupply);
+        newToken.token0.logo = exports.getTokenLogo(chain, newToken.token0.symbol);
+      } else {
+        newToken.token0.address = tokens[0];
+        newToken.token0.symbol = await exports.query(chain, newToken.token0.address, minABI, 'symbol', []);
+        let tokenDecimals = parseInt(await exports.query(chain, newToken.token0.address, minABI, 'decimals', []));
+        newToken.token0.price = await getPrice(chain, newToken.token0.address, tokenDecimals);
+        newToken.token0.balance = parseInt(reserves[0]) * ((newToken.balance / (10 ** decimals)) / lpTokenSupply);
+        newToken.token0.logo = exports.getTokenLogo(chain, newToken.token0.symbol);
+      }
+
+      // Second Paired Token:
+      if(tokens[1].toLowerCase() === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
+        newToken.token1.address = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
+        newToken.token1.symbol = 'ETH';
+        newToken.token1.price = await getPrice(chain, newToken.token1.address, 18);
+        newToken.token1.balance = parseInt(reserves[1]) * ((newToken.balance / (10 ** decimals)) / lpTokenSupply);
+        newToken.token1.logo = exports.getTokenLogo(chain, newToken.token1.symbol);
+      } else {
+        newToken.token1.address = tokens[1];
+        newToken.token1.symbol = await exports.query(chain, newToken.token1.address, minABI, 'symbol', []);
+        let tokenDecimals = parseInt(await exports.query(chain, newToken.token1.address, minABI, 'decimals', []));
+        newToken.token1.price = await getPrice(chain, newToken.token1.address, tokenDecimals);
+        newToken.token1.balance = parseInt(reserves[1]) * ((newToken.balance / (10 ** decimals)) / lpTokenSupply);
+        newToken.token1.logo = exports.getTokenLogo(chain, newToken.token1.symbol);
+      }
+
+      return newToken;
+    }
 
   // Polygon Token:
   } else if(chain === 'poly') {
