@@ -163,3 +163,21 @@ exports.compound = {
     { constant: true, inputs: [], name: "underlying", outputs: [{ name: "", type: "address" }], type: "function" }
   ]
 }
+
+// Yearn ABIs:
+exports.yearn = {
+  deployerABI: [
+    { constant: true, inputs: [], name: "numTokens", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "arg0", type: "uint256" }], name: "tokens", outputs: [{ name: "", type: "address" }], type: "function" },
+    { constant: true, inputs: [{ name: "arg0", type: "address" }], name: "numVaults", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "arg0", type: "address" }, { name: "arg1", type: "uint256" }], name: "vaults", outputs: [{ name: "", type: "address" }], type: "function" }
+  ],
+  vaultABI: [
+    { constant: true, inputs: [], name: "token", outputs: [{ name: "", type: "address" }], type: "function" },
+    { constant: true, inputs: [], name: "pricePerShare", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ],
+  tokenABI: [
+    { constant: true, inputs: [], name: "token", outputs: [{ name: "", type: "address" }], type: "function" },
+    { constant: true, inputs: [], name: "getPricePerFullShare", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ]
+}
