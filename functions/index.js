@@ -7,6 +7,7 @@ const cors = require('cors');
 // Ethereum Routes:
 const eth_wallet = require('./routes/ethereum/wallet.js');
 const eth_aave = require('./routes/ethereum/aave.js');
+const eth_compound = require('./routes/ethereum/compound.js');
 
 // BSC Routes:
 const bsc_wallet = require('./routes/bsc/wallet.js');
@@ -126,6 +127,9 @@ app.get('/avalanche/autofarm', async (req, res) => {
 });
 
 // Compound (Ethereum):
+app.get('/ethereum/compound', async (req, res) => {
+  res.end(await eth_compound.get(req));
+});
 
 // Yearn (Ethereum):
 

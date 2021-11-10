@@ -35,6 +35,7 @@ The API that powers CookieTrack.
 
 **Ethereum Projects Available:**
 - `aave`
+- `compound`
 
 **BSC Projects Available:**
 - `pancakeswap`
