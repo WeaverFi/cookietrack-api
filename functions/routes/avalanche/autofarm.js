@@ -2,12 +2,12 @@
 // Imports:
 const { ethers } = require('ethers');
 const { minABI, autofarm } = require('../../static/ABIs.js');
-const { query, addToken, addLPToken, addCurveToken, addBZXToken } = require('../../static/functions.js');
+const { query, addToken, addLPToken, addTraderJoeToken } = require('../../static/functions.js');
 
 // Initializations:
-const chain = 'poly';
+const chain = 'avax';
 const project = 'autofarm';
-const registry = '0x89d065572136814230a55ddeeddec9df34eb0b76';
+const registry = '0x864A0B7F8466247A0e44558D29cDC37D4623F213';
 
 /* ========================================================================================================================================================================= */
 
@@ -59,18 +59,13 @@ const getVaultBalances = async (wallet) => {
       let token = (await query(chain, registry, autofarm.registryABI, 'poolInfo', [vaultID]))[0];
       let symbol = await query(chain, token, minABI, 'symbol', []);
 
-      // Curve Vaults:
-      if(vaultID === 66 || vaultID === 97 || vaultID === 98) {
-        let newToken = await addCurveToken(chain, project, token, balance, wallet);
-        balances.push(newToken);
-
-      // BZX I-Token Vaults:
-      } else if(vaultID > 58 && vaultID < 66) {
-        let newToken = await addBZXToken(chain, project, token, balance, wallet);
+      // xJOE Vault:
+      if(vaultID === 17) {
+        let newToken = await addTraderJoeToken(chain, project, token, balance, wallet);
         balances.push(newToken);
 
       // LP Token Vaults:
-      } else if(symbol.includes('LP') || symbol === 'UNI-V2') {
+      } else if(symbol.includes('LP')) {
         let newToken = await addLPToken(chain, project, token, balance, wallet);
         balances.push(newToken);
 
