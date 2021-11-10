@@ -7,4 +7,4 @@ assignees: ''
 
 ---
 
-Add support for [<Project Name>](<Project Link).
+Add support for [<Project Name>](<Project Link>).
