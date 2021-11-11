@@ -1320,3 +1320,80 @@ exports.addBZXToken = async (chain, location, address, balance, owner) => {
 
   return newToken;
 }
+
+/* ========================================================================================================================================================================= */
+
+// Function to get Balancer LP token info:
+exports.addBalancerToken = async (chain, location, address, balance, owner, id) => {
+
+  // Getting LP Token Info:
+  let vault = '0xBA12222222228d8Ba445958a75a0704d566BF2C8';
+  let poolInfo = await exports.query(chain, vault, balancer.vaultABI, 'getPoolTokens', [id]);
+  let symbol = await exports.query(chain, address, minABI, 'symbol', []);
+  let decimals = parseInt(await exports.query(chain, address, minABI, 'decimals', []));
+  let actualBalance = balance / (10 ** decimals);
+  let lpTokenSupply = parseInt(await exports.query(chain, address, minABI, 'totalSupply', []));
+
+  // 3+ Asset Tokens:
+  if(poolInfo.tokens.length > 2) {
+    
+    // Initializing New Token:
+    let newToken = {
+      type: 'token',
+      chain: chain,
+      location: location,
+      owner: owner,
+      symbol: symbol,
+      address: address,
+      balance: actualBalance,
+      price: 0,
+      logo: ''
+    }
+
+    // Getting Missing Token Info:
+    let priceSum = 0;
+    for(let i = 0; i < poolInfo.tokens.length; i++) {
+      let tokenDecimals = parseInt(await exports.query(chain, poolInfo.tokens[i], minABI, 'decimals', []));
+      let tokenPrice = await getPrice(chain, poolInfo.tokens[i], tokenDecimals);
+      priceSum += (parseInt(poolInfo.balances[i]) / (10 ** tokenDecimals)) * tokenPrice;
+    }
+    newToken.price = priceSum / (lpTokenSupply / (10 ** decimals));
+    newToken.logo = exports.getTokenLogo(chain, newToken.symbol);
+
+    return newToken;
+
+  // Standard LP Tokens:
+  } else if(poolInfo.tokens.length === 2) {
+    
+    // Initializing New Token:
+    let newToken = {
+      type: 'lpToken',
+      chain: chain,
+      location: location,
+      owner: owner,
+      symbol: symbol,
+      address: address,
+      balance: actualBalance,
+      token0: { symbol: '', address: '', balance: 0, price: 0, logo: '' },
+      token1: { symbol: '', address: '', balance: 0, price: 0, logo: '' }
+    }
+
+    // First Paired Token:
+    newToken.token0.address = poolInfo.tokens[0];
+    newToken.token0.symbol = await exports.query(chain, newToken.token0.address, minABI, 'symbol', []);
+    let tokenDecimals = parseInt(await exports.query(chain, newToken.token0.address, minABI, 'decimals', []));
+    newToken.token0.price = await getPrice(chain, newToken.token0.address, tokenDecimals);
+    newToken.token0.balance = parseInt(reserves[0]) * ((newToken.balance / (10 ** decimals)) / lpTokenSupply);
+    newToken.token0.logo = exports.getTokenLogo(chain, newToken.token0.symbol);
+
+    // Second Paired Token:
+    newToken.token1.address = poolInfo.tokens[1];
+    newToken.token1.symbol = await exports.query(chain, newToken.token1.address, minABI, 'symbol', []);
+    tokenDecimals = parseInt(await exports.query(chain, newToken.token1.address, minABI, 'decimals', []));
+    newToken.token1.price = await getPrice(chain, newToken.token1.address, tokenDecimals);
+    newToken.token1.balance = parseInt(reserves[1]) * ((newToken.balance / (10 ** decimals)) / lpTokenSupply);
+    newToken.token1.logo = exports.getTokenLogo(chain, newToken.token1.symbol);
+
+    return newToken;
+  }
+}

@@ -37,6 +37,7 @@ The API that powers CookieTrack.
 - `aave`
 - `compound`
 - `yearn`
+- `balancer`
 
 **BSC Projects Available:**
 - `pancakeswap`
@@ -45,6 +46,7 @@ The API that powers CookieTrack.
 **Polygon Projects Available:**
 - `aave`
 - `autofarm`
+- `balancer`
 
 **Fantom Projects Available:**
 - `autofarm`

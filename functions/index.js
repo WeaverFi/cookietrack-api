@@ -9,6 +9,7 @@ const eth_wallet = require('./routes/ethereum/wallet.js');
 const eth_aave = require('./routes/ethereum/aave.js');
 const eth_compound = require('./routes/ethereum/compound.js');
 const eth_yearn = require('./routes/ethereum/yearn.js');
+const eth_balancer = require('./routes/ethereum/balancer.js');
 
 // BSC Routes:
 const bsc_wallet = require('./routes/bsc/wallet.js');
@@ -19,6 +20,7 @@ const bsc_autofarm = require('./routes/bsc/autofarm.js');
 const poly_wallet = require('./routes/polygon/wallet.js');
 const poly_aave = require('./routes/polygon/aave.js');
 const poly_autofarm = require('./routes/polygon/autofarm.js');
+const poly_balancer = require('./routes/polygon/balancer.js');
 
 // Fantom Routes:
 const ftm_wallet = require('./routes/fantom/wallet.js');
@@ -138,7 +140,15 @@ app.get('/ethereum/yearn', async (req, res) => {
 });
 
 // Balancer (Ethereum):
+app.get('/ethereum/balancer', async (req, res) => {
+  res.end(await eth_balancer.get(req));
+});
+
 // Balancer (Polygon):
+app.get('/polygon/balancer', async (req, res) => {
+  res.end(await poly_balancer.get(req));
+});
+
 
 // Belt (BSC):
 

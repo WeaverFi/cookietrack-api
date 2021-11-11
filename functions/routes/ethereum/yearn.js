@@ -71,7 +71,7 @@ const getVaultBalances = async (wallet) => {
     if(vaultCount > 0) {
       for(let i = 0; i < vaultCount; i++) {
         let vault = await query(chain, deployer, yearn.deployerABI, 'vaults', [token, i]);
-        let balance = await query(chain, vault, minABI, 'balanceOf', [wallet]);
+        let balance = parseInt(await query(chain, vault, minABI, 'balanceOf', [wallet]));
         if(balance > 0) {
           let underlyingToken = await query(chain, vault, yearn.vaultABI, 'token', []);
           let multiplier = await query(chain, vault, yearn.vaultABI, 'pricePerShare', []);
@@ -97,7 +97,7 @@ const getVaultBalances = async (wallet) => {
 const getTokenBalances = async (wallet) => {
   let balances = [];
   let promises = yTokenList.map(token => (async () => {
-    let balance = await query(chain, token, minABI, 'balanceOf', [wallet]);
+    let balance = parseInt(await query(chain, token, minABI, 'balanceOf', [wallet]));
     if(balance > 0) {
       let underlyingToken = await query(chain, token, yearn.tokenABI, 'token', []);
       let multiplier = await query(chain, token, yearn.tokenABI, 'getPricePerFullShare', []);
