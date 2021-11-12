@@ -208,3 +208,13 @@ exports.venus = {
     { constant: true, inputs: [{ name: "_user", type: "address" }], name: "pendingXVS", outputs: [{ name: "", type: "uint256" }], type: "function" }
   ]
 }
+
+// Iron ABIs:
+exports.iron = {
+  tokenABI: [
+    { constant: true, inputs: [], name: "swap", outputs: [{ name: "", type: "address" }], type: "function" }
+  ],
+  swapABI: [
+    { constant: true, inputs: [], name: "getVirtualPrice", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ]
+}
