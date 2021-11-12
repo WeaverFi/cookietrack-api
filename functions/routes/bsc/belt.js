@@ -56,7 +56,7 @@ const getPoolBalances = async (wallet) => {
   let poolLength = parseInt(await query(chain, masterBelt, belt.masterBeltABI, 'poolLength', []));
   let pools = [...Array(poolLength).keys()].filter(pool => pool != 0 && pool != 12 && pool != 13);
   let promises = pools.map(poolID => (async () => {
-    let balance = parseInt((await query(chain, masterBelt, belt.masterBeltABI, 'stakedWantTokens', [poolID, wallet])));
+    let balance = parseInt(await query(chain, masterBelt, belt.masterBeltABI, 'stakedWantTokens', [poolID, wallet]));
     if(balance > 0) {
       let token = (await query(chain, masterBelt, belt.masterBeltABI, 'poolInfo', [poolID])).want;
       let symbol = await query(chain, token, minABI, 'symbol', []);

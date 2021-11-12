@@ -43,6 +43,7 @@ The API that powers CookieTrack.
 - `pancakeswap`
 - `autofarm`
 - `belt`
+- `venus`
 
 **Polygon Projects Available:**
 - `aave`
