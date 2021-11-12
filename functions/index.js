@@ -27,6 +27,7 @@ const poly_balancer = require('./routes/polygon/balancer.js');
 // Fantom Routes:
 const ftm_wallet = require('./routes/fantom/wallet.js');
 const ftm_autofarm = require('./routes/fantom/autofarm.js');
+const ftm_spookyswap = require('./routes/fantom/spookyswap.js');
 
 // Avalanche Routes:
 const avax_wallet = require('./routes/avalanche/wallet.js');
@@ -173,6 +174,9 @@ app.get('/bsc/venus', async (req, res) => {
 // QuickSwap (Polygon):
 
 // SpookySwap (Fantom):
+app.get('/fantom/spookyswap', async (req, res) => {
+  res.end(await ftm_spookyswap.get(req));
+});
 
 // BenQi (Avalanche):
 
@@ -256,7 +260,7 @@ app.get('/snowball/deposits', async (req, res) => {
 /* ========================================================================================================================================================================= */
 
 // Starting Local Server:
-// app.listen(3000, () => { console.log('\nAPI Up on 127.0.0.1:3000'); });
+app.listen(3000, () => { console.log('\nAPI Up on 127.0.0.1:3000'); });
 
 // Exporting Express App:
 exports.app = functions.runWith({ memory: '256MB', timeoutSeconds: 120 }).https.onRequest(app);
