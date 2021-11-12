@@ -15,6 +15,7 @@ const eth_balancer = require('./routes/ethereum/balancer.js');
 const bsc_wallet = require('./routes/bsc/wallet.js');
 const bsc_pancakeswap = require('./routes/bsc/pancakeswap.js');
 const bsc_autofarm = require('./routes/bsc/autofarm.js');
+const bsc_belt = require('./routes/bsc/belt.js');
 
 // Polygon Routes:
 const poly_wallet = require('./routes/polygon/wallet.js');
@@ -149,8 +150,10 @@ app.get('/polygon/balancer', async (req, res) => {
   res.end(await poly_balancer.get(req));
 });
 
-
 // Belt (BSC):
+app.get('/bsc/belt', async (req, res) => {
+  res.end(await bsc_belt.get(req));
+});
 
 // Venus (BSC):
 

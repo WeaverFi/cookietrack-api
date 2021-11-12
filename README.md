@@ -42,6 +42,7 @@ The API that powers CookieTrack.
 **BSC Projects Available:**
 - `pancakeswap`
 - `autofarm`
+- `belt`
 
 **Polygon Projects Available:**
 - `aave`
