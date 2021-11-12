@@ -17,6 +17,7 @@ const bsc_pancakeswap = require('./routes/bsc/pancakeswap.js');
 const bsc_autofarm = require('./routes/bsc/autofarm.js');
 const bsc_belt = require('./routes/bsc/belt.js');
 const bsc_venus = require('./routes/bsc/venus.js');
+const bsc_beefy = require('./routes/bsc/beefy.js');
 
 // Polygon Routes:
 const poly_wallet = require('./routes/polygon/wallet.js');
@@ -163,6 +164,10 @@ app.get('/bsc/venus', async (req, res) => {
 });
 
 // Beefy (BSC):
+app.get('/bsc/beefy', async (req, res) => {
+  res.end(await bsc_beefy.get(req));
+});
+
 // Beefy (Polygon):
 // Beefy (Fantom):
 // Beefy (Avalanche):
@@ -260,7 +265,7 @@ app.get('/snowball/deposits', async (req, res) => {
 /* ========================================================================================================================================================================= */
 
 // Starting Local Server:
-app.listen(3000, () => { console.log('\nAPI Up on 127.0.0.1:3000'); });
+// app.listen(3000, () => { console.log('\nAPI Up on 127.0.0.1:3000'); });
 
 // Exporting Express App:
 exports.app = functions.runWith({ memory: '256MB', timeoutSeconds: 120 }).https.onRequest(app);

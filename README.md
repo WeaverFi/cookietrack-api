@@ -44,6 +44,7 @@ The API that powers CookieTrack.
 - `autofarm`
 - `belt`
 - `venus`
+- `beefy`
 
 **Polygon Projects Available:**
 - `aave`

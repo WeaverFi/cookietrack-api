@@ -231,3 +231,13 @@ exports.spookyswap = {
     { constant: true, inputs: [{ name: "_account", type: "address" }], name: "BOOBalance", outputs: [{ name: "booAmount_", type: "uint256" }], type: "function" }
   ]
 }
+
+// Beefy ABIs:
+exports.beefy = {
+  vaultABI: [
+		{ constant: true, inputs: [], name: "getPricePerFullShare", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ],
+  stakingABI: [
+    { constant: true, inputs: [{ name: "account", type: "address" }], name: "earned", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ]
+}
