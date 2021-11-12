@@ -2,7 +2,7 @@
 // Imports:
 const { ethers } = require('ethers');
 const axios = require('axios');
-const { snowball } = require('../../../static/ABIs.js');
+const { minABI, snowball } = require('../../../static/ABIs.js');
 const { query } = require('../../../static/functions.js');
 const farms = require('./farms.json').farms;
 
@@ -61,9 +61,9 @@ const getData = async (wallet) => {
 const getDeposits = async (wallet) => {
   let deposits = [];
   let promises = farms.map(farm => (async () => {
-    let balance = parseInt(await query(chain, farm.gauge, snowball.gaugeABI, 'balanceOf', [wallet]));
+    let balance = parseInt(await query(chain, farm.gauge, minABI, 'balanceOf', [wallet]));
     if(balance > 0) {
-      let symbol = await query(chain, farm.token, snowball.farmABI, 'symbol', []);
+      let symbol = await query(chain, farm.token, minABI, 'symbol', []);
       if(symbol != 's4D') {
         let underlyingAddress = await query(chain, farm.token, snowball.farmABI, 'token', []);
         let deposit = {

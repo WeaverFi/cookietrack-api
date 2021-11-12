@@ -88,9 +88,9 @@ const getFarmBalances = async (wallet) => {
   let deposits = [];
   let snobRewards = 0;
   let promises = farms.map(farm => (async () => {
-    let balance = parseInt(await query(chain, farm.gauge, snowball.gaugeABI, 'balanceOf', [wallet]));
+    let balance = parseInt(await query(chain, farm.gauge, minABI, 'balanceOf', [wallet]));
     if(balance > 0) {
-      let symbol = await query(chain, farm.token, snowball.farmABI, 'symbol', []);
+      let symbol = await query(chain, farm.token, minABI, 'symbol', []);
       if(symbol === 's4D') {
         let controller = await query(chain, farm.token, snowball.s4dABI, 'owner', []);
         let newToken = {
@@ -141,9 +141,9 @@ const getFarmBalances = async (wallet) => {
           }
           balances.push(newToken);
         } else if(symbol.includes('xJOE')) {
-          let decimals = parseInt(await query(chain, token, traderJoe.joeABI, 'decimals', []));
-          let symbol = await query(chain, token, traderJoe.joeABI, 'symbol', []);
-          let xjoeSupply = parseInt(await query(chain, token, traderJoe.joeABI, 'totalSupply', []));
+          let decimals = parseInt(await query(chain, token, minABI, 'decimals', []));
+          let symbol = await query(chain, token, minABI, 'symbol', []);
+          let xjoeSupply = parseInt(await query(chain, token, minABI, 'totalSupply', []));
           let underlyingToken = await query(chain, token, traderJoe.joeABI, 'joe', []);
           let joeStaked = parseInt(await query(chain, underlyingToken, minABI, 'balanceOf', [token]));
           let multiplier = joeStaked / xjoeSupply;

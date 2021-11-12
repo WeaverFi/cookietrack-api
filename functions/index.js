@@ -7,23 +7,36 @@ const cors = require('cors');
 // Ethereum Routes:
 const eth_wallet = require('./routes/ethereum/wallet.js');
 const eth_aave = require('./routes/ethereum/aave.js');
+const eth_compound = require('./routes/ethereum/compound.js');
+const eth_yearn = require('./routes/ethereum/yearn.js');
+const eth_balancer = require('./routes/ethereum/balancer.js');
 
 // BSC Routes:
 const bsc_wallet = require('./routes/bsc/wallet.js');
 const bsc_pancakeswap = require('./routes/bsc/pancakeswap.js');
+const bsc_autofarm = require('./routes/bsc/autofarm.js');
+const bsc_belt = require('./routes/bsc/belt.js');
+const bsc_venus = require('./routes/bsc/venus.js');
+const bsc_beefy = require('./routes/bsc/beefy.js');
 
 // Polygon Routes:
 const poly_wallet = require('./routes/polygon/wallet.js');
 const poly_aave = require('./routes/polygon/aave.js');
+const poly_autofarm = require('./routes/polygon/autofarm.js');
+const poly_balancer = require('./routes/polygon/balancer.js');
+const poly_beefy = require('./routes/polygon/beefy.js');
 
 // Fantom Routes:
 const ftm_wallet = require('./routes/fantom/wallet.js');
+const ftm_autofarm = require('./routes/fantom/autofarm.js');
+const ftm_spookyswap = require('./routes/fantom/spookyswap.js');
 
 // Avalanche Routes:
 const avax_wallet = require('./routes/avalanche/wallet.js');
 const avax_aave = require('./routes/avalanche/aave.js');
 const avax_snowball = require('./routes/avalanche/snowball.js');
 const avax_lydia = require('./routes/avalanche/lydia.js');
+const avax_autofarm = require('./routes/avalanche/autofarm.js');
 
 // Harmony Routes:
 const one_wallet = require('./routes/harmony/wallet.js');
@@ -103,23 +116,65 @@ app.get('/bsc/pancakeswap', async (req, res) => {
 });
 
 // AutoFarm (BSC):
+app.get('/bsc/autofarm', async (req, res) => {
+  res.end(await bsc_autofarm.get(req));
+});
+
 // AutoFarm (Polygon):
+app.get('/polygon/autofarm', async (req, res) => {
+  res.end(await poly_autofarm.get(req));
+});
+
 // AutoFarm (Fantom):
+app.get('/fantom/autofarm', async (req, res) => {
+  res.end(await ftm_autofarm.get(req));
+});
+
 // AutoFarm (Avalanche):
+app.get('/avalanche/autofarm', async (req, res) => {
+  res.end(await avax_autofarm.get(req));
+});
 
 // Compound (Ethereum):
+app.get('/ethereum/compound', async (req, res) => {
+  res.end(await eth_compound.get(req));
+});
 
 // Yearn (Ethereum):
+app.get('/ethereum/yearn', async (req, res) => {
+  res.end(await eth_yearn.get(req));
+});
 
 // Balancer (Ethereum):
+app.get('/ethereum/balancer', async (req, res) => {
+  res.end(await eth_balancer.get(req));
+});
+
 // Balancer (Polygon):
+app.get('/polygon/balancer', async (req, res) => {
+  res.end(await poly_balancer.get(req));
+});
 
 // Belt (BSC):
+app.get('/bsc/belt', async (req, res) => {
+  res.end(await bsc_belt.get(req));
+});
 
 // Venus (BSC):
+app.get('/bsc/venus', async (req, res) => {
+  res.end(await bsc_venus.get(req));
+});
 
 // Beefy (BSC):
+app.get('/bsc/beefy', async (req, res) => {
+  res.end(await bsc_beefy.get(req));
+});
+
 // Beefy (Polygon):
+app.get('/polygon/beefy', async (req, res) => {
+  res.end(await poly_beefy.get(req));
+});
+
 // Beefy (Fantom):
 // Beefy (Avalanche):
 // Beefy (Harmony):
@@ -130,6 +185,9 @@ app.get('/bsc/pancakeswap', async (req, res) => {
 // QuickSwap (Polygon):
 
 // SpookySwap (Fantom):
+app.get('/fantom/spookyswap', async (req, res) => {
+  res.end(await ftm_spookyswap.get(req));
+});
 
 // BenQi (Avalanche):
 
@@ -195,6 +253,8 @@ app.get('/avalanche/lydia', async (req, res) => {
 
 // Bouje (Fantom):
 
+// Axial (Avalanche):
+
 /* ========================================================================================================================================================================= */
 
 // Snowball Partnership Endpoints:
@@ -214,7 +274,7 @@ app.get('/snowball/deposits', async (req, res) => {
 /* ========================================================================================================================================================================= */
 
 // Starting Local Server:
-app.listen(3000, () => { console.log('\nAPI Up on 127.0.0.1:3000'); });
+//app.listen(3000, () => { console.log('\nAPI Up on 127.0.0.1:3000'); });
 
 // Exporting Express App:
 exports.app = functions.runWith({ memory: '256MB', timeoutSeconds: 120 }).https.onRequest(app);

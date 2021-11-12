@@ -18,7 +18,7 @@ The API that powers CookieTrack.
 
 `/<chain>/wallet?address=<wallet_address>` - Returns a wallet's token balances.
 
-**Chains available:**
+**Chains Available:**
 - `ethereum`
 - `bsc`
 - `polygon`
@@ -33,27 +33,39 @@ The API that powers CookieTrack.
 
 `/<chain>/<project>?address=<wallet_address>` - Returns a wallet's token balances in a specific project.
 
-**Ethereum Projects available:**
+**Ethereum Projects Available:**
 - `aave`
+- `compound`
+- `yearn`
+- `balancer`
 
-**BSC Projects available:**
+**BSC Projects Available:**
 - `pancakeswap`
+- `autofarm`
+- `belt`
+- `venus`
+- `beefy`
 
-**Polygon Projects available:**
+**Polygon Projects Available:**
 - `aave`
+- `autofarm`
+- `balancer`
+- `beefy`
 
-**Fantom Projects available:**
-- None.
+**Fantom Projects Available:**
+- `autofarm`
+- `spookyswap`
 
-**Avalanche Projects available:**
+**Avalanche Projects Available:**
 - `aave`
 - `snowball`
 - `lydia`
+- `autofarm`
 
-**Harmony Projects available:**
+**Harmony Projects Available:**
 - None.
 
-**Solana Projects available:**
+**Solana Projects Available:**
 - None.
 
 **Example:**

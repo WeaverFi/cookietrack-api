@@ -20,17 +20,13 @@ exports.lpABI = [
 // Aave ABIs:
 exports.aave = {
   stakingABI: [
-    { constant: true, inputs: [{ name: "account", type: "address" }], name: "balanceOf", outputs: [{ name: "", type: "uint256" }], type: "function" },
     { constant: true, inputs: [], name: "STAKED_TOKEN", outputs: [{ name: "", type: "address" }], type: "function" }
   ],
   incentivesABI: [
     { constant: true, inputs: [{ name: "_user", type: "address" }], name: "getUserUnclaimedRewards", outputs: [{ name: "", type: "uint256" }], type: "function" }
   ],
   lpABI: [
-    { constant: true, inputs: [], name: "bPool", outputs: [{ name: "", type: "address" }], type: "function" },
-    { constant: true, inputs: [], name: "symbol", outputs: [{ name: "", type: "string" }], type: "function" },
-    { constant: true, inputs: [], name: "decimals", outputs: [{ name: "", type: "uint8" }], type: "function" },
-    { constant: true, inputs: [], name: "totalSupply", outputs: [{ name: "", type: "uint256" }], type: "function" }
+    { constant: true, inputs: [], name: "bPool", outputs: [{ name: "", type: "address" }], type: "function" }
   ],
   registryABI: [
     { constant: true, inputs: [{ name: "asset", type: "address" }], name: "getReserveTokensAddresses", outputs: [{ name: "aTokenAddress", type: "address" }, { name: "stableDebtTokenAddress", type: "address" }, { name: "variableDebtTokenAddress", type: "address" }], type: "function" }
@@ -42,6 +38,10 @@ exports.balancer = {
   tokenABI: [
     { constant: true, inputs: [], name: "getCurrentTokens", outputs: [{ name: "", type: "address[]" }], type: "function" },
     { constant: true, inputs: [{ name: "token", type: "address" }], name: "getBalance", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ],
+  vaultABI: [
+    { constant: true, inputs: [{ name: "poolId", type: "bytes32" }], name: "getPool", outputs: [{ name: "", type: "address" }, { name: "", type: "uint8" }], type: "function" },
+    { constant: true, inputs: [{ name: "poolId", type: "bytes32" }], name: "getPoolTokens", outputs: [{ name: "tokens", type: "address[]" }, { name: "balances", type: "uint256[]" }], type: "function" }
   ]
 }
 
@@ -52,13 +52,11 @@ exports.snowball = {
     { constant: true, inputs: [{ name: "_token", type: "address" }], name: "getGauge", outputs: [{ name: "", type: "address" }], type: "function" }
   ],
   gaugeABI: [
-    { constant: true, inputs: [{ name: "account", type: "address" }], name: "balanceOf", outputs: [{ name: "", type: "uint256" }], type: "function" },
     { constant: true, inputs: [{ name: "account", type: "address" }], name: "earned", outputs: [{ name: "", type: "uint256" }], type: "function" }
   ],
   farmABI: [
     { constant: true, inputs: [], name: "getRatio", outputs: [{ name: "", type: "uint256" }], type: "function" },
-    { constant: true, inputs: [], name: "token", outputs: [{ name: "", type: "address" }], type: "function" },
-    { constant: true, inputs: [], name: "symbol", outputs: [{ name: "", type: "string" }], type: "function" }
+    { constant: true, inputs: [], name: "token", outputs: [{ name: "", type: "address" }], type: "function" }
   ],
   stakingABI: [
     { constant: true, inputs: [{ name: "arg0", type: "address" }], name: "locked", outputs: [{ name: "amount", type: "uint128" }, { name: "end", type: "uint256" }], type: "function" }
@@ -74,11 +72,7 @@ exports.snowball = {
 // Trader Joe ABIs:
 exports.traderJoe = {
   joeABI: [
-    { constant: true, inputs: [], name: "joe", outputs: [{ name: "", type: "address" }], type: "function" },
-    { constant: true, inputs: [{ name: "account", type: "address" }], name: "balanceOf", outputs: [{ name: "", type: "uint256" }], type: "function" },
-    { constant: true, inputs: [], name: "totalSupply", outputs: [{ name: "", type: "uint256" }], type: "function" },
-    { constant: true, inputs: [], name: "decimals", outputs: [{ name: "", type: "uint8" }], type: "function" },
-    { constant: true, inputs: [], name: "symbol", outputs: [{ name: "", type: "string" }], type: "function" }
+    { constant: true, inputs: [], name: "joe", outputs: [{ name: "", type: "address" }], type: "function" }
   ]
 }
 
@@ -113,4 +107,156 @@ exports.lydia = {
         { constant: true, inputs: [], name: "stakingToken", outputs: [{ name: "", type: "address" }], type: "function" },
         { constant: true, inputs: [{ name: "account", type: "address" }], name: "earned", outputs: [{ name: "", type: "uint256" }], type: "function" }
     ]
+}
+
+// AutoFarm ABIs:
+exports.autofarm = {
+  registryABI: [
+    { constant: true, inputs: [], name: "poolLength", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "_pid", type: "uint256" }, { name: "_user", type: "address" }], name: "stakedWantTokens", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "", type: "uint256" }], name: "poolInfo", outputs: [{ name: "want", type: "address" }, { name: "allocPoint", type: "uint256" }, { name: "lastRewardBlock", type: "uint256" }, { name: "accAUTOPerShare", type: "uint256" }, { name: "strat", type: "address" }], type: "function" }
+  ],
+  pendingRewardsABI: [
+    { constant: true, inputs: [{ name: "_pid", type: "uint256" }, { name: "_user", type: "address" }], name: "pendingAUTO", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ]
+}
+
+// Belt ABIs:
+exports.belt = {
+  masterBeltABI: [
+    { constant: true, inputs: [], name: "poolLength", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "_pid", type: "uint256" }, { name: "_user", type: "address" }], name: "stakedWantTokens", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "<input>", type: "uint256" }], name: "poolInfo", outputs: [{ name: "want", type: "address" }, { name: "allocPoint", type: "uint256" }, { name: "lastRewardBlock", type: "uint256" }, { name: "accBELTPerShare", type: "uint256" }, { name: "strat", type: "address" }], type: "function" },
+    { constant: true, inputs: [{ name: "_pid", type: "uint256" }, { name: "_user", type: "address" }], name: "pendingBELT", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ],
+  tokenABI: [
+    { constant: true, inputs: [], name: "getPricePerFullShare", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [], name: "token", outputs: [{ name: "", type: "address" }], type: "function" }
+  ]
+}
+
+// Alpaca ABIs:
+exports.alpaca = {
+  tokenABI: [
+    { constant: true, inputs: [], name: "token", outputs: [{ name: "", type: "address" }], type: "function" },
+    { constant: true, inputs: [], name: "totalToken", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ]
+}
+
+// Curve ABIs:
+exports.curve = {
+  registryABI: [
+    { constant: true, inputs: [{ name: "arg0", type: "address" }], name: "get_pool_from_lp_token", outputs: [{ name: "", type: "address" }], type: "function" },
+    { constant: true, inputs: [{ name: "_pool", type: "address" }], name: "get_underlying_coins", outputs: [{ name: "", type: "address[8]" }], type: "function" },
+    { constant: true, inputs: [{ name: "_pool", type: "address" }], name: "get_balances", outputs: [{ name: "", type: "uint256[8]" }], type: "function" },
+    { constant: true, inputs: [{ name: "_token", type: "address" }], name: "get_virtual_price_from_lp_token", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ],
+  polyTokenABI: [
+    { constant: true, inputs: [], name: "minter", outputs: [{ name: "", type: "address" }], type: "function" }
+  ],
+  ftmTokenABI: [
+    { constant: true, inputs: [], name: "get_virtual_price", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "arg0", type: "uint256" }], name: "balances", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "arg0", type: "uint256" }], name: "coins", outputs: [{ name: "", type: "address" }], type: "function" },
+    { constant: true, inputs: [], name: "minter", outputs: [{ name: "", type: "address" }], type: "function" }
+  ],
+  avaxTokenABI: [
+    { constant: true, inputs: [], name: "minter", outputs: [{ name: "", type: "address" }], type: "function" }
+  ],
+  minterABI: [
+    { constant: true, inputs: [{ name: "i", type: "uint256" }], name: "balances", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [], name: "get_virtual_price", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "arg0", type: "uint256" }], name: "coins", outputs: [{ name: "", type: "address" }], type: "function" },
+    { constant: true, inputs: [{ name: "arg0", type: "uint256" }], name: "underlying_coins", outputs: [{ name: "", type: "address" }], type: "function" }
+  ],
+  intermediaryABI: [
+    { constant: true, inputs: [], name: "UNDERLYING_ASSET_ADDRESS", outputs: [{ name: "", type: "address" }], type: "function" }
+  ]
+}
+
+// BZX ABIs:
+exports.bzx = {
+  tokenABI: [
+    { constant: true, inputs: [], name: "loanTokenAddress", outputs: [{ name: "", type: "address" }], type: "function" },
+    { constant: true, inputs: [], name: "tokenPrice", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ]
+}
+
+// Compound ABIs:
+exports.compound = {
+  controllerABI: [
+    { constant: true, inputs: [], name: "getAllMarkets", outputs: [{ name: "", type: "address[]" }], type: "function" }
+  ],
+  marketABI: [
+    { constant: true, inputs: [{ name: "account", type: "address" }], name: "getAccountSnapshot", outputs: [{ name: "", type: "uint256" }, { name: "", type: "uint256" }, { name: "", type: "uint256" }, { name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [], name: "underlying", outputs: [{ name: "", type: "address" }], type: "function" }
+  ]
+}
+
+// Yearn ABIs:
+exports.yearn = {
+  deployerABI: [
+    { constant: true, inputs: [], name: "numTokens", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "arg0", type: "uint256" }], name: "tokens", outputs: [{ name: "", type: "address" }], type: "function" },
+    { constant: true, inputs: [{ name: "arg0", type: "address" }], name: "numVaults", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "arg0", type: "address" }, { name: "arg1", type: "uint256" }], name: "vaults", outputs: [{ name: "", type: "address" }], type: "function" }
+  ],
+  vaultABI: [
+    { constant: true, inputs: [], name: "token", outputs: [{ name: "", type: "address" }], type: "function" },
+    { constant: true, inputs: [], name: "pricePerShare", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ],
+  tokenABI: [
+    { constant: true, inputs: [], name: "token", outputs: [{ name: "", type: "address" }], type: "function" },
+    { constant: true, inputs: [], name: "getPricePerFullShare", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ]
+}
+
+// Venus ABIs:
+exports.venus = {
+  controllerABI: [
+    { constant: true, inputs: [], name: "getAllMarkets", outputs: [{ name: "", type: "address[]" }], type: "function" },
+    { constant: true, inputs: [{ name: "<input>", type: "address" }], name: "venusAccrued", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ],
+  marketABI: [
+    { constant: true, inputs: [], name: "exchangeRateStored", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [], name: "underlying", outputs: [{ name: "", type: "address" }], type: "function" },
+    { constant: true, inputs: [{ name: "account", type: "address" }], name: "borrowBalanceStored", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ],
+  vaultABI: [
+    { constant: true, inputs: [{ name: "<input>", type: "address" }], name: "userInfo", outputs: [{ name: "amount", type: "uint256" }, { name: "rewardDebt", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "_user", type: "address" }], name: "pendingXVS", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ]
+}
+
+// Iron ABIs:
+exports.iron = {
+  tokenABI: [
+    { constant: true, inputs: [], name: "swap", outputs: [{ name: "", type: "address" }], type: "function" }
+  ],
+  swapABI: [
+    { constant: true, inputs: [], name: "getVirtualPrice", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ]
+}
+
+// SpookySwap ABIs:
+exports.spookyswap = {
+  masterChefABI: [
+    { constant: true, inputs: [], name: "poolLength", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "<input>", type: "uint256" }, { name: "<input>", type: "address" }], name: "userInfo", outputs: [{ name: "amount", type: "uint256" }, { name: "rewardDebt", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "<input>", type: "uint256" }], name: "poolInfo", outputs: [{ name: "lpToken", type: "address" }, { name: "allocPoint", type: "uint256" }, { name: "lastRewardTime", type: "uint256" }, { name: "accBOOPerShare", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "_pid", type: "uint256" }, { name: "_user", type: "address" }], name: "pendingBOO", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ],
+  xbooABI: [
+    { constant: true, inputs: [{ name: "_account", type: "address" }], name: "BOOBalance", outputs: [{ name: "booAmount_", type: "uint256" }], type: "function" }
+  ]
+}
+
+// Beefy ABIs:
+exports.beefy = {
+  vaultABI: [
+		{ constant: true, inputs: [], name: "getPricePerFullShare", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ],
+  stakingABI: [
+    { constant: true, inputs: [{ name: "account", type: "address" }], name: "earned", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ]
 }

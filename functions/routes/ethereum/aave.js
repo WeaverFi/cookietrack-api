@@ -70,7 +70,7 @@ const getStakedAAVE = async (wallet) => {
 
 // Function to get staked LP balance:
 const getStakedLP = async (wallet) => {
-  let balance = parseInt(await query(chain, lpStaking, aave.stakingABI, 'balanceOf', [wallet]));
+  let balance = parseInt(await query(chain, lpStaking, minABI, 'balanceOf', [wallet]));
   if(balance > 0) {
     let tokenAddress = await query(chain, lpStaking, aave.stakingABI, 'STAKED_TOKEN', []);
     let newToken = await addAaveBLPToken(chain, project, tokenAddress, balance, wallet);
