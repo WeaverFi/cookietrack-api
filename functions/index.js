@@ -23,6 +23,7 @@ const ftm_wallet = require('./routes/fantom/wallet.js');
 const avax_wallet = require('./routes/avalanche/wallet.js');
 const avax_aave = require('./routes/avalanche/aave.js');
 const avax_snowball = require('./routes/avalanche/snowball.js');
+const avax_lydia = require('./routes/avalanche/lydia.js');
 
 // Harmony Routes:
 const one_wallet = require('./routes/harmony/wallet.js');
@@ -159,6 +160,9 @@ app.get('/avalanche/snowball', async (req, res) => {
 // PoolTogether (Polygon):
 
 // Lydia (Avalanche):
+app.get('/avalanche/lydia', async (req, res) => {
+    res.end(await avax_lydia.get(req));
+});
 
 // Teddy (Avalanche):
 
@@ -210,7 +214,7 @@ app.get('/snowball/deposits', async (req, res) => {
 /* ========================================================================================================================================================================= */
 
 // Starting Local Server:
-// app.listen(3000, () => { console.log('\nAPI Up on 127.0.0.1:3000'); });
+app.listen(3000, () => { console.log('\nAPI Up on 127.0.0.1:3000'); });
 
 // Exporting Express App:
 exports.app = functions.runWith({ memory: '256MB', timeoutSeconds: 120 }).https.onRequest(app);

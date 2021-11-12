@@ -48,6 +48,7 @@ The API that powers CookieTrack.
 **Avalanche Projects available:**
 - `aave`
 - `snowball`
+- `lydia`
 
 **Harmony Projects available:**
 - None.
