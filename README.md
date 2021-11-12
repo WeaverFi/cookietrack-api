@@ -50,6 +50,7 @@ The API that powers CookieTrack.
 - `aave`
 - `autofarm`
 - `balancer`
+- `beefy`
 
 **Fantom Projects Available:**
 - `autofarm`

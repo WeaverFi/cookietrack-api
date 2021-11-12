@@ -24,6 +24,7 @@ const poly_wallet = require('./routes/polygon/wallet.js');
 const poly_aave = require('./routes/polygon/aave.js');
 const poly_autofarm = require('./routes/polygon/autofarm.js');
 const poly_balancer = require('./routes/polygon/balancer.js');
+const poly_beefy = require('./routes/polygon/beefy.js');
 
 // Fantom Routes:
 const ftm_wallet = require('./routes/fantom/wallet.js');
@@ -169,6 +170,10 @@ app.get('/bsc/beefy', async (req, res) => {
 });
 
 // Beefy (Polygon):
+app.get('/polygon/beefy', async (req, res) => {
+  res.end(await poly_beefy.get(req));
+});
+
 // Beefy (Fantom):
 // Beefy (Avalanche):
 // Beefy (Harmony):

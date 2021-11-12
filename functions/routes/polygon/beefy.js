@@ -3,14 +3,14 @@
 const { ethers } = require('ethers');
 const axios = require('axios');
 const { minABI, beefy } = require('../../static/ABIs.js');
-const { query, addToken, addLPToken, add4BeltToken, addBeltToken, addAlpacaToken } = require('../../static/functions.js');
+const { query, addToken, addLPToken, addCurveToken, addIronToken} = require('../../static/functions.js');
 
 // Initializations:
-const chain = 'bsc';
+const chain = 'poly';
 const project = 'beefy';
-const staking = '0x453d4ba9a2d594314df88564248497f7d74d6b2c';
-const bifi = '0xca3f508b8e4dd382ee878a314789373d80a5190a';
-const wbnb = '0x4BD17003473389A42DAF6a0a729f6Fdb328BbBd7';
+const staking = '0xDeB0a777ba6f59C78c654B8c92F80238c8002DD2';
+const bifi = '0xfbdd194376de19a88118e84e279b977f165d01b8';
+const wmatic = '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270';
 
 /* ========================================================================================================================================================================= */
 
@@ -31,7 +31,7 @@ exports.get = async (req) => {
   if(wallet != undefined) {
     if(ethers.utils.isAddress(wallet)) {
       try {
-        let vaults = ((await axios.get('https://api.beefy.finance/vaults')).data).filter(vault => vault.chain === 'bsc' && vault.status === 'active' && vault.tokenAddress);
+        let vaults = ((await axios.get('https://api.beefy.finance/vaults')).data).filter(vault => vault.chain === 'polygon' && vault.status === 'active' && vault.tokenAddress);
         response.data.push(...(await getVaultBalances(wallet, vaults)));
         response.data.push(...(await getStakedBIFI(wallet)));
       } catch {
@@ -63,30 +63,27 @@ const getVaultBalances = async (wallet, vaults) => {
       let exchangeRate = parseInt(await query(chain, vault.earnedTokenAddress, beefy.vaultABI, 'getPricePerFullShare', []));
       let underlyingBalance = balance * (exchangeRate / (10 ** decimals));
 
+      // Curve Vaults:
+      if(vault.platform === 'Curve') {
+        let newToken = await addCurveToken(chain, project, vault.tokenAddress, underlyingBalance, wallet);
+        balances.push(newToken);
+
       // Unique Vaults (3+ Assets):
-      if(vault.assets.length > 2) {
-        if(vault.id === 'belt-4belt') {
-          let newToken = await add4BeltToken(chain, project, vault.tokenAddress, underlyingBalance, wallet);
+      } else if(vault.assets.length > 2) {
+        if(vault.paltform === 'IronFinance') {
+          let newToken = await addIronToken(chain, project, vault.tokenAddress, underlyingBalance, wallet);
           balances.push(newToken);
         }
 
       // LP Token Vaults:
-      } else if(vault.assets.length === 2 && vault.id != 'omnifarm-usdo-busd-ot' && vault.id != 'ellipsis-renbtc') {
+      } else if(vault.assets.length === 2 && vault.platform != 'Kyber') {
         let newToken = await addLPToken(chain, project, vault.tokenAddress, underlyingBalance, wallet);
         balances.push(newToken);
 
       // Single-Asset Vaults:
       } else if(vault.assets.length === 1) {
-        if(vault.platform === 'Belt') {
-          let newToken = await addBeltToken(chain, project, vault.tokenAddress, underlyingBalance, wallet);
-          balances.push(newToken);
-        } else if(vault.platform === 'Alpaca') {
-          let newToken = await addAlpacaToken(chain, project, vault.tokenAddress, underlyingBalance, wallet);
-          balances.push(newToken);
-        } else {
-          let newToken = await addToken(chain, project, vault.tokenAddress, underlyingBalance, wallet);
-          balances.push(newToken);
-        }
+        let newToken = await addToken(chain, project, vault.tokenAddress, underlyingBalance, wallet);
+        balances.push(newToken);
       }
     }
   })());
@@ -104,7 +101,7 @@ const getStakedBIFI = async (wallet) => {
   }
   let pendingRewards = parseInt(await query(chain, staking, beefy.stakingABI, 'earned', [wallet]));
   if(pendingRewards > 0) {
-    let newToken = await addToken(chain, project, wbnb, pendingRewards, wallet);
+    let newToken = await addToken(chain, project, wmatic, pendingRewards, wallet);
     balances.push(newToken);
   }
   return balances;
