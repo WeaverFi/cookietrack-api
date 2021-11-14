@@ -62,6 +62,7 @@ The API that powers CookieTrack.
 - `snowball`
 - `lydia`
 - `autofarm`
+- `beefy`
 
 **Harmony Projects Available:**
 - None.
