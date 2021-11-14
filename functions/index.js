@@ -30,6 +30,7 @@ const poly_beefy = require('./routes/polygon/beefy.js');
 const ftm_wallet = require('./routes/fantom/wallet.js');
 const ftm_autofarm = require('./routes/fantom/autofarm.js');
 const ftm_spookyswap = require('./routes/fantom/spookyswap.js');
+const ftm_beefy = require('./routes/fantom/beefy.js');
 
 // Avalanche Routes:
 const avax_wallet = require('./routes/avalanche/wallet.js');
@@ -176,6 +177,10 @@ app.get('/polygon/beefy', async (req, res) => {
 });
 
 // Beefy (Fantom):
+app.get('/fantom/beefy', async (req, res) => {
+  res.end(await ftm_beefy.get(req));
+});
+
 // Beefy (Avalanche):
 // Beefy (Harmony):
 

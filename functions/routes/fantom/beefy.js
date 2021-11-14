@@ -3,14 +3,14 @@
 const { ethers } = require('ethers');
 const axios = require('axios');
 const { minABI, beefy } = require('../../static/ABIs.js');
-const { query, addToken, addLPToken, addCurveToken, addIronToken } = require('../../static/functions.js');
+const { query, addToken, addLPToken, addCurveToken } = require('../../static/functions.js');
 
 // Initializations:
-const chain = 'poly';
+const chain = 'ftm';
 const project = 'beefy';
-const staking = '0xDeB0a777ba6f59C78c654B8c92F80238c8002DD2';
-const bifi = '0xfbdd194376de19a88118e84e279b977f165d01b8';
-const wmatic = '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270';
+const staking = '0x7fB900C14c9889A559C777D016a885995cE759Ee';
+const bifi = '0xd6070ae98b8069de6B494332d1A1a81B6179D960';
+const wftm = '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83';
 
 /* ========================================================================================================================================================================= */
 
@@ -31,7 +31,7 @@ exports.get = async (req) => {
   if(wallet != undefined) {
     if(ethers.utils.isAddress(wallet)) {
       try {
-        let vaults = ((await axios.get('https://api.beefy.finance/vaults')).data).filter(vault => vault.chain === 'polygon' && vault.status === 'active' && vault.tokenAddress);
+        let vaults = ((await axios.get('https://api.beefy.finance/vaults')).data).filter(vault => vault.chain === 'fantom' && vault.status === 'active' && vault.tokenAddress);
         response.data.push(...(await getVaultBalances(wallet, vaults)));
         response.data.push(...(await getStakedBIFI(wallet)));
       } catch {
@@ -70,20 +70,22 @@ const getVaultBalances = async (wallet, vaults) => {
 
       // Unique Vaults (3+ Assets):
       } else if(vault.assets.length > 2) {
-        if(vault.paltform === 'IronFinance') {
-          let newToken = await addIronToken(chain, project, vault.tokenAddress, underlyingBalance, wallet);
-          balances.push(newToken);
-        }
+        // None relevant / supported yet.
 
       // LP Token Vaults:
-      } else if(vault.assets.length === 2 && vault.platform != 'Kyber') {
+      } else if(vault.assets.length === 2 && vault.platform != 'StakeSteak' && vault.platform != 'Beethoven X') {
         let newToken = await addLPToken(chain, project, vault.tokenAddress, underlyingBalance, wallet);
         balances.push(newToken);
 
       // Single-Asset Vaults:
       } else if(vault.assets.length === 1) {
-        let newToken = await addToken(chain, project, vault.tokenAddress, underlyingBalance, wallet);
-        balances.push(newToken);
+        if(vault.token === 'FTM') {
+          let newToken = await addToken(chain, project, wftm, underlyingBalance, wallet);
+          balances.push(newToken);
+        } else {
+          let newToken = await addToken(chain, project, vault.tokenAddress, underlyingBalance, wallet);
+          balances.push(newToken);
+        }
       }
     }
   })());
@@ -101,7 +103,7 @@ const getStakedBIFI = async (wallet) => {
   }
   let pendingRewards = parseInt(await query(chain, staking, beefy.stakingABI, 'earned', [wallet]));
   if(pendingRewards > 0) {
-    let newToken = await addToken(chain, project, wmatic, pendingRewards, wallet);
+    let newToken = await addToken(chain, project, wftm, pendingRewards, wallet);
     balances.push(newToken);
   }
   return balances;

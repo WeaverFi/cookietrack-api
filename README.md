@@ -55,6 +55,7 @@ The API that powers CookieTrack.
 **Fantom Projects Available:**
 - `autofarm`
 - `spookyswap`
+- `beefy`
 
 **Avalanche Projects Available:**
 - `aave`
