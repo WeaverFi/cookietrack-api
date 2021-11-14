@@ -268,3 +268,27 @@ exports.wault = {
 		{ constant: true, inputs: [{ name: "<input>", type: "uint256" }], name: "poolInfo", outputs: [{ name: "lpToken", type: "address" }, { name: "allocPoint", type: "uint256" }, { name: "lastRewardBlock", type: "uint256" }, { name: "accWexPerShare", type: "uint256" }], type: "function" }
   ]
 }
+
+// Quickswap ABIs:
+exports.quickswap = {
+  registryABI: [
+    { constant: true, inputs: [{ name: "<input>", type: "uint256" }], name: "stakingTokens", outputs: [{ name: "", type: "address" }], type: "function" },
+    { constant: true, inputs: [{ name: "<input>", type: "address" }], name: "stakingRewardsInfoByStakingToken", outputs: [{ name: "stakingRewards", type: "address" }, { name: "rewardAmount", type: "uint256" }, { name: "duration", type: "uint256" }], type: "function" }
+  ],
+  dualRegistryABI: [
+    { constant: true, inputs: [{ name: "<input>", type: "uint256" }], name: "stakingTokens", outputs: [{ name: "", type: "address" }], type: "function" },
+    { constant: true, inputs: [{ name: "<input>", type: "address" }], name: "stakingRewardsInfoByStakingToken", outputs: [{ name: "stakingRewards", type: "address" }, { name: "rewardsTokenA", type: "address" }, { name: "rewardsTokenB", type: "address" }, { name: "rewardAmountA", type: "uint256" }, { name: "rewardAmountB", type: "uint256" }, { name: "duration", type: "uint256" }], type: "function" }
+  ],
+  farmABI: [
+    { constant: true, inputs: [], name: "stakingToken", outputs: [{ name: "", type: "address" }], type: "function" },
+    { constant: true, inputs: [{ name: "account", type: "address" }], name: "earned", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ],
+  dualFarmABI: [
+    { constant: true, inputs: [], name: "stakingToken", outputs: [{ name: "", type: "address" }], type: "function" },
+    { constant: true, inputs: [{ name: "account", type: "address" }], name: "earnedA", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "account", type: "address" }], name: "earnedB", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ],
+  stakingABI: [
+    { constant: true, inputs: [{ name: "_dQuickAmount", type: "uint256" }], name: "dQUICKForQUICK", outputs: [{ name: "quickAmount_", type: "uint256" }], type: "function" }
+  ]
+}

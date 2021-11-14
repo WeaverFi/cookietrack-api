@@ -27,6 +27,7 @@ const poly_autofarm = require('./routes/polygon/autofarm.js');
 const poly_balancer = require('./routes/polygon/balancer.js');
 const poly_beefy = require('./routes/polygon/beefy.js');
 const poly_wault = require('./routes/polygon/wault.js');
+const poly_quickswap = require('./routes/polygon/quickswap.js');
 
 // Fantom Routes:
 const ftm_wallet = require('./routes/fantom/wallet.js');
@@ -206,6 +207,9 @@ app.get('/polygon/wault', async (req, res) => {
 });
 
 // QuickSwap (Polygon):
+app.get('/polygon/quickswap', async (req, res) => {
+  res.end(await poly_quickswap.get(req));
+});
 
 // SpookySwap (Fantom):
 app.get('/fantom/spookyswap', async (req, res) => {
