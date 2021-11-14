@@ -45,6 +45,7 @@ The API that powers CookieTrack.
 - `belt`
 - `venus`
 - `beefy`
+- `wault`
 
 **Polygon Projects Available:**
 - `aave`

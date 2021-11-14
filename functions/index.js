@@ -18,6 +18,7 @@ const bsc_autofarm = require('./routes/bsc/autofarm.js');
 const bsc_belt = require('./routes/bsc/belt.js');
 const bsc_venus = require('./routes/bsc/venus.js');
 const bsc_beefy = require('./routes/bsc/beefy.js');
+const bsc_wault = require('./routes/bsc/wault.js');
 
 // Polygon Routes:
 const poly_wallet = require('./routes/polygon/wallet.js');
@@ -194,6 +195,10 @@ app.get('/harmony/beefy', async (req, res) => {
 });
 
 // Wault (BSC):
+app.get('/bsc/wault', async (req, res) => {
+  res.end(await bsc_wault.get(req));
+});
+
 // Wault (Polygon):
 
 // QuickSwap (Polygon):
