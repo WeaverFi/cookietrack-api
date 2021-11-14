@@ -42,6 +42,7 @@ const avax_beefy = require('./routes/avalanche/beefy.js');
 
 // Harmony Routes:
 const one_wallet = require('./routes/harmony/wallet.js');
+const one_beefy = require('./routes/harmony/beefy.js');
 
 // Partnership Routes:
 const snowball_index = require('./routes/partnerships/snowball/index.js');
@@ -188,6 +189,9 @@ app.get('/avalanche/beefy', async (req, res) => {
 });
 
 // Beefy (Harmony):
+app.get('/harmony/beefy', async (req, res) => {
+  res.end(await one_beefy.get(req));
+});
 
 // Wault (BSC):
 // Wault (Polygon):
