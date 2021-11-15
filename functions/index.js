@@ -42,6 +42,7 @@ const avax_snowball = require('./routes/avalanche/snowball.js');
 const avax_lydia = require('./routes/avalanche/lydia.js');
 const avax_autofarm = require('./routes/avalanche/autofarm.js');
 const avax_beefy = require('./routes/avalanche/beefy.js');
+const avax_benqi = require('./routes/avalanche/benqi.js');
 
 // Harmony Routes:
 const one_wallet = require('./routes/harmony/wallet.js');
@@ -217,6 +218,9 @@ app.get('/fantom/spookyswap', async (req, res) => {
 });
 
 // BenQi (Avalanche):
+app.get('/avalanche/benqi', async (req, res) => {
+  res.end(await avax_benqi.get(req));
+});
 
 // Pangolin (Avalanche):
 
