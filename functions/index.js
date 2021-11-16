@@ -43,6 +43,7 @@ const avax_lydia = require('./routes/avalanche/lydia.js');
 const avax_autofarm = require('./routes/avalanche/autofarm.js');
 const avax_beefy = require('./routes/avalanche/beefy.js');
 const avax_benqi = require('./routes/avalanche/benqi.js');
+const avax_pangolin = require('./routes/avalanche/pangolin.js');
 
 // Harmony Routes:
 const one_wallet = require('./routes/harmony/wallet.js');
@@ -223,6 +224,9 @@ app.get('/avalanche/benqi', async (req, res) => {
 });
 
 // Pangolin (Avalanche):
+app.get('/avalanche/pangolin', async (req, res) => {
+  res.end(await avax_pangolin.get(req));
+});
 
 // HoneyFarm (BSC):
 

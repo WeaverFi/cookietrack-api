@@ -303,3 +303,11 @@ exports.benqi = {
     { constant: true, inputs: [], name: "underlying", outputs: [{ name: "", type: "address" }], type: "function" }
   ]
 }
+
+// Pangolin ABIs:
+exports.pangolin = {
+  factoryABI: [
+    { constant: true, inputs: [], name: "allPairsLength", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "", type: "uint256" }], name: "allPairs", outputs: [{ name: "", type: "address" }], type: "function" }
+  ]
+}

@@ -67,6 +67,7 @@ The API that powers CookieTrack.
 - `autofarm`
 - `beefy`
 - `benqi`
+- `pangolin`
 
 **Harmony Projects Available:**
 - `beefy`
