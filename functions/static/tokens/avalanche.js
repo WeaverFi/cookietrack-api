@@ -147,7 +147,8 @@ exports.avax_token_logos = {
   'BLZZ':               'https://snowtrace.io/token/images/blzz_32.png',
   'AXIAL':              'https://assets.coingecko.com/coins/images/20502/small/E5nD9pPv_400x400.jpg?1637139692',
   'AS4D':               'https://assets.coingecko.com/coins/images/20502/small/E5nD9pPv_400x400.jpg?1637139692',
-  'AC4D':               'https://assets.coingecko.com/coins/images/20502/small/E5nD9pPv_400x400.jpg?1637139692'
+  'AC4D':               'https://assets.coingecko.com/coins/images/20502/small/E5nD9pPv_400x400.jpg?1637139692',
+  'AM3D':               'https://assets.coingecko.com/coins/images/20502/small/E5nD9pPv_400x400.jpg?1637139692'
 }
 
 // Token Blacklist:
