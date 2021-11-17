@@ -59,7 +59,8 @@ exports.avax_tokens = [
   { address: '0x9a928D7dcD8D7E5Cb6860B7768eC2D87B8934267', symbol: 'BAMBOO-V2' },
   { address: '0x6e7f5c0b9f4432716bdd0a77a3601291b9d9e985', symbol: 'SPORE' },
   { address: '0xb2a85C5ECea99187A977aC34303b80AcbDdFa208', symbol: 'ROCO' },
-  { address: '0x0f34919404a290e71fc6A510cB4a6aCb8D764b24', symbol: 'BLZZ' }
+  { address: '0x0f34919404a290e71fc6A510cB4a6aCb8D764b24', symbol: 'BLZZ' },
+  { address: '0xcF8419A615c57511807236751c0AF38Db4ba3351', symbol: 'AXIAL' }
 ];
 
 // Token Logos:
@@ -143,7 +144,10 @@ exports.avax_token_logos = {
   'Lydia-LP':           'https://assets.coingecko.com/coins/images/15195/small/512_pure_logo.png?1620083279',
   'SPORE':              'https://snowtrace.io/token/images/sporeearth_32.png',
   'ROCO':               'https://assets.coingecko.com/coins/images/19234/small/86109466.png?1634769540',
-  'BLZZ':               'https://snowtrace.io/token/images/blzz_32.png'
+  'BLZZ':               'https://snowtrace.io/token/images/blzz_32.png',
+  'AXIAL':              'https://assets.coingecko.com/coins/images/20502/small/E5nD9pPv_400x400.jpg?1637139692',
+  'AS4D':               'https://assets.coingecko.com/coins/images/20502/small/E5nD9pPv_400x400.jpg?1637139692',
+  'AC4D':               'https://assets.coingecko.com/coins/images/20502/small/E5nD9pPv_400x400.jpg?1637139692'
 }
 
 // Token Blacklist:
