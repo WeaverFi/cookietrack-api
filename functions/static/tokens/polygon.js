@@ -176,5 +176,6 @@ exports.poly_token_blacklist = [
   '0xcbf4ab00b6aa19b4d5d29c7c3508b393a1c01fe3',
   '0x6142f62e7996faec5c5bb9d10669d60299d69dfe',
   '0xa39b14f57087aa5f16b941e5ec182b84a5432aa7',
-  '0xa85f8a198d59f0fda82333be9aeeb50f24dd59ff'
+  '0xa85f8a198d59f0fda82333be9aeeb50f24dd59ff',
+  '0x2744861accb5bd435017c1cfee789b6ebab42082'
 ];
