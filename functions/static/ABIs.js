@@ -311,3 +311,13 @@ exports.pangolin = {
     { constant: true, inputs: [{ name: "", type: "uint256" }], name: "allPairs", outputs: [{ name: "", type: "address" }], type: "function" }
   ]
 }
+
+// Axial ABIs:
+exports.axial = {
+  tokenABI: [
+    { constant: true, inputs: [], name: "owner", outputs: [{ name: "", type: "address" }], type: "function" }
+  ],
+  swapABI: [
+    { constant: true, inputs: [], name: "getVirtualPrice", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ]
+}

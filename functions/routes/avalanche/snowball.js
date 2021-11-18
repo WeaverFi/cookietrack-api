@@ -2,7 +2,7 @@
 // Imports:
 const { ethers } = require('ethers');
 const { minABI, snowball } = require('../../static/ABIs.js');
-const { query, addToken, addLPToken, addS4DToken, addTraderJoeToken } = require('../../static/functions.js');
+const { query, addToken, addLPToken, addS4DToken, addTraderJoeToken, addAxialToken } = require('../../static/functions.js');
 
 // Initializations:
 const chain = 'avax';
@@ -93,6 +93,11 @@ const getFarmBalances = async (wallet) => {
           // xJOE Trader Joe Pool:
           } else if(symbol.includes('xJOE')) {
             let newToken = await addTraderJoeToken(chain, project, token, balance * (exchangeRatio / (10**18)), wallet);
+            balances.push(newToken);
+
+          // Axial Pools:
+          } else if(symbol.includes('AS4D') || symbol.includes('AC4D') || symbol.includes('AM3D')) {
+            let newToken = await addAxialToken(chain, project, token, balance * (exchangeRatio / (10**18)), wallet);
             balances.push(newToken);
 
           // All Other Single-Asset Pools:

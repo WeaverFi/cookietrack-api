@@ -1,7 +1,7 @@
 
 // Imports:
 const { ethers } = require('ethers');
-const { minABI, lpABI, snowball, traderJoe } = require('../../../static/ABIs.js');
+const { minABI, lpABI, snowball, traderJoe, axial } = require('../../../static/ABIs.js');
 const { query, getTokenLogo, getTokenPrice } = require('../../../static/functions.js');
 const farms = require('./farms.json').farms;
 
@@ -128,6 +128,21 @@ const getFarmBalances = async (wallet) => {
             frozenAddress: farm.token,
             balance: (balance * (exchangeRatio / (10**18))) / (10 ** decimals),
             price: multiplier * (await getTokenPrice(chain, underlyingToken, decimals)),
+            logo: getTokenLogo(chain, symbol)
+          }
+          balances.push(newToken);
+        } else if(symbol.includes('AS4D') || symbol.includes('AC4D') || symbol.includes('AM3D')) {
+          let decimals = parseInt(await query(chain, address, minABI, 'decimals', []));
+          let symbol = await query(chain, address, minABI, 'symbol', []);
+          let swapAddress = await query(chain, address, axial.tokenABI, 'owner', []);
+          let price = parseInt(await query(chain, swapAddress, axial.swapABI, 'getVirtualPrice', [])) / (10 ** decimals);
+          let newToken = {
+            type: 'token',
+            symbol: symbol,
+            address: token,
+            frozenAddress: farm.token,
+            balance: (balance * (exchangeRatio / (10**18))) / (10 ** decimals),
+            price: price,
             logo: getTokenLogo(chain, symbol)
           }
           balances.push(newToken);
