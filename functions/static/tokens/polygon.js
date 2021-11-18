@@ -66,7 +66,8 @@ exports.poly_tokens = [
   { address: '0x2C89bbc92BD86F8075d1DEcc58C7F4E0107f286b', symbol: 'AVAX' },
   { address: '0x7DfF46370e9eA5f0Bad3C4E29711aD50062EA7A4', symbol: 'SOL' },
   { address: '0x61BDD9C7d4dF4Bf47A4508c0c8245505F2Af5b7b', symbol: 'AXS' },
-  { address: '0xe1c8f3d529bea8e3fa1fac5b416335a2f998ee1c', symbol: 'ELK' }
+  { address: '0xe1c8f3d529bea8e3fa1fac5b416335a2f998ee1c', symbol: 'ELK' },
+  { address: '0x8a0e8b4b0903929f47c3ea30973940d4a9702067', symbol: 'INSUR' }
 ];
 
 // Token Logos:
@@ -162,7 +163,8 @@ exports.poly_token_logos = {
   'PTaUSDC':            'https://polygonscan.com/token/images/centre-usdc_32.png',
   'APE-LP':             'https://bscscan.com/token/images/apeswap_32.png',
   'ELK':                'https://assets.coingecko.com/coins/images/17813/small/elk.png?1629336971',
-  'UNI-V2':             'https://polygonscan.com/token/images/uniswap_32.png'
+  'UNI-V2':             'https://polygonscan.com/token/images/uniswap_32.png',
+  'INSUR':              'https://assets.coingecko.com/coins/images/14226/small/insur.png?1615124622'
 }
 
 // Token Blacklist:

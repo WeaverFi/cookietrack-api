@@ -60,7 +60,11 @@ exports.avax_tokens = [
   { address: '0x6e7f5c0b9f4432716bdd0a77a3601291b9d9e985', symbol: 'SPORE' },
   { address: '0xb2a85C5ECea99187A977aC34303b80AcbDdFa208', symbol: 'ROCO' },
   { address: '0x0f34919404a290e71fc6A510cB4a6aCb8D764b24', symbol: 'BLZZ' },
-  { address: '0xcF8419A615c57511807236751c0AF38Db4ba3351', symbol: 'AXIAL' }
+  { address: '0xcF8419A615c57511807236751c0AF38Db4ba3351', symbol: 'AXIAL' },
+  { address: '0x564A341Df6C126f90cf3ECB92120FD7190ACb401', symbol: 'TRYB' },
+  { address: '0xa32608e873f9ddef944b24798db69d80bbb4d1ed', symbol: 'CRA' },
+  { address: '0xf693248F96Fe03422FEa95aC0aFbBBc4a8FdD172', symbol: 'TUS' },
+  { address: '0x544c42fbb96b39b21df61cf322b5edc285ee7429', symbol: 'INSUR' },
 ];
 
 // Token Logos:
@@ -148,7 +152,11 @@ exports.avax_token_logos = {
   'AXIAL':              'https://assets.coingecko.com/coins/images/20502/small/E5nD9pPv_400x400.jpg?1637139692',
   'AS4D':               'https://assets.coingecko.com/coins/images/20502/small/E5nD9pPv_400x400.jpg?1637139692',
   'AC4D':               'https://assets.coingecko.com/coins/images/20502/small/E5nD9pPv_400x400.jpg?1637139692',
-  'AM3D':               'https://assets.coingecko.com/coins/images/20502/small/E5nD9pPv_400x400.jpg?1637139692'
+  'AM3D':               'https://assets.coingecko.com/coins/images/20502/small/E5nD9pPv_400x400.jpg?1637139692',
+  'TRYB':               'https://snowtrace.io/token/images/bilira_32.png',
+  'CRA':                'https://snowtrace.io/token/images/crabadatoken_32.png',
+  'TUS':                'https://snowtrace.io/token/images/treasureunderthesea_32.png',
+  'INSUR':              'https://assets.coingecko.com/coins/images/14226/small/insur.png?1615124622'
 }
 
 // Token Blacklist:

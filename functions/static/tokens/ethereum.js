@@ -71,7 +71,8 @@ exports.eth_tokens = [
   { address: '0x3f382dbd960e3a9bbceae22651e88158d2791550', symbol: 'GHST' },
   { address: '0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9', symbol: 'AAVE' },
   { address: '0x0cEC1A9154Ff802e7934Fc916Ed7Ca50bDE6844e', symbol: 'POOL' },
-  { address: '0x090185f2135308bad17527004364ebcc2d37e5f6', symbol: 'SPELL' }
+  { address: '0x090185f2135308bad17527004364ebcc2d37e5f6', symbol: 'SPELL' },
+  { address: '0x544c42fbb96b39b21df61cf322b5edc285ee7429', symbol: 'INSUR' }
 ];
 
 // Token Logos:
@@ -174,7 +175,8 @@ exports.eth_token_logos = {
   'POOL':             'https://etherscan.io/token/images/pooltogether_32.png',
   'CRV':              'https://etherscan.io/token/images/Curvefi_32.png',
   'SPELL':            'https://assets.coingecko.com/coins/images/15861/small/abracadabra-3.png?1622544862',
-  'UNI-V2':           'https://etherscan.io/token/images/uniswap_32.png'
+  'UNI-V2':           'https://etherscan.io/token/images/uniswap_32.png',
+  'INSUR':            'https://assets.coingecko.com/coins/images/14226/small/insur.png?1615124622'
 }
 
 // Token Blacklist:

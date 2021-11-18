@@ -113,7 +113,8 @@ exports.bsc_tokens = [
   { address: '0x039cB485212f996A9DBb85A9a75d898F94d38dA6', symbol: 'DEXE' },
   { address: '0x928e55daB735aa8260AF3cEDadA18B5f70C72f1b', symbol: 'FRONT' },
   { address: '0x2eD9a5C8C13b93955103B9a7C167B67Ef4d568a3', symbol: 'MASK' },
-  { address: '0x98936Bde1CF1BFf1e7a8012Cee5e2583851f2067', symbol: 'ANN' }
+  { address: '0x98936Bde1CF1BFf1e7a8012Cee5e2583851f2067', symbol: 'ANN' },
+  { address: '0x3192ccddf1cdce4ff055ebc80f3f0231b86a7e30', symbol: 'INSUR' }
 ];
 
 // Token Logos:
@@ -264,7 +265,8 @@ exports.bsc_token_logos = {
   'MASK':               'https://bscscan.com/token/images/mask_32.png',
   'ANN':                'https://bscscan.com/token/images/annexfinance_32.png',
   'APE-LP':             'https://bscscan.com/token/images/apeswap_32.png',
-  'WINGS-LP':           'https://bscscan.com/token/images/jetswap_32.png'
+  'WINGS-LP':           'https://bscscan.com/token/images/jetswap_32.png',
+  'INSUR':              'https://assets.coingecko.com/coins/images/14226/small/insur.png?1615124622'
 }
 
 // Token Blacklist:
