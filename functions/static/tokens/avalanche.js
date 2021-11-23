@@ -156,7 +156,10 @@ exports.avax_token_logos = {
   'TRYB':               'https://snowtrace.io/token/images/bilira_32.png',
   'CRA':                'https://snowtrace.io/token/images/crabadatoken_32.png',
   'TUS':                'https://snowtrace.io/token/images/treasureunderthesea_32.png',
-  'INSUR':              'https://assets.coingecko.com/coins/images/14226/small/insur.png?1615124622'
+  'INSUR':              'https://assets.coingecko.com/coins/images/14226/small/insur.png?1615124622',
+  'sAS4D':              'https://assets.coingecko.com/coins/images/20502/small/E5nD9pPv_400x400.jpg?1637139692',
+  'sAC4D':              'https://assets.coingecko.com/coins/images/20502/small/E5nD9pPv_400x400.jpg?1637139692',
+  'sAM3D':              'https://assets.coingecko.com/coins/images/20502/small/E5nD9pPv_400x400.jpg?1637139692'
 }
 
 // Token Blacklist:
