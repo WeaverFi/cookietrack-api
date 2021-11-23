@@ -43,6 +43,7 @@ const avax_lydia = require('./routes/avalanche/lydia.js');
 const avax_autofarm = require('./routes/avalanche/autofarm.js');
 const avax_beefy = require('./routes/avalanche/beefy.js');
 const avax_benqi = require('./routes/avalanche/benqi.js');
+const avax_traderjoe = require('./routes/avalanche/traderjoe.js');
 
 // Harmony Routes:
 const one_wallet = require('./routes/harmony/wallet.js');
@@ -222,11 +223,13 @@ app.get('/avalanche/benqi', async (req, res) => {
   res.end(await avax_benqi.get(req));
 });
 
-// HoneyFarm (BSC):
-
 // YieldYak (Avalanche):
+// <TODO>
 
 // Trader Joe (Avalanche):
+app.get('/avalanche/traderjoe', async (req, res) => {
+  res.end(await avax_traderjoe.get(req));
+});
 
 // mStable (Ethereum):
 // mStable (Polygon):
@@ -283,6 +286,8 @@ app.get('/avalanche/lydia', async (req, res) => {
 // Bouje (Fantom):
 
 // Axial (Avalanche):
+
+// Pangolin (Avalanche):
 
 /* ========================================================================================================================================================================= */
 

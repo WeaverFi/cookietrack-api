@@ -2,7 +2,7 @@
 // Imports:
 const { ethers } = require('ethers');
 const axios = require('axios');
-const { minABI, lpABI, snowball, traderJoe, axial } = require('../../../static/ABIs.js');
+const { minABI, lpABI, snowball, traderjoe, axial } = require('../../../static/ABIs.js');
 const { query, getTokenLogo, getTokenPrice } = require('../../../static/functions.js');
 const farms = require('./farms.json').farms;
 
@@ -144,7 +144,7 @@ const getFarmBalances = async (wallet) => {
           let decimals = parseInt(await query(chain, token, minABI, 'decimals', []));
           let symbol = await query(chain, token, minABI, 'symbol', []);
           let xjoeSupply = parseInt(await query(chain, token, minABI, 'totalSupply', []));
-          let underlyingToken = await query(chain, token, traderJoe.joeABI, 'joe', []);
+          let underlyingToken = await query(chain, token, traderjoe.joeABI, 'joe', []);
           let joeStaked = parseInt(await query(chain, underlyingToken, minABI, 'balanceOf', [token]));
           let multiplier = joeStaked / xjoeSupply;
           let newToken = {

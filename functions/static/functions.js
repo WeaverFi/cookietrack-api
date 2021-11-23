@@ -5,7 +5,7 @@ const axios = require('axios');
 
 // Required Variables:
 const { rpcs } = require('./RPCs.js');
-const { minABI, lpABI, aave, balancer, snowball, traderJoe, belt, alpaca, curve, iron, axial } = require('./ABIs.js');
+const { minABI, lpABI, aave, balancer, snowball, traderjoe, belt, alpaca, curve, iron, axial } = require('./ABIs.js');
 const { eth_token_logos } = require('./tokens/ethereum.js');
 const { bsc_token_logos } = require('./tokens/bsc.js');
 const { poly_token_logos } = require('./tokens/polygon.js');
@@ -592,7 +592,7 @@ exports.addTraderJoeToken = async (chain, location, address, balance, owner) => 
   }
 
   // Getting Missing Token Info:
-  let underlyingToken = await exports.query(chain, address, traderJoe.joeABI, 'joe', []);
+  let underlyingToken = await exports.query(chain, address, traderjoe.joeABI, 'joe', []);
   let joeStaked = parseInt(await exports.query(chain, underlyingToken, minABI, 'balanceOf', [address]));
   let xjoeSupply = parseInt(await exports.query(chain, address, minABI, 'totalSupply', []));
   let multiplier = joeStaked / xjoeSupply;

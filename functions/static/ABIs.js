@@ -70,14 +70,27 @@ exports.snowball = {
 }
 
 // Trader Joe ABIs:
-exports.traderJoe = {
+exports.traderjoe = {
   joeABI: [
     { constant: true, inputs: [], name: "joe", outputs: [{ name: "", type: "address" }], type: "function" }
+  ],
+  masterChefABI: [
+    { constant: true, inputs: [], name: "poolLength", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "", type: "uint256" }, { name: "", type: "address" }], name: "userInfo", outputs: [{ name: "amount", type: "uint256" }, { name: "rewardDebt", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "", type: "uint256" }], name: "poolInfo", outputs: [{ name: "lpToken", type: "address" }, { name: "allocPoint", type: "uint256" }, { name: "lastRewardTimestamp", type: "uint256" }, { name: "accJoePerShare", type: "uint256" }, { name: "rewarder", type: "address" }], type: "function" },
+    { constant: true, inputs: [{ name: "_pid", type: "uint256" }, { name: "_user", type: "address" }], name: "pendingTokens", outputs: [{ name: "pendingJoe", type: "uint256" }, { name: "bonusTokenAddress", type: "address" }, { name: "bonusTokenSymbol", type: "string" }, { name: "pendingBonusToken", type: "uint256" }], type: "function" }
+  ],
+  bankControllerABI: [
+    { constant: true, inputs: [], name: "getAllMarkets", outputs: [{ name: "", type: "address[]" }], type: "function" }
+  ],
+  marketABI: [
+    { constant: true, inputs: [{ name: "account", type: "address" }], name: "getAccountSnapshot", outputs: [{ name: "", type: "uint256" }, { name: "", type: "uint256" }, { name: "", type: "uint256" }, { name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [], name: "underlying", outputs: [{ name: "", type: "address" }], type: "function" }
   ]
 }
 
 // PancakeSwap ABIs:
-exports.pancakeSwap = {
+exports.pancakeswap = {
   registryABI: [
     { constant: true, inputs: [], name: "poolLength", outputs: [{ name: "", type: "uint256" }], type: "function" },
     { constant: true, inputs: [{ name: "", type: "uint256" }, { name: "", type: "address" }], name: "userInfo", outputs: [{ name: "amount", type: "uint256" }, { name: "rewardDebt", type: "uint256" }], type: "function" },
@@ -301,14 +314,6 @@ exports.benqi = {
   marketABI: [
     { constant: true, inputs: [{ name: "account", type: "address" }], name: "getAccountSnapshot", outputs: [{ name: "", type: "uint256" }, { name: "", type: "uint256" }, { name: "", type: "uint256" }, { name: "", type: "uint256" }], type: "function" },
     { constant: true, inputs: [], name: "underlying", outputs: [{ name: "", type: "address" }], type: "function" }
-  ]
-}
-
-// Pangolin ABIs:
-exports.pangolin = {
-  factoryABI: [
-    { constant: true, inputs: [], name: "allPairsLength", outputs: [{ name: "", type: "uint256" }], type: "function" },
-    { constant: true, inputs: [{ name: "", type: "uint256" }], name: "allPairs", outputs: [{ name: "", type: "address" }], type: "function" }
   ]
 }
 
