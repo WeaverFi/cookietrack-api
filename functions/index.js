@@ -10,6 +10,7 @@ const eth_aave = require('./routes/ethereum/aave.js');
 const eth_compound = require('./routes/ethereum/compound.js');
 const eth_yearn = require('./routes/ethereum/yearn.js');
 const eth_balancer = require('./routes/ethereum/balancer.js');
+const eth_mstable = require('./routes/ethereum/mstable.js');
 
 // BSC Routes:
 const bsc_wallet = require('./routes/bsc/wallet.js');
@@ -232,6 +233,10 @@ app.get('/avalanche/traderjoe', async (req, res) => {
 });
 
 // mStable (Ethereum):
+app.get('/ethereum/mstable', async (req, res) => {
+  res.end(await eth_mstable.get(req));
+});
+
 // mStable (Polygon):
 
 // Penguin (Avalanche):

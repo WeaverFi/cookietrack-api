@@ -5,7 +5,7 @@ const axios = require('axios');
 
 // Required Variables:
 const { rpcs } = require('./RPCs.js');
-const { minABI, lpABI, aave, balancer, snowball, traderjoe, belt, alpaca, curve, iron, axial } = require('./ABIs.js');
+const { minABI, lpABI, aave, balancer, snowball, traderjoe, belt, alpaca, curve, iron, axial, mstable } = require('./ABIs.js');
 const { eth_token_logos } = require('./tokens/ethereum.js');
 const { bsc_token_logos } = require('./tokens/bsc.js');
 const { poly_token_logos } = require('./tokens/polygon.js');
@@ -1452,6 +1452,34 @@ exports.addAxialToken = async (chain, location, address, balance, owner) => {
   let swapAddress = await exports.query(chain, address, axial.tokenABI, 'owner', []);
   newToken.price = parseInt(await exports.query(chain, swapAddress, axial.swapABI, 'getVirtualPrice', [])) / (10 ** decimals);
   newToken.logo = exports.getTokenLogo(chain, newToken.symbol);
+
+  return newToken;
+}
+
+/* ========================================================================================================================================================================= */
+
+// Function to get mStable token info:
+exports.addStableToken = async (chain, location, address, balance, owner) => {
+
+  // Initializing New Token:
+  let newToken = {
+    type: 'token',
+    chain: chain,
+    location: location,
+    owner: owner,
+    symbol: '',
+    address: address,
+    balance: 0,
+    price: 0,
+    logo: ''
+  }
+
+  // Getting Missing Token Info:
+  let decimals = parseInt(await exports.query(chain, address, minABI, 'decimals', []));
+  newToken.balance = balance / (10 ** decimals);
+  newToken.symbol = await exports.query(chain, address, minABI, 'symbol', []);
+  newToken.price = parseInt((await exports.query(chain, address, mstable.stableABI, 'getPrice', [])).price) / (10 ** decimals);
+  newToken.price > 1000 ? newToken.logo = exports.getTokenLogo(chain, 'mBTC') : exports.getTokenLogo(chain, 'mUSD');
 
   return newToken;
 }
