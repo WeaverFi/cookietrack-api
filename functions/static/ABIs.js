@@ -350,3 +350,17 @@ exports.mstable = {
     { constant: true, inputs: [], name: "getPrice", outputs: [{ name: "price", type: "uint256" }, { name: "k", type: "uint256" }], type: "function" }
   ]
 }
+
+// Penguin ABIs:
+exports.penguin = {
+  masterABI: [
+    { constant: true, inputs: [], name: "poolLength", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "", type: "uint256" }, { name: "", type: "address" }], name: "userInfo", outputs: [{ name: "amount", type: "uint256" }, { name: "rewardDebt", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "", type: "uint256" }], name: "poolInfo", outputs: [{ name: "poolToken", type: "address" }, { name: "rewarder", type: "address" }, { name: "strategy", type: "address" }, { name: "allocPoint", type: "uint256" }, { name: "lastRewardTime", type: "uint256" }, { name: "accPEFIPerShare", type: "uint256" }, { name: "withdrawFeeBP", type: "uint16" }, { name: "totalShares", type: "uint256" }, { name: "lpPerShare", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "pid", type: "uint256" }, { name: "user", type: "address" }], name: "pendingTokens", outputs: [{ name: "", type: "address[]" }, { name: "", type: "uint256[]" }], type: "function" },
+    { constant: true, inputs: [{ name: "pid", type: "uint256" }, { name: "penguin", type: "address" }], name: "totalPendingPEFI", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ],
+  nestABI: [
+    { constant: true, inputs: [], name: "currentExchangeRate", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ]
+}

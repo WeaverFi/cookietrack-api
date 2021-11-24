@@ -46,6 +46,7 @@ const avax_autofarm = require('./routes/avalanche/autofarm.js');
 const avax_beefy = require('./routes/avalanche/beefy.js');
 const avax_benqi = require('./routes/avalanche/benqi.js');
 const avax_traderjoe = require('./routes/avalanche/traderjoe.js');
+const avax_penguin = require('./routes/avalanche/penguin.js');
 
 // Harmony Routes:
 const one_wallet = require('./routes/harmony/wallet.js');
@@ -244,6 +245,9 @@ app.get('/polygon/mstable', async (req, res) => {
 });
 
 // Penguin (Avalanche):
+app.get('/avalanche/penguin', async (req, res) => {
+  res.end(await avax_penguin.get(req));
+});
 
 // Scream (Fantom):
 
