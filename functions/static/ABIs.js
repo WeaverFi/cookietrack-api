@@ -378,3 +378,25 @@ exports.scream = {
     { constant: true, inputs: [], name: "getShareValue", outputs: [{ name: "", type: "uint256" }], type: "function" }
   ]
 }
+
+// Cycle ABIs:
+exports.cycle = {
+  distributorABI: [
+    { constant: true, inputs: [], name: "getVaultRewardsCount", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "", type: "uint256" }], name: "rewards", outputs: [{ name: "StakingRewards", type: "address" }, { name: "weight", type: "uint256" }], type: "function" }
+  ],
+  vaultABI: [
+    { constant: true, inputs: [], name: "stakingToken", outputs: [{ name: "", type: "address" }], type: "function" },
+    { constant: true, inputs: [{ name: "account", type: "address" }], name: "earned", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ],
+  intermediaryABI: [
+    { constant: true, inputs: [], name: "LPtoken", outputs: [{ name: "", type: "address" }], type: "function" },
+    { constant: true, inputs: [{ name: "account", type: "address" }], name: "getAccountLP", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "shares", type: "uint256" }], name: "getLPamountForShares", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ],
+  stakingABI: [
+    { constant: true, inputs: [], name: "stakingToken", outputs: [{ name: "", type: "address" }], type: "function" },
+    { constant: true, inputs: [{ name: "account", type: "address" }], name: "earned", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "account", type: "address" }], name: "getAccountCYCLE", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ]
+}

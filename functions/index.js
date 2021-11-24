@@ -48,6 +48,7 @@ const avax_beefy = require('./routes/avalanche/beefy.js');
 const avax_benqi = require('./routes/avalanche/benqi.js');
 const avax_traderjoe = require('./routes/avalanche/traderjoe.js');
 const avax_penguin = require('./routes/avalanche/penguin.js');
+const avax_cycle = require('./routes/avalanche/cycle.js');
 
 // Harmony Routes:
 const one_wallet = require('./routes/harmony/wallet.js');
@@ -261,6 +262,9 @@ app.get('/avalanche/snowball', async (req, res) => {
 });
 
 // Cycle (Avalanche):
+app.get('/avalanche/cycle', async (req, res) => {
+  res.end(await avax_cycle.get(req));
+});
 
 // PoolTogether (Ethereum):
 // PoolTogether (BSC):
