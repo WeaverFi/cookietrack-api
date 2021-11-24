@@ -338,10 +338,6 @@ exports.mstable = {
     { constant: true, inputs: [], name: "stakingToken", outputs: [{ name: "", type: "address" }], type: "function" },
     { constant: true, inputs: [{ name: "_account", type: "address" }], name: "earned", outputs: [{ name: "", type: "uint256" }], type: "function" }
   ],
-  polyVaultABI: [
-    { constant: true, inputs: [], name: "stakingToken", outputs: [{ name: "", type: "address" }], type: "function" },
-    { constant: true, inputs: [{ name: "_account", type: "address" }], name: "earned", outputs: [{ name: "", type: "uint256" }], type: "function" }
-  ],
   stakingABI: [
     { constant: true, inputs: [{ name: "_account", type: "address" }], name: "rawBalanceOf", outputs: [{ name: "", type: "uint256" }, { name: "", type: "uint256" }], type: "function" },
     { constant: true, inputs: [], name: "STAKED_TOKEN", outputs: [{ name: "", type: "address" }], type: "function" },

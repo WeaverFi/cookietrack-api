@@ -55,6 +55,7 @@ The API that powers CookieTrack.
 - `beefy`
 - `wault`
 - `quickswap`
+- `mstable`
 
 **Fantom Projects Available:**
 - `autofarm`

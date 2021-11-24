@@ -100,9 +100,9 @@ const getAssetBalances = async (wallet) => {
   // imUSD Vault:
   let usdVaultBalance = parseInt(await query(chain, imUSDVault, mstable.vaultABI, 'rawBalanceOf', [wallet]));
   if(usdVaultBalance > 0) {
-    let decimals = parseInt(await query(chain, imUSDVault, minABI, 'decimals', []));
-    let exchangeRate = parseInt(await query(chain, imUSDVault, mstable.vaultABI, 'exchangeRate', [])) / (10 ** decimals);
-    let token = await query(chain, imUSDVault, mstable.vaultABI, 'underlying', []);
+    let decimals = parseInt(await query(chain, imUSD, minABI, 'decimals', []));
+    let exchangeRate = parseInt(await query(chain, imUSD, mstable.assetABI, 'exchangeRate', [])) / (10 ** decimals);
+    let token = await query(chain, imUSD, mstable.assetABI, 'underlying', []);
     let newToken = await addToken(chain, project, token, usdVaultBalance * exchangeRate, wallet);
     balances.push(newToken);
     let rewards = parseInt(await query(chain, imUSDVault, mstable.vaultABI, 'earned', [wallet]));
@@ -115,9 +115,9 @@ const getAssetBalances = async (wallet) => {
   // imBTC Vault:
   let btcVaultBalance = parseInt(await query(chain, imBTCVault, mstable.vaultABI, 'rawBalanceOf', [wallet]));
   if(btcVaultBalance > 0) {
-    let decimals = parseInt(await query(chain, imBTCVault, minABI, 'decimals', []));
-    let exchangeRate = parseInt(await query(chain, imBTCVault, mstable.vaultABI, 'exchangeRate', [])) / (10 ** decimals);
-    let token = await query(chain, imBTCVault, mstable.vaultABI, 'underlying', []);
+    let decimals = parseInt(await query(chain, imBTC, minABI, 'decimals', []));
+    let exchangeRate = parseInt(await query(chain, imBTC, mstable.assetABI, 'exchangeRate', [])) / (10 ** decimals);
+    let token = await query(chain, imBTC, mstable.assetABI, 'underlying', []);
     let newToken = await addToken(chain, project, token, btcVaultBalance * exchangeRate, wallet);
     balances.push(newToken);
     let rewards = parseInt(await query(chain, imBTCVault, mstable.vaultABI, 'earned', [wallet]));

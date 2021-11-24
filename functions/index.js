@@ -29,6 +29,7 @@ const poly_balancer = require('./routes/polygon/balancer.js');
 const poly_beefy = require('./routes/polygon/beefy.js');
 const poly_wault = require('./routes/polygon/wault.js');
 const poly_quickswap = require('./routes/polygon/quickswap.js');
+const poly_mstable = require('./routes/polygon/mstable.js');
 
 // Fantom Routes:
 const ftm_wallet = require('./routes/fantom/wallet.js');
@@ -238,6 +239,9 @@ app.get('/ethereum/mstable', async (req, res) => {
 });
 
 // mStable (Polygon):
+app.get('/polygon/mstable', async (req, res) => {
+  res.end(await poly_mstable.get(req));
+});
 
 // Penguin (Avalanche):
 
