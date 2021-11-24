@@ -61,6 +61,7 @@ The API that powers CookieTrack.
 - `autofarm`
 - `spookyswap`
 - `beefy`
+- `scream`
 
 **Avalanche Projects Available:**
 - `aave`

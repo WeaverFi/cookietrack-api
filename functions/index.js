@@ -36,6 +36,7 @@ const ftm_wallet = require('./routes/fantom/wallet.js');
 const ftm_autofarm = require('./routes/fantom/autofarm.js');
 const ftm_spookyswap = require('./routes/fantom/spookyswap.js');
 const ftm_beefy = require('./routes/fantom/beefy.js');
+const ftm_scream = require('./routes/fantom/scream.js');
 
 // Avalanche Routes:
 const avax_wallet = require('./routes/avalanche/wallet.js');
@@ -250,6 +251,9 @@ app.get('/avalanche/penguin', async (req, res) => {
 });
 
 // Scream (Fantom):
+app.get('/fantom/scream', async (req, res) => {
+  res.end(await ftm_scream.get(req));
+});
 
 // Snowball (Avalanche):
 app.get('/avalanche/snowball', async (req, res) => {
