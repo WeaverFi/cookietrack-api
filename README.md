@@ -39,6 +39,7 @@ The API that powers CookieTrack.
 - `yearn`
 - `balancer`
 - `mstable`
+- `pooltogether`
 
 **BSC Projects Available:**
 - `pancakeswap`

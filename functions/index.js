@@ -11,6 +11,7 @@ const eth_compound = require('./routes/ethereum/compound.js');
 const eth_yearn = require('./routes/ethereum/yearn.js');
 const eth_balancer = require('./routes/ethereum/balancer.js');
 const eth_mstable = require('./routes/ethereum/mstable.js');
+const eth_pooltogether = require('./routes/ethereum/pooltogether.js');
 
 // BSC Routes:
 const bsc_wallet = require('./routes/bsc/wallet.js');
@@ -267,6 +268,10 @@ app.get('/avalanche/cycle', async (req, res) => {
 });
 
 // PoolTogether (Ethereum):
+app.get('/ethereum/pooltogether', async (req, res) => {
+  res.end(await eth_pooltogether.get(req));
+});
+
 // PoolTogether (BSC):
 // PoolTogether (Polygon):
 

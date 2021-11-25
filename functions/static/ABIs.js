@@ -400,3 +400,29 @@ exports.cycle = {
     { constant: true, inputs: [{ name: "account", type: "address" }], name: "getAccountCYCLE", outputs: [{ name: "", type: "uint256" }], type: "function" }
   ]
 }
+
+// PoolTogether ABIs:
+exports.pooltogether = {
+  registryABI: [
+    { constant: true, inputs: [], name: "getAddresses", outputs: [{ name: "", type: "address[]" }], type: "function" }
+  ],
+  strategyABI: [
+    { constant: true, inputs: [], name: "tokenListener", outputs: [{ name: "", type: "address" }], type: "function" }
+  ],
+  listenerABI: [
+    { constant: true, inputs: [], name: "getAddresses", outputs: [{ name: "", type: "address[]" }], type: "function" }
+  ],
+  poolABI: [
+    { constant: true, inputs: [], name: "prizeStrategy", outputs: [{ name: "", type: "address" }], type: "function" },
+    { constant: true, inputs: [], name: "token", outputs: [{ name: "", type: "address" }], type: "function" },
+    { constant: true, inputs: [], name: "tokens", outputs: [{ name: "", type: "address[]" }], type: "function" }
+  ],
+  podABI: [
+    { constant: true, inputs: [{ name: "user", type: "address" }], name: "balanceOfUnderlying", outputs: [{ name: "amount", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [], name: "token", outputs: [{ name: "", type: "address" }], type: "function" }
+  ],
+  faucetABI: [
+    { constant: true, inputs: [], name: "asset", outputs: [{ name: "", type: "address" }], type: "function" },
+    { constant: true, inputs: [{ name: "<input>", type: "address" }], name: "userStates", outputs: [{ name: "lastExchangeRateMantissa", type: "uint128" }, { name: "balance", type: "uint128" }], type: "function" }
+  ]
+}
