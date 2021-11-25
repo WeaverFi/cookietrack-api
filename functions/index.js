@@ -22,6 +22,7 @@ const bsc_venus = require('./routes/bsc/venus.js');
 const bsc_beefy = require('./routes/bsc/beefy.js');
 const bsc_wault = require('./routes/bsc/wault.js');
 const bsc_pooltogether = require('./routes/bsc/pooltogether.js');
+const bsc_apeswap = require('./routes/bsc/apeswap.js');
 
 // Polygon Routes:
 const poly_wallet = require('./routes/polygon/wallet.js');
@@ -302,6 +303,10 @@ app.get('/avalanche/everest', async (req, res) => {
 });
 
 // ApeSwap (BSC):
+app.get('/bsc/apeswap', async (req, res) => {
+  res.end(await bsc_apeswap.get(req));
+});
+
 // ApeSwap (Polygon):
 
 // SushiSwap (Ethereum):

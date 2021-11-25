@@ -49,6 +49,7 @@ The API that powers CookieTrack.
 - `beefy`
 - `wault`
 - `pooltogether`
+- `apeswap`
 
 **Polygon Projects Available:**
 - `aave`
