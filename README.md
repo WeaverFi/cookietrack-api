@@ -40,6 +40,7 @@ The API that powers CookieTrack.
 - `balancer`
 - `mstable`
 - `pooltogether`
+- `sushiswap`
 
 **BSC Projects Available:**
 - `pancakeswap`

@@ -12,6 +12,7 @@ const eth_yearn = require('./routes/ethereum/yearn.js');
 const eth_balancer = require('./routes/ethereum/balancer.js');
 const eth_mstable = require('./routes/ethereum/mstable.js');
 const eth_pooltogether = require('./routes/ethereum/pooltogether.js');
+const eth_sushiswap = require('./routes/ethereum/sushiswap.js');
 
 // BSC Routes:
 const bsc_wallet = require('./routes/bsc/wallet.js');
@@ -314,6 +315,10 @@ app.get('/polygon/apeswap', async (req, res) => {
 });
 
 // SushiSwap (Ethereum):
+app.get('/ethereum/sushiswap', async (req, res) => {
+  res.end(await eth_sushiswap.get(req));
+});
+
 // SushiSwap (BSC):
 // SushiSwap (Polygon):
 // SushiSwap (Fantom):
