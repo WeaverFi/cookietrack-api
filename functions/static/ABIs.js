@@ -443,3 +443,16 @@ exports.teddy = {
     { constant: true, inputs: [{ name: "_user", type: "address" }], name: "getPendingLUSDGain", outputs: [{ name: "", type: "uint256" }], type: "function" }
   ]
 }
+
+// Everest ABIs:
+exports.everest = {
+  farmABI: [
+    { constant: true, inputs: [{ name: "account", type: "address" }], name: "balanceOf", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [], name: "stakingToken", outputs: [{ name: "", type: "address" }], type: "function" },
+    { constant: true, inputs: [{ name: "account", type: "address" }], name: "earned", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ],
+  stakingABI: [
+    { constant: true, inputs: [{ name: "account", type: "address" }], name: "balanceOf", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [], name: "currentExchangeRate", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ]
+}
