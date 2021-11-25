@@ -426,3 +426,20 @@ exports.pooltogether = {
     { constant: true, inputs: [{ name: "<input>", type: "address" }], name: "userStates", outputs: [{ name: "lastExchangeRateMantissa", type: "uint128" }, { name: "balance", type: "uint128" }], type: "function" }
   ]
 }
+
+// Teddy ABIs:
+exports.teddy = {
+  troveABI: [
+    { constant: true, inputs: [{ name: "", type: "address" }], name: "Troves", outputs: [{ name: "debt", type: "uint256" }, { name: "coll", type: "uint256" }, { name: "stake", type: "uint256" }, { name: "status", type: "uint8" }, { name: "arrayIndex", type: "uint128" }], type: "function" }
+  ],
+  stabilityPoolABI: [
+    { constant: true, inputs: [{ name: "", type: "address" }], name: "deposits", outputs: [{ name: "initialValue", type: "uint256" }, { name: "frontEndTag", type: "address" }], type: "function" },
+    { constant: true, inputs: [{ name: "_depositor", type: "address" }], name: "getDepositorETHGain", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "_depositor", type: "address" }], name: "getDepositorLQTYGain", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ],
+  stakingABI: [
+    { constant: true, inputs: [{ name: "", type: "address" }], name: "stakes", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "_user", type: "address" }], name: "getPendingETHGain", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "_user", type: "address" }], name: "getPendingLUSDGain", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ]
+}

@@ -52,6 +52,7 @@ const avax_benqi = require('./routes/avalanche/benqi.js');
 const avax_traderjoe = require('./routes/avalanche/traderjoe.js');
 const avax_penguin = require('./routes/avalanche/penguin.js');
 const avax_cycle = require('./routes/avalanche/cycle.js');
+const avax_teddy = require('./routes/avalanche/teddy.js');
 
 // Harmony Routes:
 const one_wallet = require('./routes/harmony/wallet.js');
@@ -290,6 +291,9 @@ app.get('/avalanche/lydia', async (req, res) => {
 });
 
 // Teddy (Avalanche):
+app.get('/avalanche/teddy', async (req, res) => {
+  res.end(await avax_teddy.get(req));
+});
 
 // Everest (Avalanche):
 

@@ -1,7 +1,7 @@
 {
   "name": "cookietrack-api",
   "description": "The API that powers CookieTrack.",
-  "version": "0.2.33",
+  "version": "0.2.34",
   "scripts": {
     "start": "node functions/index.js",
     "emulator": "firebase emulators:start",

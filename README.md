@@ -76,6 +76,7 @@ The API that powers CookieTrack.
 - `traderjoe`
 - `penguin`
 - `cycle`
+- `teddy`
 
 **Harmony Projects Available:**
 - `beefy`
