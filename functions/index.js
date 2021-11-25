@@ -32,6 +32,7 @@ const poly_beefy = require('./routes/polygon/beefy.js');
 const poly_wault = require('./routes/polygon/wault.js');
 const poly_quickswap = require('./routes/polygon/quickswap.js');
 const poly_mstable = require('./routes/polygon/mstable.js');
+const poly_pooltogether = require('./routes/polygon/pooltogether.js');
 
 // Fantom Routes:
 const ftm_wallet = require('./routes/fantom/wallet.js');
@@ -279,6 +280,9 @@ app.get('/bsc/pooltogether', async (req, res) => {
 });
 
 // PoolTogether (Polygon):
+app.get('/polygon/pooltogether', async (req, res) => {
+  res.end(await poly_pooltogether.get(req));
+});
 
 // Lydia (Avalanche):
 app.get('/avalanche/lydia', async (req, res) => {
