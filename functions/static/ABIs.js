@@ -493,3 +493,23 @@ exports.sushiswap = {
     { constant: true, inputs: [{ name: "_pid", type: "uint256" }, { name: "_user", type: "address" }], name: "pendingSushi", outputs: [{ name: "", type: "uint256" }], type: "function" }
   ]
 }
+
+// YieldYak ABIs:
+exports.yieldyak = {
+  farmABI: [
+    { constant: true, inputs: [], name: "depositToken", outputs: [{ name: "", type: "address" }], type: "function" },
+    { constant: true, inputs: [], name: "totalDeposits", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [], name: "totalSupply", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [], name: "name", outputs: [{ name: "", type: "string" }], type: "function" }
+  ],
+  stakingABI: [
+    { constant: true, inputs: [], name: "poolLength", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "", type: "uint256" }, { name: "", type: "address" }], name: "userInfo", outputs: [{ name: "amount", type: "uint256" }, { name: "rewardTokenDebt", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "", type: "uint256" }], name: "poolInfo", outputs: [{ name: "token", type: "address" }, { name: "allocPoint", type: "uint256" }, { name: "lastRewardTimestamp", type: "uint256" }, { name: "accRewardsPerShare", type: "uint256" }, { name: "vpForDeposit", type: "bool" }], type: "function" },
+    { constant: true, inputs: [{ name: "pid", type: "uint256" }, { name: "account", type: "address" }], name: "pendingRewards", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ],
+  intermediaryABI: [
+    { constant: true, inputs: [], name: "depositToken", outputs: [{ name: "", type: "address" }], type: "function" },
+    { constant: true, inputs: [{ name: "amount", type: "uint256" }], name: "getDepositTokensForShares", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ]
+}

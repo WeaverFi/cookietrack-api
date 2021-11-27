@@ -81,6 +81,7 @@ The API that powers CookieTrack.
 - `cycle`
 - `teddy`
 - `everest`
+- `yieldyak`
 
 **Harmony Projects Available:**
 - `beefy`

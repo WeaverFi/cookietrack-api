@@ -65,6 +65,8 @@ exports.avax_tokens = [
   { address: '0xa32608e873f9ddef944b24798db69d80bbb4d1ed', symbol: 'CRA' },
   { address: '0xf693248F96Fe03422FEa95aC0aFbBBc4a8FdD172', symbol: 'TUS' },
   { address: '0x544c42fbb96b39b21df61cf322b5edc285ee7429', symbol: 'INSUR' },
+  { address: '0x346A59146b9b4a77100D369a3d18E8007A9F46a6', symbol: 'AVAI' },
+  { address: '0x8B1d98A91F853218ddbb066F20b8c63E782e2430', symbol: 'ORCA' }
 ];
 
 // Token Logos:
@@ -159,7 +161,9 @@ exports.avax_token_logos = {
   'INSUR':              'https://assets.coingecko.com/coins/images/14226/small/insur.png?1615124622',
   'sAS4D':              'https://assets.coingecko.com/coins/images/20502/small/E5nD9pPv_400x400.jpg?1637139692',
   'sAC4D':              'https://assets.coingecko.com/coins/images/20502/small/E5nD9pPv_400x400.jpg?1637139692',
-  'sAM3D':              'https://assets.coingecko.com/coins/images/20502/small/E5nD9pPv_400x400.jpg?1637139692'
+  'sAM3D':              'https://assets.coingecko.com/coins/images/20502/small/E5nD9pPv_400x400.jpg?1637139692',
+  'AVAI':               'https://assets.coingecko.com/coins/images/18859/small/ic_orca.png?1633603714',
+  'ORCA':               'https://assets.coingecko.com/coins/images/18858/small/ic_orca.png?1633602571'
 }
 
 // Token Blacklist:
