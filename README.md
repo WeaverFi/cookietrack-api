@@ -72,6 +72,7 @@ The API that powers CookieTrack.
 - `spookyswap`
 - `beefy`
 - `scream`
+- `cream`
 
 **Avalanche Projects Available:**
 - `aave`
