@@ -63,6 +63,7 @@ const avax_yieldyak = require('./routes/avalanche/yieldyak.js');
 // Harmony Routes:
 const one_wallet = require('./routes/harmony/wallet.js');
 const one_beefy = require('./routes/harmony/beefy.js');
+const one_sushiswap = require('./routes/harmony/sushiswap.js');
 
 // Partnership Routes:
 const snowball_index = require('./routes/partnerships/snowball/index.js');
@@ -329,6 +330,9 @@ app.get('/polygon/sushiswap', async (req, res) => {
 });
 
 // SushiSwap (Harmony):
+app.get('/harmony/sushiswap', async (req, res) => {
+  res.end(await one_sushiswap.get(req));
+});
 
 // Cream (Ethereum):
 // Cream (BSC):

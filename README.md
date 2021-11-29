@@ -86,6 +86,7 @@ The API that powers CookieTrack.
 
 **Harmony Projects Available:**
 - `beefy`
+- `sushiswap`
 
 **Solana Projects Available:**
 - None.
