@@ -39,6 +39,7 @@ const poly_mstable = require('./routes/polygon/mstable.js');
 const poly_pooltogether = require('./routes/polygon/pooltogether.js');
 const poly_apeswap = require('./routes/polygon/apeswap.js');
 const poly_sushiswap = require('./routes/polygon/sushiswap.js');
+const poly_cream = require('./routes/polygon/cream.js');
 
 // Fantom Routes:
 const ftm_wallet = require('./routes/fantom/wallet.js');
@@ -347,6 +348,10 @@ app.get('/bsc/cream', async (req, res) => {
 });
 
 // Cream (Polygon):
+app.get('/polygon/cream', async (req, res) => {
+  res.end(await poly_cream.get(req));
+});
+
 // Cream (Fantom):
 // Cream (Avalanche):
 

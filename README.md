@@ -65,6 +65,7 @@ The API that powers CookieTrack.
 - `pooltogether`
 - `apeswap`
 - `sushiswap`
+- `cream`
 
 **Fantom Projects Available:**
 - `autofarm`
