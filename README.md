@@ -62,6 +62,7 @@ The API that powers CookieTrack.
 - `mstable`
 - `pooltogether`
 - `apeswap`
+- `sushiswap`
 
 **Fantom Projects Available:**
 - `autofarm`

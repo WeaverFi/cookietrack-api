@@ -36,6 +36,7 @@ const poly_quickswap = require('./routes/polygon/quickswap.js');
 const poly_mstable = require('./routes/polygon/mstable.js');
 const poly_pooltogether = require('./routes/polygon/pooltogether.js');
 const poly_apeswap = require('./routes/polygon/apeswap.js');
+const poly_sushiswap = require('./routes/polygon/sushiswap.js');
 
 // Fantom Routes:
 const ftm_wallet = require('./routes/fantom/wallet.js');
@@ -322,10 +323,11 @@ app.get('/ethereum/sushiswap', async (req, res) => {
   res.end(await eth_sushiswap.get(req));
 });
 
-// SushiSwap (BSC):
 // SushiSwap (Polygon):
-// SushiSwap (Fantom):
-// SushiSwap (Avalanche):
+app.get('/polygon/sushiswap', async (req, res) => {
+  res.end(await poly_sushiswap.get(req));
+});
+
 // SushiSwap (Harmony):
 
 // Cream (Ethereum):
