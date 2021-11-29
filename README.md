@@ -52,6 +52,7 @@ The API that powers CookieTrack.
 - `wault`
 - `pooltogether`
 - `apeswap`
+- `cream`
 
 **Polygon Projects Available:**
 - `aave`

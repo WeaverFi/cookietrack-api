@@ -25,6 +25,7 @@ const bsc_beefy = require('./routes/bsc/beefy.js');
 const bsc_wault = require('./routes/bsc/wault.js');
 const bsc_pooltogether = require('./routes/bsc/pooltogether.js');
 const bsc_apeswap = require('./routes/bsc/apeswap.js');
+const bsc_cream = require('./routes/bsc/cream.js');
 
 // Polygon Routes:
 const poly_wallet = require('./routes/polygon/wallet.js');
@@ -341,6 +342,10 @@ app.get('/ethereum/cream', async (req, res) => {
 });
 
 // Cream (BSC):
+app.get('/bsc/cream', async (req, res) => {
+  res.end(await bsc_cream.get(req));
+});
+
 // Cream (Polygon):
 // Cream (Fantom):
 // Cream (Avalanche):
