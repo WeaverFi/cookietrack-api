@@ -82,7 +82,6 @@ const getMarketBalances = async (wallet) => {
       let newToken = await addDebtToken(chain, project, tokenAddress, debt, wallet);
       balances.push(newToken);
     }
-
   })());
   await Promise.all(promises);
   return balances;

@@ -513,3 +513,18 @@ exports.yieldyak = {
     { constant: true, inputs: [{ name: "amount", type: "uint256" }], name: "getDepositTokensForShares", outputs: [{ name: "", type: "uint256" }], type: "function" }
   ]
 }
+
+// CREAM ABIs:
+exports.cream = {
+  controllerABI: [
+    { constant: true, inputs: [], name: "getAllMarkets", outputs: [{ name: "", type: "address[]" }], type: "function" }
+  ],
+  tokenABI: [
+    { constant: true, inputs: [], name: "exchangeRateStored", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [], name: "underlying", outputs: [{ name: "", type: "address" }], type: "function" },
+    { constant: true, inputs: [{ name: "account", type: "address" }], name: "borrowBalanceStored", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ],
+  stakingABI: [
+    { constant: true, inputs: [{ name: "account", type: "address" }], name: "earned", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ]
+}

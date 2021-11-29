@@ -13,6 +13,7 @@ const eth_balancer = require('./routes/ethereum/balancer.js');
 const eth_mstable = require('./routes/ethereum/mstable.js');
 const eth_pooltogether = require('./routes/ethereum/pooltogether.js');
 const eth_sushiswap = require('./routes/ethereum/sushiswap.js');
+const eth_cream = require('./routes/ethereum/cream.js');
 
 // BSC Routes:
 const bsc_wallet = require('./routes/bsc/wallet.js');
@@ -335,6 +336,10 @@ app.get('/harmony/sushiswap', async (req, res) => {
 });
 
 // Cream (Ethereum):
+app.get('/ethereum/cream', async (req, res) => {
+  res.end(await eth_cream.get(req));
+});
+
 // Cream (BSC):
 // Cream (Polygon):
 // Cream (Fantom):
