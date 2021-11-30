@@ -14,6 +14,7 @@ const eth_mstable = require('./routes/ethereum/mstable.js');
 const eth_pooltogether = require('./routes/ethereum/pooltogether.js');
 const eth_sushiswap = require('./routes/ethereum/sushiswap.js');
 const eth_cream = require('./routes/ethereum/cream.js');
+const eth_curve = require('./routes/ethereum/curve.js');
 
 // BSC Routes:
 const bsc_wallet = require('./routes/bsc/wallet.js');
@@ -365,6 +366,10 @@ app.get('/avalanche/cream', async (req, res) => {
 });
 
 // Curve (Ethereum):
+app.get('/ethereum/curve', async (req, res) => {
+  res.end(await eth_curve.get(req));
+});
+
 // Curve (Polygon):
 // Curve (Fantom):
 // Curve (Avalanche):

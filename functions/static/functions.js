@@ -756,7 +756,7 @@ exports.addCurveToken = async (chain, location, address, balance, owner) => {
     let lpTokenSupply = await exports.query(chain, address, minABI, 'totalSupply', []) / (10 ** decimals);
     let poolAddress = await exports.query(chain, registry, curve.registryABI, 'get_pool_from_lp_token', [address]);
     let tokens = (await exports.query(chain, registry, curve.registryABI, 'get_underlying_coins', [poolAddress])).filter(token => token != '0x0000000000000000000000000000000000000000');
-    let reserves = await exports.query(chain, registry, curve.registryABI, 'get_balances', [poolAddress]).filter(balance => balance != 0);
+    let reserves = (await exports.query(chain, registry, curve.registryABI, 'get_underlying_balances', [poolAddress])).filter(balance => balance != 0);
     let multiplier = parseInt(await exports.query(chain, registry, curve.registryABI, 'get_virtual_price_from_lp_token', [address])) / (10 ** decimals);
 
     // Function to redirect synthetic asset price fetching:
@@ -823,14 +823,14 @@ exports.addCurveToken = async (chain, location, address, balance, owner) => {
         newToken.token0.address = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
         newToken.token0.symbol = 'ETH';
         newToken.token0.price = await getPrice(chain, newToken.token0.address, 18);
-        newToken.token0.balance = parseInt(reserves[0]) * ((newToken.balance / (10 ** decimals)) / lpTokenSupply);
+        newToken.token0.balance = parseInt(reserves[0]) * ((newToken.balance / (10 ** 18)) / lpTokenSupply);
         newToken.token0.logo = exports.getTokenLogo(chain, newToken.token0.symbol);
       } else {
         newToken.token0.address = tokens[0];
         newToken.token0.symbol = await exports.query(chain, newToken.token0.address, minABI, 'symbol', []);
         let tokenDecimals = parseInt(await exports.query(chain, newToken.token0.address, minABI, 'decimals', []));
         newToken.token0.price = await getPrice(chain, newToken.token0.address, tokenDecimals);
-        newToken.token0.balance = parseInt(reserves[0]) * ((newToken.balance / (10 ** decimals)) / lpTokenSupply);
+        newToken.token0.balance = parseInt(reserves[0]) * ((newToken.balance / lpTokenSupply) / (10 ** decimals));
         newToken.token0.logo = exports.getTokenLogo(chain, newToken.token0.symbol);
       }
 
@@ -839,14 +839,14 @@ exports.addCurveToken = async (chain, location, address, balance, owner) => {
         newToken.token1.address = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
         newToken.token1.symbol = 'ETH';
         newToken.token1.price = await getPrice(chain, newToken.token1.address, 18);
-        newToken.token1.balance = parseInt(reserves[1]) * ((newToken.balance / (10 ** decimals)) / lpTokenSupply);
+        newToken.token1.balance = parseInt(reserves[1]) * ((newToken.balance / (10 ** 18)) / lpTokenSupply);
         newToken.token1.logo = exports.getTokenLogo(chain, newToken.token1.symbol);
       } else {
         newToken.token1.address = tokens[1];
         newToken.token1.symbol = await exports.query(chain, newToken.token1.address, minABI, 'symbol', []);
         let tokenDecimals = parseInt(await exports.query(chain, newToken.token1.address, minABI, 'decimals', []));
         newToken.token1.price = await getPrice(chain, newToken.token1.address, tokenDecimals);
-        newToken.token1.balance = parseInt(reserves[1]) * ((newToken.balance / (10 ** decimals)) / lpTokenSupply);
+        newToken.token1.balance = parseInt(reserves[1]) * ((newToken.balance / lpTokenSupply) / (10 ** decimals));
         newToken.token1.logo = exports.getTokenLogo(chain, newToken.token1.symbol);
       }
 

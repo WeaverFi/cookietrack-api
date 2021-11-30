@@ -158,10 +158,18 @@ exports.alpaca = {
 // Curve ABIs:
 exports.curve = {
   registryABI: [
+    { constant: true, inputs: [], name: "pool_count", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "arg0", type: "uint256" }], name: "pool_list", outputs: [{ name: "", type: "address" }], type: "function" },
+    { constant: true, inputs: [{ name: "_pool", type: "address" }], name: "get_gauges", outputs: [{ name: "", type: "address[10]" }, { name: "", type: "int128[10]" }], type: "function" },
     { constant: true, inputs: [{ name: "arg0", type: "address" }], name: "get_pool_from_lp_token", outputs: [{ name: "", type: "address" }], type: "function" },
     { constant: true, inputs: [{ name: "_pool", type: "address" }], name: "get_underlying_coins", outputs: [{ name: "", type: "address[8]" }], type: "function" },
-    { constant: true, inputs: [{ name: "_pool", type: "address" }], name: "get_balances", outputs: [{ name: "", type: "uint256[8]" }], type: "function" },
+    { constant: true, inputs: [{ name: "_pool", type: "address" }], name: "get_underlying_balances", outputs: [{ name: "", type: "uint256[8]" }], type: "function" },
     { constant: true, inputs: [{ name: "_token", type: "address" }], name: "get_virtual_price_from_lp_token", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ],
+  gaugeABI: [
+    { constant: true, inputs: [], name: "lp_token", outputs: [{ name: "", type: "address" }], type: "function" },
+    { constant: true, inputs: [{ name: "arg0", type: "uint256" }], name: "reward_tokens", outputs: [{ name: "", type: "address" }], type: "function" },
+    { constant: true, inputs: [{ name: "_addr", type: "address" }, { name: "_token", type: "address" }], name: "claimable_reward", outputs: [{ name: "", type: "uint256" }], type: "function" }
   ],
   polyTokenABI: [
     { constant: true, inputs: [], name: "minter", outputs: [{ name: "", type: "address" }], type: "function" }

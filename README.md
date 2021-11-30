@@ -42,6 +42,7 @@ The API that powers CookieTrack.
 - `pooltogether`
 - `sushiswap`
 - `cream`
+- `curve`
 
 **BSC Projects Available:**
 - `pancakeswap`
