@@ -91,6 +91,7 @@ The API that powers CookieTrack.
 - `everest`
 - `yieldyak`
 - `cream`
+- `curve`
 
 **Harmony Projects Available:**
 - `beefy`
