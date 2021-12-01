@@ -77,6 +77,7 @@ The API that powers CookieTrack.
 - `scream`
 - `cream`
 - `curve`
+- `bouje`
 
 **Avalanche Projects Available:**
 - `aave`

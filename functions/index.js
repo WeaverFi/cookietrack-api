@@ -52,6 +52,7 @@ const ftm_beefy = require('./routes/fantom/beefy.js');
 const ftm_scream = require('./routes/fantom/scream.js');
 const ftm_cream = require('./routes/fantom/cream.js');
 const ftm_curve = require('./routes/fantom/curve.js');
+const ftm_bouje = require('./routes/fantom/bouje.js');
 
 // Avalanche Routes:
 const avax_wallet = require('./routes/avalanche/wallet.js');
@@ -401,6 +402,9 @@ app.get('/avalanche/wonderland', async (req, res) => {
 });
 
 // Bouje (Fantom):
+app.get('/fantom/bouje', async (req, res) => {
+  res.end(await ftm_bouje.get(req));
+});
 
 // Axial (Avalanche):
 
