@@ -81,7 +81,6 @@ const avax_pangolin = require('./routes/avalanche/pangolin.js');
 
 // Harmony Routes:
 const one_wallet = require('./routes/harmony/wallet.js');
-const one_txs = require('./routes/harmony/txs.js');
 const one_beefy = require('./routes/harmony/beefy.js');
 const one_sushiswap = require('./routes/harmony/sushiswap.js');
 
@@ -168,9 +167,7 @@ app.get('/avalanche/txs', async (req, res) => {
 });
 
 // Harmony TX History:
-app.get('/harmony/txs', async (req, res) => {
-  res.end(await one_txs.get(req));
-});
+// <TODO>
 
 // Solana TX History:
 // <TODO>
@@ -481,7 +478,7 @@ app.get('/snowball/deposits', async (req, res) => {
 /* ========================================================================================================================================================================= */
 
 // Starting Local Server:
-app.listen(3000, () => { console.log('\nAPI Up on 127.0.0.1:3000'); });
+// app.listen(3000, () => { console.log('\nAPI Up on 127.0.0.1:3000'); });
 
 // Exporting Express App:
 exports.app = functions.runWith({ memory: '256MB', timeoutSeconds: 120 }).https.onRequest(app);

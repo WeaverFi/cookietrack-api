@@ -29,6 +29,20 @@ The API that powers CookieTrack.
 **Example:**
 `https://api.cookietrack.io/ethereum/wallet?address=0x143642531bA06843A70FB59B4455316c21036F7d`
 
+### Transaction Histories
+
+`/<chain>/txs?address=<wallet_address>` - Returns a wallet's transaction history.
+
+**Chains Available:**
+- `ethereum`
+- `bsc`
+- `polygon`
+- `fantom`
+- `avalanche`
+
+**Example:**
+`https://api.cookietrack.io/ethereum/txs?address=0x143642531bA06843A70FB59B4455316c21036F7d`
+
 ### Project Balances
 
 `/<chain>/<project>?address=<wallet_address>` - Returns a wallet's token balances in a specific project.
@@ -127,5 +141,7 @@ npm i
 cd..
 npm start
 ```
+
+For some endpoints, an API key is required. To add your own for local development, add a `functions/static/keys.js` file and export your key.
 
 [logo]: https://github.com/Ncookiez/cookietrack-api/blob/master/favicon.svg "CookieTrack"

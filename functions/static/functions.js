@@ -6,6 +6,7 @@ const axios = require('axios');
 // Required Variables:
 const { rpcs } = require('./RPCs.js');
 const { minABI, lpABI, aave, balancer, snowball, traderjoe, belt, alpaca, curve, iron, axial, mstable } = require('./ABIs.js');
+const { ckey } = require('./keys.js');
 const { eth_token_logos } = require('./tokens/ethereum.js');
 const { bsc_token_logos } = require('./tokens/bsc.js');
 const { poly_token_logos } = require('./tokens/polygon.js');
@@ -542,6 +543,162 @@ exports.getTokenPrice = async (chain, address, decimals) => {
   } catch {
     return 0;
   }
+}
+
+/* ========================================================================================================================================================================= */
+
+// Function to get the transaction history of a wallet address:
+exports.getTXs = async (chain, address) => {
+
+  // Initializations:
+  let txs = [];
+  let page = 0;
+  let hasNextPage = false;
+  let chains = {
+    eth: { id: 1, token: 'ETH' },
+    bsc: { id: 56, token: 'BNB' },
+    poly: { id: 137, token: 'MATIC' },
+    ftm: { id: 250, token: 'FTM' },
+    avax: { id: 43114, token: 'AVAX' }
+  }
+
+  do {
+    let response = (await axios.get(`https://api.covalenthq.com/v1/${chains[chain].id}/address/${address}/transactions_v2/?page-size=1000&page-number=${page++}&key=${ckey}`)).data;
+    if(!response.error) {
+      hasNextPage = response.data.pagination.has_more;
+      let promises = response.data.items.map(tx => (async () => {
+        if(tx.successful) {
+
+          // Native Transfer TXs:
+          if(parseInt(tx.value) > 0) {
+            txs.push({
+              wallet: address,
+              chain: chain,
+              type: 'transfer',
+              hash: tx.tx_hash,
+              time: (new Date(tx.block_signed_at)).getTime() / 1000,
+              direction: tx.to_address === address.toLowerCase() ? 'in' : 'out',
+              from: tx.from_address,
+              to: tx.to_address,
+              token: {
+                address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+                symbol: chains[chain].token
+              },
+              value: parseInt(tx.value) / (10 ** 18),
+              fee: (tx.gas_spent * tx.gas_price) / (10 ** 18),
+              nativeToken: chains[chain].token
+            });
+          }
+
+          // Approval TXs:
+          if(tx.log_events.length < 3) {
+            tx.log_events.forEach(event => {
+              if(event.decoded != null) {
+                if(event.decoded.name === 'Approval') {
+                  if(event.decoded.params[0].name === 'owner' && event.decoded.params[0].value === address.toLowerCase()) {
+                    txs.push({
+                      wallet: address,
+                      chain: chain,
+                      type: parseInt(event.decoded.params[2].value) > 0 ? 'approve' : 'revoke',
+                      hash: tx.tx_hash,
+                      time: (new Date(tx.block_signed_at)).getTime() / 1000,
+                      direction: 'out',
+                      token: {
+                        address: event.sender_address,
+                        symbol: event.sender_contract_ticker_symbol
+                      },
+                      fee: (tx.gas_spent * tx.gas_price) / (10 ** 18),
+                      nativeToken: chains[chain].token
+                    });
+                  }
+                }
+              }
+            });
+          }
+
+          // Other TXs:
+          tx.log_events.forEach(event => {
+            if(event.decoded != null) {
+
+              // Token Transfers:
+              if(event.decoded.name === 'Transfer') {
+
+                // Outbound:
+                if(event.decoded.params[0].name === 'from' && event.decoded.params[0].value === address.toLowerCase() && event.decoded.params[2].decoded) {
+                  if(parseInt(event.decoded.params[2].value) > 0) {
+                    txs.push({
+                      wallet: address,
+                      chain: chain,
+                      type: 'transfer',
+                      hash: tx.tx_hash,
+                      time: (new Date(tx.block_signed_at)).getTime() / 1000,
+                      direction: 'out',
+                      from: address,
+                      to: event.decoded.params[1].value,
+                      token: {
+                        address: event.sender_address,
+                        symbol: event.sender_contract_ticker_symbol
+                      },
+                      value: parseInt(event.decoded.params[2].value) / (10 ** event.sender_contract_decimals),
+                      fee: (tx.gas_spent * tx.gas_price) / (10 ** 18),
+                      nativeToken: chains[chain].token
+                    });
+                  }
+                
+                // Inbound:
+                } else if(event.decoded.params[1].name === 'to' && event.decoded.params[1].value === address.toLowerCase() && event.decoded.params[2].decoded) {
+                  if(parseInt(event.decoded.params[2].value) > 0) {
+                    txs.push({
+                      wallet: address,
+                      chain: chain,
+                      type: 'transfer',
+                      hash: tx.tx_hash,
+                      time: (new Date(tx.block_signed_at)).getTime() / 1000,
+                      direction: 'in',
+                      from: event.decoded.params[0].value,
+                      to: address,
+                      token: {
+                        address: event.sender_address,
+                        symbol: event.sender_contract_ticker_symbol
+                      },
+                      value: parseInt(event.decoded.params[2].value) / (10 ** event.sender_contract_decimals),
+                      fee: (tx.gas_spent * tx.gas_price) / (10 ** 18),
+                      nativeToken: chains[chain].token
+                    });
+                  }
+                }
+              
+              // Native Router Swaps:
+              } else if(event.decoded.name === 'Withdrawal' && event.decoded.params[0].value === tx.to_address) {
+                txs.push({
+                  wallet: address,
+                  chain: chain,
+                  type: 'transfer',
+                  hash: tx.tx_hash,
+                  time: (new Date(tx.block_signed_at)).getTime() / 1000,
+                  direction: 'in',
+                  from: tx.to_address,
+                  to: tx.from_address,
+                  token: {
+                    address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+                    symbol: chains[chain].token
+                  },
+                  value: parseInt(event.decoded.params[1].value) / (10 ** 18),
+                  fee: (tx.gas_spent * tx.gas_price) / (10 ** 18),
+                  nativeToken: chains[chain].token
+                });
+              }
+            }
+          });
+        }
+      })());
+      await Promise.all(promises);
+    } else {
+      hasNextPage = false;
+    }
+  } while(hasNextPage);
+
+  return txs;
 }
 
 /* ========================================================================================================================================================================= */
