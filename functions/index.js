@@ -7,6 +7,7 @@ const cors = require('cors');
 // Ethereum Routes:
 const eth_wallet = require('./routes/ethereum/wallet.js');
 const eth_txs = require('./routes/ethereum/txs.js');
+const eth_fees = require('./routes/ethereum/fees.js');
 const eth_aave = require('./routes/ethereum/aave.js');
 const eth_compound = require('./routes/ethereum/compound.js');
 const eth_yearn = require('./routes/ethereum/yearn.js');
@@ -20,6 +21,7 @@ const eth_curve = require('./routes/ethereum/curve.js');
 // BSC Routes:
 const bsc_wallet = require('./routes/bsc/wallet.js');
 const bsc_txs = require('./routes/bsc/txs.js');
+const bsc_fees = require('./routes/bsc/fees.js');
 const bsc_pancakeswap = require('./routes/bsc/pancakeswap.js');
 const bsc_autofarm = require('./routes/bsc/autofarm.js');
 const bsc_belt = require('./routes/bsc/belt.js');
@@ -33,6 +35,7 @@ const bsc_cream = require('./routes/bsc/cream.js');
 // Polygon Routes:
 const poly_wallet = require('./routes/polygon/wallet.js');
 const poly_txs = require('./routes/polygon/txs.js');
+const poly_fees = require('./routes/polygon/fees.js');
 const poly_aave = require('./routes/polygon/aave.js');
 const poly_autofarm = require('./routes/polygon/autofarm.js');
 const poly_balancer = require('./routes/polygon/balancer.js');
@@ -50,6 +53,7 @@ const poly_iron = require('./routes/polygon/iron.js');
 // Fantom Routes:
 const ftm_wallet = require('./routes/fantom/wallet.js');
 const ftm_txs = require('./routes/fantom/txs.js');
+const ftm_fees = require('./routes/fantom/fees.js');
 const ftm_autofarm = require('./routes/fantom/autofarm.js');
 const ftm_spookyswap = require('./routes/fantom/spookyswap.js');
 const ftm_beefy = require('./routes/fantom/beefy.js');
@@ -61,6 +65,7 @@ const ftm_bouje = require('./routes/fantom/bouje.js');
 // Avalanche Routes:
 const avax_wallet = require('./routes/avalanche/wallet.js');
 const avax_txs = require('./routes/avalanche/txs.js');
+const avax_fees = require('./routes/avalanche/fees.js');
 const avax_aave = require('./routes/avalanche/aave.js');
 const avax_snowball = require('./routes/avalanche/snowball.js');
 const avax_lydia = require('./routes/avalanche/lydia.js');
@@ -170,6 +175,39 @@ app.get('/avalanche/txs', async (req, res) => {
 // <TODO>
 
 // Solana TX History:
+// <TODO>
+
+/* ========================================================================================================================================================================= */
+
+// Ethereum Fees:
+app.get('/ethereum/fees', async (req, res) => {
+  res.end(await eth_fees.get(req));
+});
+
+// BSC Fees:
+app.get('/bsc/fees', async (req, res) => {
+  res.end(await bsc_fees.get(req));
+});
+
+// Polygon Fees:
+app.get('/polygon/fees', async (req, res) => {
+  res.end(await poly_fees.get(req));
+});
+
+// Fantom Fees:
+app.get('/fantom/fees', async (req, res) => {
+  res.end(await ftm_fees.get(req));
+});
+
+// Avalanche Fees:
+app.get('/avalanche/fees', async (req, res) => {
+  res.end(await avax_fees.get(req));
+});
+
+// Harmony Fees:
+// <TODO>
+
+// Solana Fees:
 // <TODO>
 
 /* ========================================================================================================================================================================= */

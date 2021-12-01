@@ -562,6 +562,7 @@ exports.getTXs = async (chain, address) => {
     avax: { id: 43114, token: 'AVAX' }
   }
 
+  // Fetching TXs:
   do {
     let response = (await axios.get(`https://api.covalenthq.com/v1/${chains[chain].id}/address/${address}/transactions_v2/?page-size=1000&page-number=${page++}&key=${ckey}`)).data;
     if(!response.error) {
@@ -691,6 +692,47 @@ exports.getTXs = async (chain, address) => {
             }
           });
         }
+      })());
+      await Promise.all(promises);
+    } else {
+      hasNextPage = false;
+    }
+  } while(hasNextPage);
+
+  return txs;
+}
+
+/* ========================================================================================================================================================================= */
+
+// Function to get the simple/quick transaction history of a wallet address:
+exports.getSimpleTXs = async (chain, address) => {
+
+  // Initializations:
+  let txs = [];
+  let page = 0;
+  let hasNextPage = false;
+  let chains = {
+    eth: { id: 1, token: 'ETH' },
+    bsc: { id: 56, token: 'BNB' },
+    poly: { id: 137, token: 'MATIC' },
+    ftm: { id: 250, token: 'FTM' },
+    avax: { id: 43114, token: 'AVAX' }
+  }
+
+  // Fetching TXs:
+  do {
+    let response = (await axios.get(`https://api.covalenthq.com/v1/${chains[chain].id}/address/${address}/transactions_v2/?no-logs=true&page-size=1000&page-number=${page++}&key=${ckey}`)).data;
+    if(!response.error) {
+      hasNextPage = response.data.pagination.has_more;
+      let promises = response.data.items.map(tx => (async () => {
+        txs.push({
+          wallet: address,
+          chain: chain,
+          hash: tx.tx_hash,
+          time: (new Date(tx.block_signed_at)).getTime() / 1000,
+          direction: tx.from_address === address.toLowerCase() ? 'out' : 'in',
+          fee: tx.gas_price < 1000000000000 ? (tx.gas_spent * tx.gas_price) / (10 ** 18) : tx.gas_price / (10 ** 18)
+        });
       })());
       await Promise.all(promises);
     } else {
