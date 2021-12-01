@@ -6,6 +6,7 @@ const cors = require('cors');
 
 // Ethereum Routes:
 const eth_wallet = require('./routes/ethereum/wallet.js');
+const eth_txs = require('./routes/ethereum/txs.js');
 const eth_aave = require('./routes/ethereum/aave.js');
 const eth_compound = require('./routes/ethereum/compound.js');
 const eth_yearn = require('./routes/ethereum/yearn.js');
@@ -18,6 +19,7 @@ const eth_curve = require('./routes/ethereum/curve.js');
 
 // BSC Routes:
 const bsc_wallet = require('./routes/bsc/wallet.js');
+const bsc_txs = require('./routes/bsc/txs.js');
 const bsc_pancakeswap = require('./routes/bsc/pancakeswap.js');
 const bsc_autofarm = require('./routes/bsc/autofarm.js');
 const bsc_belt = require('./routes/bsc/belt.js');
@@ -30,6 +32,7 @@ const bsc_cream = require('./routes/bsc/cream.js');
 
 // Polygon Routes:
 const poly_wallet = require('./routes/polygon/wallet.js');
+const poly_txs = require('./routes/polygon/txs.js');
 const poly_aave = require('./routes/polygon/aave.js');
 const poly_autofarm = require('./routes/polygon/autofarm.js');
 const poly_balancer = require('./routes/polygon/balancer.js');
@@ -46,6 +49,7 @@ const poly_iron = require('./routes/polygon/iron.js');
 
 // Fantom Routes:
 const ftm_wallet = require('./routes/fantom/wallet.js');
+const ftm_txs = require('./routes/fantom/txs.js');
 const ftm_autofarm = require('./routes/fantom/autofarm.js');
 const ftm_spookyswap = require('./routes/fantom/spookyswap.js');
 const ftm_beefy = require('./routes/fantom/beefy.js');
@@ -56,6 +60,7 @@ const ftm_bouje = require('./routes/fantom/bouje.js');
 
 // Avalanche Routes:
 const avax_wallet = require('./routes/avalanche/wallet.js');
+const avax_txs = require('./routes/avalanche/txs.js');
 const avax_aave = require('./routes/avalanche/aave.js');
 const avax_snowball = require('./routes/avalanche/snowball.js');
 const avax_lydia = require('./routes/avalanche/lydia.js');
@@ -76,6 +81,7 @@ const avax_pangolin = require('./routes/avalanche/pangolin.js');
 
 // Harmony Routes:
 const one_wallet = require('./routes/harmony/wallet.js');
+const one_txs = require('./routes/harmony/txs.js');
 const one_beefy = require('./routes/harmony/beefy.js');
 const one_sushiswap = require('./routes/harmony/sushiswap.js');
 
@@ -130,6 +136,44 @@ app.get('/avalanche/wallet', async (req, res) => {
 app.get('/harmony/wallet', async (req, res) => {
   res.end(await one_wallet.get(req));
 });
+
+// Solana Wallet:
+// <TODO>
+
+/* ========================================================================================================================================================================= */
+
+// Ethereum TX History:
+app.get('/ethereum/txs', async (req, res) => {
+  res.end(await eth_txs.get(req));
+});
+
+// BSC TX History:
+app.get('/bsc/txs', async (req, res) => {
+  res.end(await bsc_txs.get(req));
+});
+
+// Polygon TX History:
+app.get('/polygon/txs', async (req, res) => {
+  res.end(await poly_txs.get(req));
+});
+
+// Fantom TX History:
+app.get('/fantom/txs', async (req, res) => {
+  res.end(await ftm_txs.get(req));
+});
+
+// Avalanche TX History:
+app.get('/avalanche/txs', async (req, res) => {
+  res.end(await avax_txs.get(req));
+});
+
+// Harmony TX History:
+app.get('/harmony/txs', async (req, res) => {
+  res.end(await one_txs.get(req));
+});
+
+// Solana TX History:
+// <TODO>
 
 /* ========================================================================================================================================================================= */
 
@@ -437,7 +481,7 @@ app.get('/snowball/deposits', async (req, res) => {
 /* ========================================================================================================================================================================= */
 
 // Starting Local Server:
-// app.listen(3000, () => { console.log('\nAPI Up on 127.0.0.1:3000'); });
+app.listen(3000, () => { console.log('\nAPI Up on 127.0.0.1:3000'); });
 
 // Exporting Express App:
 exports.app = functions.runWith({ memory: '256MB', timeoutSeconds: 120 }).https.onRequest(app);
