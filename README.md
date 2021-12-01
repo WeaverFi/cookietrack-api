@@ -68,6 +68,7 @@ The API that powers CookieTrack.
 - `sushiswap`
 - `cream`
 - `curve`
+- `iron`
 
 **Fantom Projects Available:**
 - `autofarm`

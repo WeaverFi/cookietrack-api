@@ -250,6 +250,23 @@ exports.venus = {
 
 // Iron ABIs:
 exports.iron = {
+  registryABI: [
+    { constant: true, inputs: [], name: "poolLength", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "<input>", type: "uint256" }, { name: "<input>", type: "address" }], name: "userInfo", outputs: [{ name: "amount", type: "uint256" }, { name: "rewardDebt", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "<input>", type: "uint256" }], name: "lpToken", outputs: [{ name: "", type: "address" }], type: "function" },
+    { constant: true, inputs: [{ name: "_pid", type: "uint256" }, { name: "_user", type: "address" }], name: "pendingReward", outputs: [{ name: "pending", type: "uint256" }], type: "function" }
+  ],
+  lendingABI: [
+    { constant: true, inputs: [], name: "getAllMarkets", outputs: [{ name: "", type: "address[]" }], type: "function" },
+    { constant: true, inputs: [{ name: "<input>", type: "address" }], name: "rewardAccrued", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ],
+  marketABI: [
+    { constant: true, inputs: [{ name: "account", type: "address" }], name: "getAccountSnapshot", outputs: [{ name: "", type: "uint256" }, { name: "", type: "uint256" }, { name: "", type: "uint256" }, { name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [], name: "underlying", outputs: [{ name: "", type: "address" }], type: "function" }
+  ],
+  stakingABI: [
+    { constant: true, inputs: [{ name: "<input>", type: "address" }], name: "locked", outputs: [{ name: "amount", type: "uint128" }, { name: "end", type: "uint256" }], type: "function" }
+  ],
   tokenABI: [
     { constant: true, inputs: [], name: "swap", outputs: [{ name: "", type: "address" }], type: "function" }
   ],

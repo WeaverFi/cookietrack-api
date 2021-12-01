@@ -42,6 +42,7 @@ const poly_apeswap = require('./routes/polygon/apeswap.js');
 const poly_sushiswap = require('./routes/polygon/sushiswap.js');
 const poly_cream = require('./routes/polygon/cream.js');
 const poly_curve = require('./routes/polygon/curve.js');
+const poly_iron = require('./routes/polygon/iron.js');
 
 // Fantom Routes:
 const ftm_wallet = require('./routes/fantom/wallet.js');
@@ -389,6 +390,9 @@ app.get('/avalanche/curve', async (req, res) => {
 });
 
 // Iron (Polygon):
+app.get('/polygon/iron', async (req, res) => {
+  res.end(await poly_iron.get(req));
+});
 
 // Wonderland (Avalanche):
 
