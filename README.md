@@ -95,6 +95,7 @@ The API that powers CookieTrack.
 - `cream`
 - `curve`
 - `wonderland`
+- `axial`
 
 **Harmony Projects Available:**
 - `beefy`

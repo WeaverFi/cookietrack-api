@@ -71,6 +71,7 @@ const avax_yieldyak = require('./routes/avalanche/yieldyak.js');
 const avax_cream = require('./routes/avalanche/cream.js');
 const avax_curve = require('./routes/avalanche/curve.js');
 const avax_wonderland = require('./routes/avalanche/wonderland.js');
+const avax_axial = require('./routes/avalanche/axial.js');
 
 // Harmony Routes:
 const one_wallet = require('./routes/harmony/wallet.js');
@@ -407,6 +408,9 @@ app.get('/fantom/bouje', async (req, res) => {
 });
 
 // Axial (Avalanche):
+app.get('/avalanche/axial', async (req, res) => {
+  res.end(await avax_axial.get(req));
+});
 
 // Pangolin (Avalanche):
 
