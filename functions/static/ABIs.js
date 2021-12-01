@@ -553,3 +553,10 @@ exports.cream = {
     { constant: true, inputs: [{ name: "account", type: "address" }], name: "earned", outputs: [{ name: "", type: "uint256" }], type: "function" }
   ]
 }
+
+// Wonderland ABIs:
+exports.wonderland = {
+  memoABI: [
+    { constant: true, inputs: [{ name: "_amount", type: "uint256" }], name: "wMEMOToMEMO", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ]
+}

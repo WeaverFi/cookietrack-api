@@ -69,6 +69,7 @@ const avax_everest = require('./routes/avalanche/everest.js');
 const avax_yieldyak = require('./routes/avalanche/yieldyak.js');
 const avax_cream = require('./routes/avalanche/cream.js');
 const avax_curve = require('./routes/avalanche/curve.js');
+const avax_wonderland = require('./routes/avalanche/wonderland.js');
 
 // Harmony Routes:
 const one_wallet = require('./routes/harmony/wallet.js');
@@ -395,6 +396,9 @@ app.get('/polygon/iron', async (req, res) => {
 });
 
 // Wonderland (Avalanche):
+app.get('/avalanche/wonderland', async (req, res) => {
+  res.end(await avax_wonderland.get(req));
+});
 
 // Bouje (Fantom):
 
