@@ -7,12 +7,12 @@ const axios = require('axios');
 const { rpcs } = require('./RPCs.js');
 const { minABI, lpABI, aave, balancer, snowball, traderjoe, belt, alpaca, curve, iron, axial, mstable } = require('./ABIs.js');
 const { ckey } = require('./keys.js');
-const { eth_token_logos } = require('./tokens/ethereum.js');
-const { bsc_token_logos } = require('./tokens/bsc.js');
-const { poly_token_logos } = require('./tokens/polygon.js');
-const { ftm_tokens, ftm_token_logos } = require('./tokens/fantom.js');
-const { avax_tokens, avax_token_logos } = require('./tokens/avalanche.js');
-const { one_tokens, one_token_logos } = require('./tokens/harmony.js');
+const { eth_token_logos, eth_token_blacklist } = require('./tokens/ethereum.js');
+const { bsc_token_logos, bsc_token_blacklist } = require('./tokens/bsc.js');
+const { poly_token_logos, poly_token_blacklist } = require('./tokens/polygon.js');
+const { ftm_tokens, ftm_token_logos, ftm_token_blacklist } = require('./tokens/fantom.js');
+const { avax_tokens, avax_token_logos, avax_token_blacklist } = require('./tokens/avalanche.js');
+const { one_tokens, one_token_logos, one_token_blacklist } = require('./tokens/harmony.js');
 
 // Initializations:
 let ethTokenPrices = [];
@@ -555,11 +555,11 @@ exports.getTXs = async (chain, address) => {
   let page = 0;
   let hasNextPage = false;
   let chains = {
-    eth: { id: 1, token: 'ETH' },
-    bsc: { id: 56, token: 'BNB' },
-    poly: { id: 137, token: 'MATIC' },
-    ftm: { id: 250, token: 'FTM' },
-    avax: { id: 43114, token: 'AVAX' }
+    eth: { id: 1, token: 'ETH', blacklist: eth_token_blacklist },
+    bsc: { id: 56, token: 'BNB', blacklist: bsc_token_blacklist },
+    poly: { id: 137, token: 'MATIC', blacklist: poly_token_blacklist },
+    ftm: { id: 250, token: 'FTM', blacklist: ftm_token_blacklist },
+    avax: { id: 43114, token: 'AVAX', blacklist: avax_token_blacklist }
   }
 
   // Fetching TXs:
@@ -624,48 +624,52 @@ exports.getTXs = async (chain, address) => {
               // Token Transfers:
               if(event.decoded.name === 'Transfer') {
 
-                // Outbound:
-                if(event.decoded.params[0].name === 'from' && event.decoded.params[0].value === address.toLowerCase() && event.decoded.params[2].decoded) {
-                  if(parseInt(event.decoded.params[2].value) > 0) {
-                    txs.push({
-                      wallet: address,
-                      chain: chain,
-                      type: 'transfer',
-                      hash: tx.tx_hash,
-                      time: (new Date(tx.block_signed_at)).getTime() / 1000,
-                      direction: 'out',
-                      from: address,
-                      to: event.decoded.params[1].value,
-                      token: {
-                        address: event.sender_address,
-                        symbol: event.sender_contract_ticker_symbol
-                      },
-                      value: parseInt(event.decoded.params[2].value) / (10 ** event.sender_contract_decimals),
-                      fee: (tx.gas_spent * tx.gas_price) / (10 ** 18),
-                      nativeToken: chains[chain].token
-                    });
-                  }
-                
-                // Inbound:
-                } else if(event.decoded.params[1].name === 'to' && event.decoded.params[1].value === address.toLowerCase() && event.decoded.params[2].decoded) {
-                  if(parseInt(event.decoded.params[2].value) > 0) {
-                    txs.push({
-                      wallet: address,
-                      chain: chain,
-                      type: 'transfer',
-                      hash: tx.tx_hash,
-                      time: (new Date(tx.block_signed_at)).getTime() / 1000,
-                      direction: 'in',
-                      from: event.decoded.params[0].value,
-                      to: address,
-                      token: {
-                        address: event.sender_address,
-                        symbol: event.sender_contract_ticker_symbol
-                      },
-                      value: parseInt(event.decoded.params[2].value) / (10 ** event.sender_contract_decimals),
-                      fee: (tx.gas_spent * tx.gas_price) / (10 ** 18),
-                      nativeToken: chains[chain].token
-                    });
+                // Filtering Blacklisted Tokens:
+                if(!chains[chain].blacklist.includes(event.sender_address.toLowerCase())) {
+
+                  // Outbound:
+                  if(event.decoded.params[0].name === 'from' && event.decoded.params[0].value === address.toLowerCase() && event.decoded.params[2].decoded) {
+                    if(parseInt(event.decoded.params[2].value) > 0) {
+                      txs.push({
+                        wallet: address,
+                        chain: chain,
+                        type: 'transfer',
+                        hash: tx.tx_hash,
+                        time: (new Date(tx.block_signed_at)).getTime() / 1000,
+                        direction: 'out',
+                        from: address,
+                        to: event.decoded.params[1].value,
+                        token: {
+                          address: event.sender_address,
+                          symbol: event.sender_contract_ticker_symbol
+                        },
+                        value: parseInt(event.decoded.params[2].value) / (10 ** event.sender_contract_decimals),
+                        fee: (tx.gas_spent * tx.gas_price) / (10 ** 18),
+                        nativeToken: chains[chain].token
+                      });
+                    }
+                  
+                  // Inbound:
+                  } else if(event.decoded.params[1].name === 'to' && event.decoded.params[1].value === address.toLowerCase() && event.decoded.params[2].decoded) {
+                    if(parseInt(event.decoded.params[2].value) > 0) {
+                      txs.push({
+                        wallet: address,
+                        chain: chain,
+                        type: 'transfer',
+                        hash: tx.tx_hash,
+                        time: (new Date(tx.block_signed_at)).getTime() / 1000,
+                        direction: 'in',
+                        from: event.decoded.params[0].value,
+                        to: address,
+                        token: {
+                          address: event.sender_address,
+                          symbol: event.sender_contract_ticker_symbol
+                        },
+                        value: parseInt(event.decoded.params[2].value) / (10 ** event.sender_contract_decimals),
+                        fee: (tx.gas_spent * tx.gas_price) / (10 ** 18),
+                        nativeToken: chains[chain].token
+                      });
+                    }
                   }
                 }
               
