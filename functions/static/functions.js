@@ -57,7 +57,7 @@ exports.addNativeToken = async (chain, balance, owner) => {
     owner: owner,
     symbol: '',
     address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-    balance: balance / (10**18),
+    balance: balance / (10 ** 18),
     price: 0,
     logo: ''
   }
@@ -261,7 +261,7 @@ exports.getTokenLogo = (chain, symbol) => {
   // Initializing Default Logo:
   let logo = 'https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@d5c68edec1f5eaec59ac77ff2b48144679cebca1/32/icon/generic.png';
 
-  // Ehereum Token:
+  // Ethereum Token:
   if(chain === 'eth') {
     if(eth_token_logos.hasOwnProperty(symbol)) {
       logo = eth_token_logos[symbol];
@@ -308,7 +308,7 @@ exports.getTokenPrice = async (chain, address, decimals) => {
 
   try {
 
-    // Ehereum Token:
+    // Ethereum Token:
     if(chain === 'eth') {
       let usdToken = '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'; // Using USDC.
       if(address === '0xa3BeD4E1c75D00fa6f4E5E6922DB7261B5E9AcD2') { usdToken = '0x6b175474e89094c44da98b954eedeac495271d0f'; } // Using DAI for price fetching.
@@ -393,7 +393,7 @@ exports.getTokenPrice = async (chain, address, decimals) => {
           let result = await axios.get(apiQuery);
           let tokens = Object.keys(result.data);
           tokens.forEach(token => {
-            ftmTokenPrices.push({token: token.toLowerCase(), price: result.data[token.toLowerCase()].usd});
+            ftmTokenPrices.push({token: token.toLowerCase(), price: result.data[token].usd});
           });
         } catch {
           return 0;
@@ -447,7 +447,7 @@ exports.getTokenPrice = async (chain, address, decimals) => {
           let result = await axios.get(apiQuery);
           let tokens = Object.keys(result.data);
           tokens.forEach(token => {
-            avaxTokenPrices.push({token: token.toLowerCase(), price: result.data[token.toLowerCase()].usd});
+            avaxTokenPrices.push({token: token.toLowerCase(), price: result.data[token].usd});
           });
         } catch {
           return 0;
@@ -496,7 +496,7 @@ exports.getTokenPrice = async (chain, address, decimals) => {
           let result = await axios.get(apiQuery);
           let tokens = Object.keys(result.data);
           tokens.forEach(token => {
-            oneTokenPrices.push({token: token.toLowerCase(), price: result.data[token.toLowerCase()].usd});
+            oneTokenPrices.push({token: token.toLowerCase(), price: result.data[token].usd});
           });
         } catch {
           return 0;
@@ -1087,7 +1087,7 @@ exports.addCurveToken = async (chain, location, address, balance, owner) => {
       // 1st Token Info:
       let address0 = await exports.query(chain, minter, curve.minterABI, 'coins', [0]);
       let token0 = await exports.addCurveToken(chain, location, address0, 0, address);
-      let supply0 = parseInt(await exports.query(chain, minter, curve.minterABI, 'balances', [0])) / (10**18);
+      let supply0 = parseInt(await exports.query(chain, minter, curve.minterABI, 'balances', [0])) / (10 ** 18);
       let price0 = token0.price;
 
       // 2nd Token Info:
@@ -1400,7 +1400,7 @@ exports.addCurveToken = async (chain, location, address, balance, owner) => {
       // 1st Token Info:
       let address0 = await exports.query(chain, minter, curve.minterABI, 'coins', [0]);
       let token0 = await exports.addCurveToken(chain, location, address0, 0, address);
-      let supply0 = parseInt(await exports.query(chain, minter, curve.minterABI, 'balances', [0])) / (10**18);
+      let supply0 = parseInt(await exports.query(chain, minter, curve.minterABI, 'balances', [0])) / (10 ** 18);
       let price0 = token0.price;
 
       // 2nd Token Info:

@@ -89,6 +89,9 @@ const one_wallet = require('./routes/harmony/wallet.js');
 const one_beefy = require('./routes/harmony/beefy.js');
 const one_sushiswap = require('./routes/harmony/sushiswap.js');
 
+// Solana Routes:
+const sol_wallet = require('./routes/solana/wallet.js');
+
 // Partnership Routes:
 const snowball_index = require('./routes/partnerships/snowball/index.js');
 const snowball_wallet = require('./routes/partnerships/snowball/wallet.js');
@@ -142,7 +145,9 @@ app.get('/harmony/wallet', async (req, res) => {
 });
 
 // Solana Wallet:
-// <TODO>
+app.get('/solana/wallet', async (req, res) => {
+  res.end(await sol_wallet.get(req));
+});
 
 /* ========================================================================================================================================================================= */
 

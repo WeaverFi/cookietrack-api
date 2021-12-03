@@ -64,7 +64,7 @@ const getMarketBalances = async (wallet) => {
     // Lending Balances:
     if(balance > 0) {
       let tokenAddress = await query(chain, market, scream.marketABI, 'underlying', []);
-      let underlyingBalance = balance * (exchangeRate / (10**18));
+      let underlyingBalance = balance * (exchangeRate / (10 ** 18));
       let newToken = await addToken(chain, project, tokenAddress, underlyingBalance, wallet);
       balances.push(newToken);
     }

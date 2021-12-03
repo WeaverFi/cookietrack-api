@@ -171,6 +171,6 @@ const getDualFarms = async () => {
 
 // Function to get dQUICK ratio:
 const getRatio = async () => {
-  let ratio = parseInt(await query(chain, dquick, quickswap.stakingABI, 'dQUICKForQUICK', [100000000])) / (10**8);
+  let ratio = parseInt(await query(chain, dquick, quickswap.stakingABI, 'dQUICKForQUICK', [100000000])) / (10 ** 8);
   return ratio;
 }

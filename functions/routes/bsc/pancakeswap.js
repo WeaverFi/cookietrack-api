@@ -92,7 +92,7 @@ const getFarmBalances = async (wallet) => {
 const getAutoCakePoolBalance = async (wallet) => {
   let balance = parseInt((await query(chain, autoCakePool, pancakeswap.autoCakePoolABI, 'userInfo', [wallet]))[0]);
   if(balance > 0) {
-    let multiplier = parseInt(await query(chain, autoCakePool, pancakeswap.autoCakePoolABI, 'getPricePerFullShare', [])) / (10**18);
+    let multiplier = parseInt(await query(chain, autoCakePool, pancakeswap.autoCakePoolABI, 'getPricePerFullShare', [])) / (10 ** 18);
     let actualBalance = balance * multiplier;
     let newToken = await addToken(chain, project, cake, actualBalance, wallet);
     return [newToken];

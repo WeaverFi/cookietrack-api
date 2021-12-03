@@ -143,7 +143,7 @@ const getMarketBalances = async (wallet) => {
     let exchangeRate = parseInt(account[3]);
     if(balance > 0) {
       let token = await query(chain, market, traderjoe.marketABI, 'underlying', []);
-      let underlyingBalance = balance * (exchangeRate / (10**18));
+      let underlyingBalance = balance * (exchangeRate / (10 ** 18));
       let newToken = await addToken(chain, project, token, underlyingBalance, wallet);
       balances.push(newToken);
     }

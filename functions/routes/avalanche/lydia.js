@@ -92,7 +92,7 @@ const getFarmBalances = async (wallet) => {
 const getAutoLYDFarmBalance = async (wallet) => {
   let shares = parseInt(await query(chain, autoLydFarm, lydia.lydFarmABI, 'sharesOf', [wallet]));
   if(shares > 0) {
-    let exchangeRate = parseInt(await query(chain, autoLydFarm, lydia.lydFarmABI, 'getPricePerFullShare', [])) / (10**18);
+    let exchangeRate = parseInt(await query(chain, autoLydFarm, lydia.lydFarmABI, 'getPricePerFullShare', [])) / (10 ** 18);
     let balance = shares * exchangeRate;
     let newToken = await addToken(chain, project, lyd, balance, wallet);
     return [newToken];

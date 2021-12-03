@@ -64,14 +64,14 @@ const getData = async (wallet) => {
 
 // Function to get wallet SNOB balance:
 const getSNOB = async (wallet) => {
-  let balance = parseInt(await query(chain, snob, minABI, 'balanceOf', [wallet])) / (10**18);
+  let balance = parseInt(await query(chain, snob, minABI, 'balanceOf', [wallet])) / (10 ** 18);
   return balance;
 }
 
 // Function to get staked SNOB balance:
 const getStakedSNOB = async (wallet) => {
   let locked = await query(chain, xsnob, snowball.stakingABI, 'locked', [wallet]);
-  let balance = parseInt(locked.amount) / (10**18);
+  let balance = parseInt(locked.amount) / (10 ** 18);
   let unlock = parseInt(locked.end);
   return { balance, unlock };
 }

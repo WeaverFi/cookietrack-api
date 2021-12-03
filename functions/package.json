@@ -13,6 +13,7 @@
   },
   "main": "index.js",
   "dependencies": {
+    "@solana/web3.js": "^1.31.0",
     "axios": "^0.23.0",
     "cors": "^2.8.5",
     "ethers": "^5.4.7",

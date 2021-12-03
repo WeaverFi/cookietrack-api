@@ -70,14 +70,14 @@ const getData = async (wallet) => {
 
 // Function to get wallet SNOB balance:
 const getSNOB = async (wallet) => {
-  let balance = parseInt(await query(chain, snob, minABI, 'balanceOf', [wallet])) / (10**18);
+  let balance = parseInt(await query(chain, snob, minABI, 'balanceOf', [wallet])) / (10 ** 18);
   return balance;
 }
 
 // Function to get staked SNOB balance:
 const getStakedSNOB = async (wallet) => {
   let locked = await query(chain, xsnob, snowball.stakingABI, 'locked', [wallet]);
-  let balance = parseInt(locked.amount) / (10**18);
+  let balance = parseInt(locked.amount) / (10 ** 18);
   let unlock = parseInt(locked.end);
   return { balance, unlock };
 }
@@ -97,8 +97,8 @@ const getFarmBalances = async (wallet) => {
           type: 'token',
           symbol: 's4D',
           address: farm.token,
-          balance: balance / (10**18),
-          price: parseInt(await query(chain, controller, snowball.s4dControllerABI, 'getVirtualPrice', [])) / (10**18),
+          balance: balance / (10 ** 18),
+          price: parseInt(await query(chain, controller, snowball.s4dControllerABI, 'getVirtualPrice', [])) / (10 ** 18),
           logo: getTokenLogo(chain, 's4D')
         }
         balances.push(newToken);
@@ -106,7 +106,7 @@ const getFarmBalances = async (wallet) => {
         let token = await query(chain, farm.token, snowball.farmABI, 'token', []);
         let exchangeRatio = parseInt(await query(chain, farm.token, snowball.farmABI, 'getRatio', []));
         if(symbol.includes('PGL') || symbol.includes('JLP')) {
-          let trueBalance = balance * (exchangeRatio / (10**18));
+          let trueBalance = balance * (exchangeRatio / (10 ** 18));
           let decimals = parseInt(await query(chain, token, minABI, 'decimals', []));
           let lpTokenReserves = await query(chain, token, lpABI, 'getReserves', []);
           let lpTokenSupply = await query(chain, token, lpABI, 'totalSupply', []) / (10 ** decimals);
@@ -152,7 +152,7 @@ const getFarmBalances = async (wallet) => {
             symbol: symbol,
             address: token,
             frozenAddress: farm.token,
-            balance: (balance * (exchangeRatio / (10**18))) / (10 ** decimals),
+            balance: (balance * (exchangeRatio / (10 ** 18))) / (10 ** decimals),
             price: multiplier * (await getTokenPrice(chain, underlyingToken, decimals)),
             logo: getTokenLogo(chain, symbol)
           }
@@ -167,7 +167,7 @@ const getFarmBalances = async (wallet) => {
             symbol: symbol,
             address: token,
             frozenAddress: farm.token,
-            balance: (balance * (exchangeRatio / (10**18))) / (10 ** decimals),
+            balance: (balance * (exchangeRatio / (10 ** 18))) / (10 ** decimals),
             price: price,
             logo: getTokenLogo(chain, symbol)
           }
@@ -180,7 +180,7 @@ const getFarmBalances = async (wallet) => {
             symbol: symbol,
             address: token,
             frozenAddress: farm.token,
-            balance: (balance * (exchangeRatio / (10**18))) / (10 ** decimals),
+            balance: (balance * (exchangeRatio / (10 ** 18))) / (10 ** decimals),
             price: await getTokenPrice(chain, token, decimals),
             logo: getTokenLogo(chain, symbol)
           }
@@ -200,7 +200,7 @@ const getFarmBalances = async (wallet) => {
       }
       let rewards = parseInt(await query(chain, farm.gauge, snowball.gaugeABI, 'earned', [wallet]));
       if(rewards > 0) {
-        snobRewards += (rewards / (10**18));
+        snobRewards += (rewards / (10 ** 18));
       }
     }
   })());

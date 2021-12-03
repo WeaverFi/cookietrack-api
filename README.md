@@ -25,6 +25,7 @@ The API that powers CookieTrack.
 - `fantom`
 - `avalanche`
 - `harmony`
+- `solana`
 
 **Example:**
 `https://api.cookietrack.io/ethereum/wallet?address=0x143642531bA06843A70FB59B4455316c21036F7d`

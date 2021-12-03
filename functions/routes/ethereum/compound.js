@@ -66,7 +66,7 @@ const getMarketBalances = async (wallet) => {
       } else {
         tokenAddress = await query(chain, market, compound.marketABI, 'underlying', []);
       }
-      let underlyingBalance = balance * (exchangeRate / (10**18));
+      let underlyingBalance = balance * (exchangeRate / (10 ** 18));
       let newToken = await addToken(chain, project, tokenAddress, underlyingBalance, wallet);
       balances.push(newToken);
     }

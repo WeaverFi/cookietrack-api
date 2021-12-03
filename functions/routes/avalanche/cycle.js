@@ -72,14 +72,14 @@ const getVaultBalances = async (wallet) => {
 
       // xJOE Vault:
       if(intermediary.toLowerCase() === '0x04E6F23217C13E1dfE54ee80fb96F7ECC90116Fe'.toLowerCase()) {
-        let actualBalance = parseInt(await query(chain, intermediary, cycle.intermediaryABI, 'getLPamountForShares', [(balance / 10**10).toFixed(0)]));
-        let newToken = await addTraderJoeToken(chain, project, xjoe, actualBalance * (10**10), wallet);
+        let actualBalance = parseInt(await query(chain, intermediary, cycle.intermediaryABI, 'getLPamountForShares', [(balance / 10 ** 10).toFixed(0)]));
+        let newToken = await addTraderJoeToken(chain, project, xjoe, actualBalance * (10 ** 10), wallet);
         balances.push(newToken);
 
       // PNG Vault:
       } else if(intermediary.toLowerCase() === '0x8AdEaddcB00F4ea34c7EB0B4d48Bff8de0a39244'.toLowerCase()) {
-        let actualBalance = parseInt(await query(chain, intermediary, cycle.intermediaryABI, 'getLPamountForShares', [(balance / 10**10).toFixed(0)]));
-        let newToken = await addToken(chain, project, png, actualBalance * (10**10), wallet);
+        let actualBalance = parseInt(await query(chain, intermediary, cycle.intermediaryABI, 'getLPamountForShares', [(balance / 10 ** 10).toFixed(0)]));
+        let newToken = await addToken(chain, project, png, actualBalance * (10 ** 10), wallet);
         balances.push(newToken);
 
       // All Other LP Vaults:
