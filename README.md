@@ -14,6 +14,8 @@ The API that powers CookieTrack.
 
 ## Endpoints
 
+A list of available endpoints can be found through `https://api.cookietrack.io/routes`.
+
 ### Wallet Balances
 
 `/<chain>/wallet?address=<wallet_address>` - Returns a wallet's token balances.
