@@ -3,6 +3,7 @@
 const functions = require('firebase-functions');
 const express = require('express');
 const cors = require('cors');
+const fs = require('fs');
 
 // Partnership Routes:
 const snowball_index = require('./routes/partnerships/snowball/index.js');
@@ -25,6 +26,20 @@ const errorResponse = `<p>Invalid route. Click <a href="${repository}">here</a> 
 app.get('/', (req, res) => {
   res.send(rootResponse);
 });
+
+// Routes Endpoint:
+app.get('/routes', (req, res) => {
+  let routes = {};
+  let chains = fs.readdirSync('./functions/routes').filter(i => i != 'partnerships' && i != 'template.js');
+  chains.forEach(chain => {
+    let endpoints = fs.readdirSync(`./functions/routes/${chain}`).map(e => e.slice(0, -3));
+    routes[chain] = [...endpoints];
+  })
+  res.send(JSON.stringify({routes}));
+});
+
+
+/* ========================================================================================================================================================================= */
 
 // Ethereum Endpoints:
 app.get('/ethereum/*', async (req, res) => {
@@ -115,7 +130,7 @@ app.get('/snowball/deposits', async (req, res) => {
 /* ========================================================================================================================================================================= */
 
 // Starting Local Server:
-// app.listen(3000, () => { console.log('\nAPI Up on 127.0.0.1:3000'); });
+app.listen(3000, () => { console.log('\nAPI Up on 127.0.0.1:3000'); });
 
 // Exporting Express App:
 exports.app = functions.runWith({ memory: '256MB', timeoutSeconds: 120 }).https.onRequest(app);
