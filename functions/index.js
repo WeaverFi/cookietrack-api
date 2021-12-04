@@ -3,7 +3,6 @@
 const functions = require('firebase-functions');
 const express = require('express');
 const cors = require('cors');
-const fs = require('fs');
 
 // Partnership Routes:
 const snowball_index = require('./routes/partnerships/snowball/index.js');
@@ -14,6 +13,9 @@ const snowball_deposits = require('./routes/partnerships/snowball/deposits.js');
 // Initializing Express Server:
 const app = express();
 app.use(cors());
+
+// Routes:
+const routes = require('./static/routes.json');
 
 // Initializing Text Reponses:
 const repository = 'https://github.com/Ncookiez/cookietrack-api';
@@ -29,13 +31,7 @@ app.get('/', (req, res) => {
 
 // Routes Endpoint:
 app.get('/routes', (req, res) => {
-  let routes = {};
-  let chains = fs.readdirSync('./functions/routes').filter(i => i != 'partnerships' && i != 'template.js');
-  chains.forEach(chain => {
-    let endpoints = fs.readdirSync(`./functions/routes/${chain}`).map(e => e.slice(0, -3));
-    routes[chain] = [...endpoints];
-  })
-  res.send(JSON.stringify({routes}));
+  res.end(JSON.stringify(routes));
 });
 
 

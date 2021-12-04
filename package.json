@@ -1,10 +1,12 @@
 {
   "name": "cookietrack-api",
   "description": "The API that powers CookieTrack.",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "scripts": {
     "start": "node functions/index.js",
     "emulator": "firebase emulators:start",
+    "update": "node functions/routes.js",
+    "deploy": "node functions/routes.js && firebase deploy",
     "update-snowball": "node functions/routes/partnerships/snowball/update.js"
   },
   "dependencies": {}
