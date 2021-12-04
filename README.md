@@ -161,4 +161,6 @@ npm start
 
 For some endpoints, an API key is required. To add your own for local development, add a `functions/static/keys.js` file and export your key.
 
+Updating the `routes.json` file for deployment can be done through `npm run update`.
+
 [logo]: https://github.com/Ncookiez/cookietrack-api/blob/master/favicon.svg "CookieTrack"
