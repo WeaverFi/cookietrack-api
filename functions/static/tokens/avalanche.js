@@ -163,7 +163,10 @@ exports.avax_token_logos = {
   'sAC4D':              'https://assets.coingecko.com/coins/images/20502/small/E5nD9pPv_400x400.jpg?1637139692',
   'sAM3D':              'https://assets.coingecko.com/coins/images/20502/small/E5nD9pPv_400x400.jpg?1637139692',
   'AVAI':               'https://assets.coingecko.com/coins/images/18859/small/ic_orca.png?1633603714',
-  'ORCA':               'https://assets.coingecko.com/coins/images/18858/small/ic_orca.png?1633602571'
+  'ORCA':               'https://assets.coingecko.com/coins/images/18858/small/ic_orca.png?1633602571',
+  'AA3D':               'https://assets.coingecko.com/coins/images/20502/small/E5nD9pPv_400x400.jpg?1637139692',
+  'sAA3D':              'https://assets.coingecko.com/coins/images/20502/small/E5nD9pPv_400x400.jpg?1637139692',
+  'sWAVAX':             'https://avascan.info/cdn/images/addresses/wavax.svg'
 }
 
 // Token Blacklist:
