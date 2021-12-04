@@ -673,25 +673,25 @@ exports.getTXs = async (chain, address) => {
                   }
                 }
               
-              // Native Router Swaps:
-              } else if(event.decoded.name === 'Withdrawal' && event.decoded.params[0].value === tx.to_address) {
-                txs.push({
-                  wallet: address,
-                  chain: chain,
-                  type: 'transfer',
-                  hash: tx.tx_hash,
-                  time: (new Date(tx.block_signed_at)).getTime() / 1000,
-                  direction: 'in',
-                  from: tx.to_address,
-                  to: tx.from_address,
-                  token: {
-                    address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-                    symbol: chains[chain].token
-                  },
-                  value: parseInt(event.decoded.params[1].value) / (10 ** 18),
-                  fee: (tx.gas_spent * tx.gas_price) / (10 ** 18),
-                  nativeToken: chains[chain].token
-                });
+              // Native Router Swaps: <TODO> Not working as intended (catching false positives).
+              // } else if(event.decoded.name === 'Withdrawal' && event.decoded.params[0].value === tx.to_address) {
+              //   txs.push({
+              //     wallet: address,
+              //     chain: chain,
+              //     type: 'transfer',
+              //     hash: tx.tx_hash,
+              //     time: (new Date(tx.block_signed_at)).getTime() / 1000,
+              //     direction: 'in',
+              //     from: tx.to_address,
+              //     to: tx.from_address,
+              //     token: {
+              //       address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+              //       symbol: chains[chain].token
+              //     },
+              //     value: parseInt(event.decoded.params[1].value) / (10 ** 18),
+              //     fee: (tx.gas_spent * tx.gas_price) / (10 ** 18),
+              //     nativeToken: chains[chain].token
+              //   });
               }
             }
           });
