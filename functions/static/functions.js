@@ -10,9 +10,9 @@ const { ckey } = require('./keys.js');
 const { eth_token_logos, eth_token_blacklist } = require('./tokens/ethereum.js');
 const { bsc_token_logos, bsc_token_blacklist } = require('./tokens/bsc.js');
 const { poly_token_logos, poly_token_blacklist } = require('./tokens/polygon.js');
-const { ftm_tokens, ftm_token_logos, ftm_token_blacklist } = require('./tokens/fantom.js');
-const { avax_tokens, avax_token_logos, avax_token_blacklist } = require('./tokens/avalanche.js');
-const { one_tokens, one_token_logos, one_token_blacklist } = require('./tokens/harmony.js');
+const { ftm_token_logos, ftm_token_blacklist } = require('./tokens/fantom.js');
+const { avax_token_logos, avax_token_blacklist } = require('./tokens/avalanche.js');
+const { one_token_logos, one_token_blacklist } = require('./tokens/harmony.js');
 
 /* ========================================================================================================================================================================= */
 
