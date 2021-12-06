@@ -96,7 +96,7 @@ const getFarmBalances = async (wallet) => {
             balances.push(newToken);
 
           // Axial Pools:
-          } else if(symbol.includes('AS4D') || symbol.includes('AC4D') || symbol.includes('AM3D')) {
+          } else if(symbol.includes('AS4D') || symbol.includes('AC4D') || symbol.includes('AM3D') || symbol.includes('AA3D')) {
             let newToken = await addAxialToken(chain, project, token, balance * (exchangeRatio / (10 ** 18)), wallet);
             balances.push(newToken);
 
