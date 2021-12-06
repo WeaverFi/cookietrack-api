@@ -14,7 +14,7 @@ const snowball_deposits = require('./routes/partnerships/snowball/deposits.js');
 const app = express();
 app.use(cors());
 
-// Routes:
+// Routes Endpoint Data:
 const routes = require('./static/routes.json');
 
 // Initializing Text Reponses:
@@ -40,7 +40,8 @@ app.get('/routes', (req, res) => {
 // Ethereum Endpoints:
 app.get('/ethereum/*', async (req, res) => {
   try {
-    let route = require(`./routes/ethereum/${req.originalUrl.split('/')[2].split('?')[0]}.js`);
+    let input = req.originalUrl.split('/')[2].split('?')[0];
+    let route = require(`./routes/ethereum/${input}.js`);
     res.end(await route.get(req));
   } catch {
     res.send(errorResponse);
@@ -50,7 +51,8 @@ app.get('/ethereum/*', async (req, res) => {
 // BSC Endpoints:
 app.get('/bsc/*', async (req, res) => {
   try {
-    let route = require(`./routes/bsc/${req.originalUrl.split('/')[2].split('?')[0]}.js`);
+    let input = req.originalUrl.split('/')[2].split('?')[0];
+    let route = require(`./routes/bsc/${input}.js`);
     res.end(await route.get(req));
   } catch {
     res.send(errorResponse);
@@ -60,7 +62,8 @@ app.get('/bsc/*', async (req, res) => {
 // Polygon Endpoints:
 app.get('/polygon/*', async (req, res) => {
   try {
-    let route = require(`./routes/polygon/${req.originalUrl.split('/')[2].split('?')[0]}.js`);
+    let input = req.originalUrl.split('/')[2].split('?')[0];
+    let route = require(`./routes/polygon/${input}.js`);
     res.end(await route.get(req));
   } catch {
     res.send(errorResponse);
@@ -70,7 +73,8 @@ app.get('/polygon/*', async (req, res) => {
 // Fantom Endpoints:
 app.get('/fantom/*', async (req, res) => {
   try {
-    let route = require(`./routes/fantom/${req.originalUrl.split('/')[2].split('?')[0]}.js`);
+    let input = req.originalUrl.split('/')[2].split('?')[0];
+    let route = require(`./routes/fantom/${input}.js`);
     res.end(await route.get(req));
   } catch {
     res.send(errorResponse);
@@ -80,7 +84,8 @@ app.get('/fantom/*', async (req, res) => {
 // Avalanche Endpoints:
 app.get('/avalanche/*', async (req, res) => {
   try {
-    let route = require(`./routes/avalanche/${req.originalUrl.split('/')[2].split('?')[0]}.js`);
+    let input = req.originalUrl.split('/')[2].split('?')[0];
+    let route = require(`./routes/avalanche/${input}.js`);
     res.end(await route.get(req));
   } catch {
     res.send(errorResponse);
@@ -90,7 +95,8 @@ app.get('/avalanche/*', async (req, res) => {
 // Harmony Endpoints:
 app.get('/harmony/*', async (req, res) => {
   try {
-    let route = require(`./routes/harmony/${req.originalUrl.split('/')[2].split('?')[0]}.js`);
+    let input = req.originalUrl.split('/')[2].split('?')[0];
+    let route = require(`./routes/harmony/${input}.js`);
     res.end(await route.get(req));
   } catch {
     res.send(errorResponse);
@@ -100,7 +106,8 @@ app.get('/harmony/*', async (req, res) => {
 // Solana Endpoints:
 app.get('/solana/*', async (req, res) => {
   try {
-    let route = require(`./routes/solana/${req.originalUrl.split('/')[2].split('?')[0]}.js`);
+    let input = req.originalUrl.split('/')[2].split('?')[0];
+    let route = require(`./routes/solana/${input}.js`);
     res.end(await route.get(req));
   } catch {
     res.send(errorResponse);

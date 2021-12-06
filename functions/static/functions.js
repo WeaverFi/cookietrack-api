@@ -409,7 +409,7 @@ exports.getTokenPrice = async (chain, address, decimals) => {
 /* ========================================================================================================================================================================= */
 
 // Function to get the transaction history of a wallet address:
-exports.getTXs = async (chain, address) => {
+exports.getTXs = async (chain, address, last50) => {
 
   // Initializations:
   let txs = [];
@@ -425,9 +425,9 @@ exports.getTXs = async (chain, address) => {
 
   // Fetching TXs:
   do {
-    let response = (await axios.get(`https://api.covalenthq.com/v1/${chains[chain].id}/address/${address}/transactions_v2/?page-size=1000&page-number=${page++}&key=${ckey}`)).data;
+    let response = (await axios.get(`https://api.covalenthq.com/v1/${chains[chain].id}/address/${address}/transactions_v2/?page-size=${last50 ? 50 : 1000}&page-number=${page++}&key=${ckey}`)).data;
     if(!response.error) {
-      hasNextPage = response.data.pagination.has_more;
+      last50 ? hasNextPage = false : hasNextPage = response.data.pagination.has_more;
       let promises = response.data.items.map(tx => (async () => {
         if(tx.successful) {
 
