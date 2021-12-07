@@ -174,6 +174,7 @@ exports.bsc_token_logos = {
   'beltBTC':            'https://bscscan.com/token/images/btcb_32.png',
   'beltETH':            'https://bscscan.com/token/images/ethereum_32.png',
   'beltBNB':            'https://etherscan.io/token/images/bnb_28_2.png',
+  'beltBUSD':           'https://bscscan.com/token/images/busd_32.png',
   'LIT':                'https://bscscan.com/token/images/litentry_32.png',
   'WEX':                'https://bscscan.com/token/images/waultswap_32.png?=v1',
   'WLP':                'https://bscscan.com/token/images/waultswap_32.png?=v1',
@@ -302,5 +303,6 @@ exports.bsc_token_blacklist = [
   '0x0198be93b7cae38da7e2fd966946412cc36447bf',
   '0x5e48c354a5da2b0a8c203518d0fc7b9c58cc9329',
   '0x0d05a204e27e4815f1f5afdb9d82aa221aa0bdfa',
-  '0x04645027122c9f152011f128c7085449b27cb6d7'
+  '0x04645027122c9f152011f128c7085449b27cb6d7',
+  '0x5190b01965b6e3d786706fd4a999978626c19880'
 ];

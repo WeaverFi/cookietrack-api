@@ -74,7 +74,8 @@ exports.eth_tokens = [
   { address: '0x090185f2135308bad17527004364ebcc2d37e5f6', symbol: 'SPELL' },
   { address: '0x544c42fbb96b39b21df61cf322b5edc285ee7429', symbol: 'INSUR' },
   { address: '0x0ab87046fbb341d058f17cbc4c1133f25a20a52f', symbol: 'gOHM' },
-  { address: '0x2e9d63788249371f1dfc918a52f8d799f4a38c94', symbol: 'TOKE' }
+  { address: '0x2e9d63788249371f1dfc918a52f8d799f4a38c94', symbol: 'TOKE' },
+  { address: '0xc18360217d8f7ab5e7c516566761ea12ce7f9d72', symbol: 'ENS' }
 ];
 
 // Token Logos:
@@ -180,7 +181,8 @@ exports.eth_token_logos = {
   'UNI-V2':           'https://etherscan.io/token/images/uniswap_32.png',
   'INSUR':            'https://assets.coingecko.com/coins/images/14226/small/insur.png?1615124622',
   'gOHM':             'https://assets.coingecko.com/coins/images/21129/small/token_wsOHM_logo.png?1638764900',
-  'TOKE':             'https://etherscan.io/token/images/tokemak_32.png'
+  'TOKE':             'https://etherscan.io/token/images/tokemak_32.png',
+  'ENS':              'https://etherscan.io/token/images/ens2_32.png'
 }
 
 // Token Blacklist:
