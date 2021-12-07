@@ -4,6 +4,9 @@ const functions = require('firebase-functions');
 const express = require('express');
 const cors = require('cors');
 
+// Routes Endpoint:
+const routes = require('./static/routes.json');
+
 // Partnership Routes:
 const snowball_index = require('./routes/partnerships/snowball/index.js');
 const snowball_wallet = require('./routes/partnerships/snowball/wallet.js');
@@ -14,13 +17,13 @@ const snowball_deposits = require('./routes/partnerships/snowball/deposits.js');
 const app = express();
 app.use(cors());
 
-// Routes Endpoint Data:
-const routes = require('./static/routes.json');
-
 // Initializing Text Reponses:
 const repository = 'https://github.com/Ncookiez/cookietrack-api';
 const rootResponse = `<title>CookieTrack API</title><p>Click <a href="${repository}">here</a> to see the docs and endpoints available.</p>`;
 const errorResponse = `<p>Invalid route. Click <a href="${repository}">here</a> to see the docs and endpoints available.</p>`;
+
+// Initializing Regex Filter:
+const filter = /[^a-zA-Z0-9]/;
 
 /* ========================================================================================================================================================================= */
 
@@ -41,8 +44,7 @@ app.get('/routes', (req, res) => {
 app.get('/ethereum/*', async (req, res) => {
   try {
     let input = req.originalUrl.split('/')[2].split('?')[0];
-    let route = require(`./routes/ethereum/${input}.js`);
-    res.end(await route.get(req));
+    input.match(filter) ? res.send(errorResponse) : res.end(await require(`./routes/ethereum/${input}.js`).get(req));
   } catch {
     res.send(errorResponse);
   }
@@ -52,8 +54,7 @@ app.get('/ethereum/*', async (req, res) => {
 app.get('/bsc/*', async (req, res) => {
   try {
     let input = req.originalUrl.split('/')[2].split('?')[0];
-    let route = require(`./routes/bsc/${input}.js`);
-    res.end(await route.get(req));
+    input.match(filter) ? res.send(errorResponse) : res.end(await require(`./routes/bsc/${input}.js`).get(req));
   } catch {
     res.send(errorResponse);
   }
@@ -63,8 +64,7 @@ app.get('/bsc/*', async (req, res) => {
 app.get('/polygon/*', async (req, res) => {
   try {
     let input = req.originalUrl.split('/')[2].split('?')[0];
-    let route = require(`./routes/polygon/${input}.js`);
-    res.end(await route.get(req));
+    input.match(filter) ? res.send(errorResponse) : res.end(await require(`./routes/polygon/${input}.js`).get(req));
   } catch {
     res.send(errorResponse);
   }
@@ -74,8 +74,7 @@ app.get('/polygon/*', async (req, res) => {
 app.get('/fantom/*', async (req, res) => {
   try {
     let input = req.originalUrl.split('/')[2].split('?')[0];
-    let route = require(`./routes/fantom/${input}.js`);
-    res.end(await route.get(req));
+    input.match(filter) ? res.send(errorResponse) : res.end(await require(`./routes/fantom/${input}.js`).get(req));
   } catch {
     res.send(errorResponse);
   }
@@ -85,8 +84,7 @@ app.get('/fantom/*', async (req, res) => {
 app.get('/avalanche/*', async (req, res) => {
   try {
     let input = req.originalUrl.split('/')[2].split('?')[0];
-    let route = require(`./routes/avalanche/${input}.js`);
-    res.end(await route.get(req));
+    input.match(filter) ? res.send(errorResponse) : res.end(await require(`./routes/avalanche/${input}.js`).get(req));
   } catch {
     res.send(errorResponse);
   }
@@ -96,8 +94,7 @@ app.get('/avalanche/*', async (req, res) => {
 app.get('/harmony/*', async (req, res) => {
   try {
     let input = req.originalUrl.split('/')[2].split('?')[0];
-    let route = require(`./routes/harmony/${input}.js`);
-    res.end(await route.get(req));
+    input.match(filter) ? res.send(errorResponse) : res.end(await require(`./routes/harmony/${input}.js`).get(req));
   } catch {
     res.send(errorResponse);
   }
@@ -107,8 +104,7 @@ app.get('/harmony/*', async (req, res) => {
 app.get('/solana/*', async (req, res) => {
   try {
     let input = req.originalUrl.split('/')[2].split('?')[0];
-    let route = require(`./routes/solana/${input}.js`);
-    res.end(await route.get(req));
+    input.match(filter) ? res.send(errorResponse) : res.end(await require(`./routes/solana/${input}.js`).get(req));
   } catch {
     res.send(errorResponse);
   }
@@ -133,7 +129,7 @@ app.get('/snowball/deposits', async (req, res) => {
 /* ========================================================================================================================================================================= */
 
 // Starting Local Server:
-// app.listen(3000, () => { console.log('\nAPI Up on 127.0.0.1:3000'); });
+app.listen(3000, () => { console.log('\nAPI Up on 127.0.0.1:3000'); });
 
 // Exporting Express App:
 exports.app = functions.runWith({ memory: '256MB', timeoutSeconds: 120 }).https.onRequest(app);
