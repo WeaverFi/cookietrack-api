@@ -444,7 +444,8 @@ exports.getTXs = async (chain, address, last50) => {
               to: tx.to_address,
               token: {
                 address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-                symbol: chains[chain].token
+                symbol: chains[chain].token,
+                logo: exports.getTokenLogo(chain, chains[chain].token)
               },
               value: parseInt(tx.value) / (10 ** 18),
               fee: (tx.gas_spent * tx.gas_price) / (10 ** 18),
@@ -467,7 +468,8 @@ exports.getTXs = async (chain, address, last50) => {
                       direction: 'out',
                       token: {
                         address: event.sender_address,
-                        symbol: event.sender_contract_ticker_symbol
+                        symbol: event.sender_contract_ticker_symbol,
+                        logo: exports.getTokenLogo(chain, event.sender_contract_ticker_symbol)
                       },
                       fee: (tx.gas_spent * tx.gas_price) / (10 ** 18),
                       nativeToken: chains[chain].token
@@ -502,7 +504,8 @@ exports.getTXs = async (chain, address, last50) => {
                         to: event.decoded.params[1].value,
                         token: {
                           address: event.sender_address,
-                          symbol: event.sender_contract_ticker_symbol
+                          symbol: event.sender_contract_ticker_symbol,
+                          logo: exports.getTokenLogo(chain, event.sender_contract_ticker_symbol)
                         },
                         value: parseInt(event.decoded.params[2].value) / (10 ** event.sender_contract_decimals),
                         fee: (tx.gas_spent * tx.gas_price) / (10 ** 18),
@@ -524,7 +527,8 @@ exports.getTXs = async (chain, address, last50) => {
                         to: address,
                         token: {
                           address: event.sender_address,
-                          symbol: event.sender_contract_ticker_symbol
+                          symbol: event.sender_contract_ticker_symbol,
+                          logo: exports.getTokenLogo(chain, event.sender_contract_ticker_symbol)
                         },
                         value: parseInt(event.decoded.params[2].value) / (10 ** event.sender_contract_decimals),
                         fee: (tx.gas_spent * tx.gas_price) / (10 ** 18),
@@ -547,7 +551,8 @@ exports.getTXs = async (chain, address, last50) => {
               //     to: tx.from_address,
               //     token: {
               //       address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-              //       symbol: chains[chain].token
+              //       symbol: chains[chain].token,
+              //       logo: exports.getTokenLogo(chain, chains[chain].token)
               //     },
               //     value: parseInt(event.decoded.params[1].value) / (10 ** 18),
               //     fee: (tx.gas_spent * tx.gas_price) / (10 ** 18),
