@@ -67,7 +67,8 @@ exports.avax_tokens = [
   { address: '0x544c42fbb96b39b21df61cf322b5edc285ee7429', symbol: 'INSUR' },
   { address: '0x346A59146b9b4a77100D369a3d18E8007A9F46a6', symbol: 'AVAI' },
   { address: '0x8B1d98A91F853218ddbb066F20b8c63E782e2430', symbol: 'ORCA' },
-  { address: '0x321e7092a180bb43555132ec53aaa65a5bf84251', symbol: 'gOHM' }
+  { address: '0x321e7092a180bb43555132ec53aaa65a5bf84251', symbol: 'gOHM' },
+  { address: '0x783c08b5f26e3daf8c4681f3bf49844e425b6393', symbol: 'AUSD' }
 ];
 
 // Token Logos:
@@ -168,7 +169,8 @@ exports.avax_token_logos = {
   'AA3D':               'https://assets.coingecko.com/coins/images/20502/small/E5nD9pPv_400x400.jpg?1637139692',
   'sAA3D':              'https://assets.coingecko.com/coins/images/20502/small/E5nD9pPv_400x400.jpg?1637139692',
   'sWAVAX':             'https://avascan.info/cdn/images/addresses/wavax.svg',
-  'gOHM':               'https://assets.coingecko.com/coins/images/21129/small/token_wsOHM_logo.png?1638764900'
+  'gOHM':               'https://assets.coingecko.com/coins/images/21129/small/token_wsOHM_logo.png?1638764900',
+  'AUSD':               'https://assets.coingecko.com/coins/images/21328/small/ausd.png?1638946188'
 }
 
 // Token Blacklist:
