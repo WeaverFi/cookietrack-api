@@ -25,13 +25,12 @@ exports.query = async (chain, address, abi, method, args) => {
     return result;
   } catch {
     try {
-      console.log(`Using backup ${chain.toUpperCase()} RPC...`);
       let ethers_provider = new ethers.providers.JsonRpcProvider(rpcs.backups[chain]);
       let contract = new ethers.Contract(address, abi, ethers_provider);
       let result = await contract[method](...args);
       return result;
     } catch {
-      console.log(`ERROR: Calling ${method}(${args}) on ${address} (Chain: ${chain.toUpperCase()})`);
+      console.error(`ERROR: Calling ${method}(${args}) on ${address} (Chain: ${chain.toUpperCase()})`);
     }
   }
 }
@@ -330,7 +329,7 @@ exports.getTokenPrice = async (chain, address, decimals) => {
     if(address.toLowerCase() === chains[chain].usdc.toLowerCase()) {
       return 1;
     } else {
-      let apiQuery = `https://api.1inch.exchange/v3.0/${chains[chain].id}/quote?fromTokenAddress=${address}&toTokenAddress=${chains[chain].usdc}&amount=${10 ** decimals}`
+      let apiQuery = `https://api.1inch.exchange/v3.0/${chains[chain].id}/quote?fromTokenAddress=${address}&toTokenAddress=${chains[chain].usdc}&amount=${10 ** decimals}`;
       try {
         let response = (await axios.get(apiQuery)).data;
         if(response.protocols.length < 4) {
@@ -401,7 +400,7 @@ exports.getTokenPrice = async (chain, address, decimals) => {
   }
 
   // Logging tokens with no working price feed for debugging purposes:
-  console.log(chain.toUpperCase() + ': Token Price Not Found -', address);
+  console.error(chain.toUpperCase() + ': Token Price Not Found -', address);
 
   return 0;
 }
@@ -422,6 +421,7 @@ exports.getTXs = async (chain, address, last50) => {
     ftm: { id: 250, token: 'FTM', blacklist: ftm_token_blacklist },
     avax: { id: 43114, token: 'AVAX', blacklist: avax_token_blacklist }
   }
+  let nullEventNativeSwapTXs = [];
 
   // Fetching TXs:
   do {
@@ -451,10 +451,9 @@ exports.getTXs = async (chain, address, last50) => {
               fee: (tx.gas_spent * tx.gas_price) / (10 ** 18),
               nativeToken: chains[chain].token
             });
-          }
 
           // Approval TXs:
-          if(tx.log_events.length < 3) {
+          } else if(tx.log_events.length < 3) {
             tx.log_events.forEach(event => {
               if(event.decoded != null) {
                 if(event.decoded.name === 'Approval') {
@@ -538,26 +537,55 @@ exports.getTXs = async (chain, address, last50) => {
                   }
                 }
               
-              // Native Router Swaps: <TODO> Not working as intended (catching false positives).
-              // } else if(event.decoded.name === 'Withdrawal' && event.decoded.params[0].value === tx.to_address) {
-              //   txs.push({
-              //     wallet: address,
-              //     chain: chain,
-              //     type: 'transfer',
-              //     hash: tx.tx_hash,
-              //     time: (new Date(tx.block_signed_at)).getTime() / 1000,
-              //     direction: 'in',
-              //     from: tx.to_address,
-              //     to: tx.from_address,
-              //     token: {
-              //       address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-              //       symbol: chains[chain].token,
-              //       logo: exports.getTokenLogo(chain, chains[chain].token)
-              //     },
-              //     value: parseInt(event.decoded.params[1].value) / (10 ** 18),
-              //     fee: (tx.gas_spent * tx.gas_price) / (10 ** 18),
-              //     nativeToken: chains[chain].token
-              //   });
+              // Native Router Swaps:
+              } else if(event.decoded.name === 'Withdrawal' && event.decoded.params[0].value === tx.to_address) {
+                let nullEvent = tx.log_events.find(event => event.decoded === null);
+                if(nullEvent) {
+                  if(!nullEventNativeSwapTXs.includes(nullEvent.tx_hash)) {
+                    nullEventNativeSwapTXs.push(nullEvent.tx_hash);
+
+                    // ParaSwap TXs:
+                    if(nullEvent.raw_log_topics[0] === '0x680ad12fcfabafe9b1f08214caef968eb651cf010bee4a2824adfaec965903e8' && nullEvent.raw_log_topics[3].endsWith('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')) {
+                      txs.push({
+                        wallet: address,
+                        chain: chain,
+                        type: 'transfer',
+                        hash: tx.tx_hash,
+                        time: (new Date(tx.block_signed_at)).getTime() / 1000,
+                        direction: 'in',
+                        from: tx.to_address,
+                        to: tx.from_address,
+                        token: {
+                          address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+                          symbol: chains[chain].token,
+                          logo: exports.getTokenLogo(chain, chains[chain].token)
+                        },
+                        value: ((parseInt(nullEvent.raw_log_data.slice(194, 258), 16) + parseInt(nullEvent.raw_log_data.slice(258, 322), 16)) / 2) / (10 ** 18),
+                        fee: (tx.gas_spent * tx.gas_price) / (10 ** 18),
+                        nativeToken: chains[chain].token
+                      });
+                    }
+                  }
+                } else {
+                  txs.push({
+                    wallet: address,
+                    chain: chain,
+                    type: 'transfer',
+                    hash: tx.tx_hash,
+                    time: (new Date(tx.block_signed_at)).getTime() / 1000,
+                    direction: 'in',
+                    from: tx.to_address,
+                    to: tx.from_address,
+                    token: {
+                      address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+                      symbol: chains[chain].token,
+                      logo: exports.getTokenLogo(chain, chains[chain].token)
+                    },
+                    value: parseInt(event.decoded.params[1].value) / (10 ** 18),
+                    fee: (tx.gas_spent * tx.gas_price) / (10 ** 18),
+                    nativeToken: chains[chain].token
+                  });
+                }
               }
             }
           });

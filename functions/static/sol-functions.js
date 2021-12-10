@@ -17,9 +17,8 @@ exports.query = async (method, args) => {
     let sol = new web3.Connection(web3.clusterApiUrl('mainnet-beta'), 'confirmed');
     let result = await sol[method](...args);
     return result;
-  } catch(err) {
-    console.log(err);
-    console.log(`ERROR: Calling ${method}(${args}) (Chain: SOL)`);
+  } catch {
+    console.error(`ERROR: Calling ${method}(${args}) (Chain: SOL)`);
   }
 }
 
