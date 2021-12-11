@@ -1211,22 +1211,19 @@ exports.addCurveToken = async (chain, location, address, balance, owner) => {
       let multiplier = parseInt(await exports.query(chain, minter, curve.minterABI, 'get_virtual_price', [])) / (10 ** decimals);
 
       // 1st Token Info:
-      let address0 = await exports.query(chain, minter, curve.minterABI, 'coins', [0]);
-      let token0 = await exports.query(chain, address0, curve.intermediaryABI, 'UNDERLYING_ASSET_ADDRESS', []);
+      let token0 = await exports.query(chain, minter, curve.minterABI, 'coins', [0]);
       let decimals0 = parseInt(await exports.query(chain, token0, minABI, 'decimals', []));
       let supply0 = await exports.query(chain, minter, curve.minterABI, 'balances', [0]) / (10 ** decimals0);
       let price0 = await exports.getTokenPrice(chain, token0, decimals0);
 
       // 2nd Token Info:
-      let address1 = await exports.query(chain, minter, curve.minterABI, 'coins', [1]);
-      let token1 = await exports.query(chain, address1, curve.intermediaryABI, 'UNDERLYING_ASSET_ADDRESS', []);
+      let token1 = await exports.query(chain, minter, curve.minterABI, 'coins', [1]);
       let decimals1 = parseInt(await exports.query(chain, token1, minABI, 'decimals', []));
       let supply1 = await exports.query(chain, minter, curve.minterABI, 'balances', [1]) / (10 ** decimals1);
       let price1 = await exports.getTokenPrice(chain, token1, decimals1);
 
       // 3rd Token Info:
-      let address2 = await exports.query(chain, minter, curve.minterABI, 'coins', [2]);
-      let token2 = await exports.query(chain, address2, curve.intermediaryABI, 'UNDERLYING_ASSET_ADDRESS', []);
+      let token2 = await exports.query(chain, minter, curve.minterABI, 'coins', [2]);
       let decimals2 = parseInt(await exports.query(chain, token2, minABI, 'decimals', []));
       let supply2 = await exports.query(chain, minter, curve.minterABI, 'balances', [2]) / (10 ** decimals2);
       let price2 = await exports.getTokenPrice(chain, token2, decimals2);
