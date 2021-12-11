@@ -111,7 +111,7 @@ A list of available endpoints can be found through `https://api.cookietrack.io/r
 **Example:**
 `https://api.cookietrack.io/ethereum/aave?address=0x143642531bA06843A70FB59B4455316c21036F7d`
 
-### Transaction Histories
+### Transaction History
 
 `/<chain>/txs?address=<wallet_address>` - Returns a wallet's transaction history.
 
@@ -138,6 +138,20 @@ A list of available endpoints can be found through `https://api.cookietrack.io/r
 
 **Example:**
 `https://api.cookietrack.io/ethereum/fees?address=0x143642531bA06843A70FB59B4455316c21036F7d`
+
+### Tax Reporting
+
+`/<chain>/taxes?address=<wallet_address>` - Returns a wallet's transaction history alongside token prices for tax purposes.
+
+**Chains Available:**
+- `ethereum`
+- `bsc`
+- `polygon`
+- `fantom`
+- `avalanche`
+
+**Example:**
+`https://api.cookietrack.io/ethereum/taxes?address=0x143642531bA06843A70FB59B4455316c21036F7d`
 
 ---
 
