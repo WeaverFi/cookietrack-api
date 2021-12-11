@@ -6,8 +6,10 @@ const { getTXs } = require('../../static/functions.js');
 const { ckey } = require('../../static/keys.js');
 
 // Initializations:
-const chain = 'eth';
-const id = 1;
+const chain = 'poly';
+const id = 137;
+const nativeToken = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
+const wrappedNativeToken = '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270';
 
 /* ========================================================================================================================================================================= */
 
@@ -78,7 +80,7 @@ const getTaxTXs = async (wallet) => {
   // Formatting Data:
   let tokenArray = Array.from(tokens);
   tokenArray.forEach(token => {
-    tokenString += token + ',';
+    token === nativeToken ? tokenString += wrappedNativeToken + ',' : tokenString += token + ',';
   });
   tokenString = tokenString.slice(0, -1);
   dates.formattedStart = formatDate(dates.start);
@@ -88,6 +90,12 @@ const getTaxTXs = async (wallet) => {
   let response = (await axios.get(`https://api.covalenthq.com/v1/pricing/historical_by_addresses_v2/${id}/USD/${tokenString}/?quote-currency=USD&format=JSON&from=${dates.formattedStart}&to=${dates.formattedEnd}&page-size=9999&prices-at-asc=true&key=${ckey}`)).data;
   if(!response.error) {
     response.data.forEach(token => {
+      if(token.contract_address === wrappedNativeToken) {
+        tokenPrices[nativeToken] = [];
+        token.prices.forEach(entry => {
+          tokenPrices[nativeToken].push({ time: (new Date(entry.date).getTime() / 1000), price: entry.price });
+        });
+      }
       tokenPrices[token.contract_address] = [];
       token.prices.forEach(entry => {
         tokenPrices[token.contract_address].push({ time: (new Date(entry.date).getTime() / 1000), price: entry.price });

@@ -6,8 +6,8 @@ const { getTXs } = require('../../static/functions.js');
 const { ckey } = require('../../static/keys.js');
 
 // Initializations:
-const chain = 'eth';
-const id = 1;
+const chain = 'avax';
+const id = 43114;
 
 /* ========================================================================================================================================================================= */
 
