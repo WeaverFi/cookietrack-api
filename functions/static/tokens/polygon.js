@@ -68,7 +68,8 @@ exports.poly_tokens = [
   { address: '0x61BDD9C7d4dF4Bf47A4508c0c8245505F2Af5b7b', symbol: 'AXS' },
   { address: '0xe1c8f3d529bea8e3fa1fac5b416335a2f998ee1c', symbol: 'ELK' },
   { address: '0x8a0e8b4b0903929f47c3ea30973940d4a9702067', symbol: 'INSUR' },
-  { address: '0xd8ca34fd379d9ca3c6ee3b3905678320f5b45195', symbol: 'gOHM' }
+  { address: '0xd8ca34fd379d9ca3c6ee3b3905678320f5b45195', symbol: 'gOHM' },
+  { address: '0x7BDF330f423Ea880FF95fC41A280fD5eCFD3D09f', symbol: 'EURT' }
 ];
 
 // Token Logos:
@@ -166,7 +167,9 @@ exports.poly_token_logos = {
   'ELK':                'https://assets.coingecko.com/coins/images/17813/small/elk.png?1629336971',
   'UNI-V2':             'https://polygonscan.com/token/images/uniswap_32.png',
   'INSUR':              'https://assets.coingecko.com/coins/images/14226/small/insur.png?1615124622',
-  'gOHM':               'https://assets.coingecko.com/coins/images/21129/small/token_wsOHM_logo.png?1638764900'
+  'gOHM':               'https://assets.coingecko.com/coins/images/21129/small/token_wsOHM_logo.png?1638764900',
+  'EURT':               'https://assets.coingecko.com/coins/images/17385/small/Tether_full_logo_dm.png?1627537298',
+  'crvEURTUSD':         'https://assets.coingecko.com/coins/images/17385/small/Tether_full_logo_dm.png?1627537298'
 }
 
 // Token Blacklist:

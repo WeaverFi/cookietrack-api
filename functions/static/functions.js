@@ -14,6 +14,9 @@ const { ftm_token_logos, ftm_token_blacklist } = require('./tokens/fantom.js');
 const { avax_token_logos, avax_token_blacklist } = require('./tokens/avalanche.js');
 const { one_token_logos, one_token_blacklist } = require('./tokens/harmony.js');
 
+// Initializations:
+const defaultTokenLogo = 'https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@d5c68edec1f5eaec59ac77ff2b48144679cebca1/32/icon/generic.png';
+
 /* ========================================================================================================================================================================= */
 
 // Function to make blockchain queries:
@@ -250,7 +253,7 @@ exports.addDebtToken = async (chain, location, address, balance, owner) => {
 exports.getTokenLogo = (chain, symbol) => {
 
   // Initializing Default Logo:
-  let logo = 'https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@d5c68edec1f5eaec59ac77ff2b48144679cebca1/32/icon/generic.png';
+  let logo = defaultTokenLogo;
 
   // Ethereum Token:
   if(chain === 'eth') {
@@ -354,6 +357,13 @@ exports.getTokenPrice = async (chain, address, decimals) => {
           return response[results[0]].destAmount / (10 ** chains[chain].usdcDecimals);
         }
       } catch {}
+    }
+  }
+
+  // Polygon Redirections:
+  if(chain === 'poly') {
+    if(address.toLowerCase() === '0x7BDF330f423Ea880FF95fC41A280fD5eCFD3D09f'.toLowerCase()) { // EURT
+      return exports.getTokenPrice('eth', '0xc581b735a1688071a1746c968e0798d642ede491', 6);
     }
   }
 
@@ -1071,6 +1081,48 @@ exports.addCurveToken = async (chain, location, address, balance, owner) => {
       newToken.token1.logo = exports.getTokenLogo(chain, newToken.token1.symbol);
 
       return newToken;
+
+    // crvEURTUSD (EURtUSD):
+    } else if(address.toLowerCase() === '0x600743B1d8A96438bD46836fD34977a00293f6Aa'.toLowerCase()) {
+
+      // Initializing New Token:
+      let newToken = {
+        type: 'token',
+        chain: chain,
+        location: location,
+        owner: owner,
+        symbol: '',
+        address: address,
+        balance: 0,
+        price: 0,
+        logo: ''
+      }
+
+      // LP Token Info:
+      let decimals = parseInt(await exports.query(chain, address, minABI, 'decimals', []));
+      newToken.balance = balance / (10 ** decimals);
+      newToken.symbol = await exports.query(chain, address, minABI, 'symbol', []);
+      newToken.logo = exports.getTokenLogo(chain, newToken.symbol);
+      let lpTokenSupply = await exports.query(chain, address, minABI, 'totalSupply', []) / (10 ** decimals);
+      let minter = await exports.query(chain, address, curve.polyTokenABI, 'minter', []);
+      let multiplier = parseInt(await exports.query(chain, minter, curve.minterABI, 'get_virtual_price', [])) / (10 ** decimals);
+
+      // 1st Token Info:
+      let token0 = await exports.query(chain, minter, curve.minterABI, 'coins', [0]);
+      let decimals0 = parseInt(await exports.query(chain, token0, minABI, 'decimals', []));
+      let supply0 = await exports.query(chain, minter, curve.minterABI, 'balances', [0]) / (10 ** decimals0);
+      let price0 = await exports.getTokenPrice(chain, token0, decimals0);
+
+      // 2nd Token Info:
+      let address1 = await exports.query(chain, minter, curve.minterABI, 'coins', [1]);
+      let token1 = await exports.addCurveToken(chain, location, address1, 0, address);
+      let supply1 = parseInt(await exports.query(chain, minter, curve.minterABI, 'balances', [1])) / (10 ** 18);
+      let price1 = token1.price;
+
+      // Calculated Token Price:
+      newToken.price = multiplier * (((supply0 * price0) + (supply1 * price1)) / lpTokenSupply);
+
+      return newToken;
     }
 
   // Fantom Token:
@@ -1382,6 +1434,19 @@ exports.addCurveToken = async (chain, location, address, balance, owner) => {
 
       return newToken;
     }
+  }
+
+  // No Token Identified:
+  return {
+    type: 'token',
+    chain: chain,
+    location: location,
+    owner: owner,
+    symbol: '???',
+    address: address,
+    balance: 0,
+    price: 0,
+    logo: defaultTokenLogo
   }
 }
 
