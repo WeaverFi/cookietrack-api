@@ -586,3 +586,10 @@ exports.pangolin = {
     { constant: true, inputs: [{ name: "_pid", type: "uint256" }, { name: "_user", type: "address" }], name: "pendingReward", outputs: [{ name: "pending", type: "uint256" }], type: "function" }
   ]
 }
+
+// Cookie Game ABIs:
+exports.cookiegame = {
+  bakeryABI: [
+    { constant: true, inputs: [{ name: "<input>", type: "address" }], name: "ownedStakesBalance", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ]
+}
