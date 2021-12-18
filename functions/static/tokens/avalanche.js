@@ -172,6 +172,7 @@ exports.avax_token_logos = {
   'sWAVAX':             'https://avascan.info/cdn/images/addresses/wavax.svg',
   'gOHM':               'https://assets.coingecko.com/coins/images/21129/small/token_wsOHM_logo.png?1638764900',
   'AUSD':               'https://assets.coingecko.com/coins/images/21328/small/ausd.png?1638946188',
+  'USDC-AM3D':          'https://assets.coingecko.com/coins/images/20502/small/E5nD9pPv_400x400.jpg?1637139692'
   // 'COOKIE':             ''
 }
 

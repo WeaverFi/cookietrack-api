@@ -1008,7 +1008,7 @@ exports.addCurveToken = async (chain, location, address, balance, owner) => {
       let supply2 = await exports.query(chain, minter, curve.minterABI, 'balances', [2]) / (10 ** decimals2);
       let price2 = await exports.getTokenPrice(chain, token2, decimals2);
 
-      // Calculated Token Price:
+      // Calculating Token Price:
       newToken.price = multiplier * (((supply0 * price0) + (supply1 * price1) + (supply2 * price2)) / lpTokenSupply);
 
       return newToken;
@@ -1119,7 +1119,7 @@ exports.addCurveToken = async (chain, location, address, balance, owner) => {
       let supply1 = parseInt(await exports.query(chain, minter, curve.minterABI, 'balances', [1])) / (10 ** 18);
       let price1 = token1.price;
 
-      // Calculated Token Price:
+      // Calculating Token Price:
       newToken.price = multiplier * (((supply0 * price0) + (supply1 * price1)) / lpTokenSupply);
 
       return newToken;
@@ -1280,7 +1280,7 @@ exports.addCurveToken = async (chain, location, address, balance, owner) => {
       let supply2 = await exports.query(chain, minter, curve.minterABI, 'balances', [2]) / (10 ** decimals2);
       let price2 = await exports.getTokenPrice(chain, token2, decimals2);
 
-      // Calculated Token Price:
+      // Calculating Token Price:
       newToken.price = multiplier * (((supply0 * price0) + (supply1 * price1) + (supply2 * price2)) / lpTokenSupply);
 
       return newToken;
@@ -1360,7 +1360,7 @@ exports.addCurveToken = async (chain, location, address, balance, owner) => {
       let supply2 = await exports.query(chain, minter, curve.minterABI, 'balances', [2]) / (10 ** decimals2);
       let price2 = await exports.getTokenPrice(chain, token2, decimals2);
 
-      // Calculated Token Price:
+      // Calculating Token Price:
       newToken.price = multiplier * (((supply0 * price0) + (supply1 * price1) + (supply2 * price2)) / lpTokenSupply);
 
       return newToken;
@@ -1513,7 +1513,7 @@ exports.addBalancerToken = async (chain, location, address, balance, owner, id) 
     let priceSum = 0;
     for(let i = 0; i < poolInfo.tokens.length; i++) {
       let tokenDecimals = parseInt(await exports.query(chain, poolInfo.tokens[i], minABI, 'decimals', []));
-      let tokenPrice = await getPrice(chain, poolInfo.tokens[i], tokenDecimals);
+      let tokenPrice = await exports.getTokenPrice(chain, poolInfo.tokens[i], tokenDecimals);
       priceSum += (parseInt(poolInfo.balances[i]) / (10 ** tokenDecimals)) * tokenPrice;
     }
     newToken.price = priceSum / (lpTokenSupply / (10 ** decimals));
@@ -1541,7 +1541,7 @@ exports.addBalancerToken = async (chain, location, address, balance, owner, id) 
     newToken.token0.address = poolInfo.tokens[0];
     newToken.token0.symbol = await exports.query(chain, newToken.token0.address, minABI, 'symbol', []);
     let tokenDecimals = parseInt(await exports.query(chain, newToken.token0.address, minABI, 'decimals', []));
-    newToken.token0.price = await getPrice(chain, newToken.token0.address, tokenDecimals);
+    newToken.token0.price = await exports.getTokenPrice(chain, newToken.token0.address, tokenDecimals);
     newToken.token0.balance = parseInt(reserves[0]) * ((newToken.balance / (10 ** decimals)) / lpTokenSupply);
     newToken.token0.logo = exports.getTokenLogo(chain, newToken.token0.symbol);
 
@@ -1549,7 +1549,7 @@ exports.addBalancerToken = async (chain, location, address, balance, owner, id) 
     newToken.token1.address = poolInfo.tokens[1];
     newToken.token1.symbol = await exports.query(chain, newToken.token1.address, minABI, 'symbol', []);
     tokenDecimals = parseInt(await exports.query(chain, newToken.token1.address, minABI, 'decimals', []));
-    newToken.token1.price = await getPrice(chain, newToken.token1.address, tokenDecimals);
+    newToken.token1.price = await exports.getTokenPrice(chain, newToken.token1.address, tokenDecimals);
     newToken.token1.balance = parseInt(reserves[1]) * ((newToken.balance / (10 ** decimals)) / lpTokenSupply);
     newToken.token1.logo = exports.getTokenLogo(chain, newToken.token1.symbol);
 
@@ -1611,6 +1611,49 @@ exports.addAxialToken = async (chain, location, address, balance, owner) => {
   let swapAddress = await exports.query(chain, address, axial.tokenABI, 'owner', []);
   newToken.price = parseInt(await exports.query(chain, swapAddress, axial.swapABI, 'getVirtualPrice', [])) / (10 ** decimals);
   newToken.logo = exports.getTokenLogo(chain, newToken.symbol);
+
+  return newToken;
+}
+
+/* ========================================================================================================================================================================= */
+
+// Function to get Axial Metapool token info:
+exports.addAxialMetaToken = async (chain, location, address, balance, owner) => {
+  
+  // Initializing New Token:
+  let newToken = {
+    type: 'token',
+    chain: chain,
+    location: location,
+    owner: owner,
+    symbol: '',
+    address: address,
+    balance: 0,
+    price: 0,
+    logo: ''
+  }
+  
+  // Getting Missing Token Info:
+  let decimals = parseInt(await exports.query(chain, address, minABI, 'decimals', []));
+  newToken.balance = balance / (10 ** decimals);
+  newToken.symbol = await exports.query(chain, address, minABI, 'symbol', []);
+  newToken.logo = exports.getTokenLogo(chain, newToken.symbol);
+  let swapAddress = await exports.query(chain, address, axial.tokenABI, 'owner', []);
+
+  // First Paired Token:
+  let token0 = await exports.query(chain, swapAddress, axial.swapABI, 'getToken', [0]);
+  let decimals0 = parseInt(await exports.query(chain, token0, minABI, 'decimals', []));
+  let supply0 = parseInt(await exports.query(chain, token0, minABI, 'balanceOf', [swapAddress])) / (10 ** decimals0);
+  let price0 = await exports.getTokenPrice(chain, token0, decimals0);
+
+  // Second Paired Token (Axial LP Token):
+  let token1 = await exports.query(chain, swapAddress, axial.swapABI, 'getToken', [1]);
+  let decimals1 = parseInt(await exports.query(chain, token1, minABI, 'decimals', []));
+  let supply1 = parseInt(await exports.query(chain, token1, minABI, 'balanceOf', [swapAddress])) / (10 ** decimals1);
+  let price1 = (await exports.addAxialToken(chain, location, token1, 0, swapAddress)).price;
+
+  // Calculating Price:
+  newToken.price = ((price0 * supply0) + (price1 * supply1)) / (supply0 + supply1);
 
   return newToken;
 }

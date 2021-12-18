@@ -2,7 +2,7 @@
 // Imports:
 const { ethers } = require('ethers');
 const { minABI, axial } = require('../../static/ABIs.js');
-const { query, addToken, addLPToken, addAxialToken } = require('../../static/functions.js');
+const { query, addToken, addLPToken, addAxialToken, addAxialMetaToken } = require('../../static/functions.js');
 
 // Initializations:
 const chain = 'avax';
@@ -63,6 +63,11 @@ const getPoolBalances = async (wallet) => {
       // Standard LPs:
       if(symbol === 'JLP' || symbol === 'PGL') {
         let newToken = await addLPToken(chain, project, token, balance, wallet);
+        balances.push(newToken);
+
+      // Axial Meta LPs:
+      } else if(symbol.includes('-')) {
+        let newToken = await addAxialMetaToken(chain, project, token, balance, wallet);
         balances.push(newToken);
 
       // Axial LPs:

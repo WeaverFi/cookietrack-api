@@ -358,7 +358,8 @@ exports.axial = {
     { constant: true, inputs: [], name: "owner", outputs: [{ name: "", type: "address" }], type: "function" }
   ],
   swapABI: [
-    { constant: true, inputs: [], name: "getVirtualPrice", outputs: [{ name: "", type: "uint256" }], type: "function" }
+    { constant: true, inputs: [], name: "getVirtualPrice", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "", type: "uint8" }], name: "getToken", outputs: [{ name: "", type: "address" }], type: "function" }
   ]
 }
 
