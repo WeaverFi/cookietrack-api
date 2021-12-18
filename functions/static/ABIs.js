@@ -245,6 +245,10 @@ exports.venus = {
   vaultABI: [
     { constant: true, inputs: [{ name: "<input>", type: "address" }], name: "userInfo", outputs: [{ name: "amount", type: "uint256" }, { name: "rewardDebt", type: "uint256" }], type: "function" },
     { constant: true, inputs: [{ name: "_user", type: "address" }], name: "pendingXVS", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ],
+  xvsVaultABI: [
+    { constant: true, inputs: [{ name: "_rewardToken", type: "address" }, { name: "_pid", type: "uint256" }, { name: "_user", type: "address" }], name: "getUserInfo", outputs: [{ name: "amount", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "_rewardToken", type: "address" }, { name: "_pid", type: "uint256" }, { name: "_user", type: "address" }], name: "pendingReward", outputs: [{ name: "", type: "uint256" }], type: "function" }
   ]
 }
 

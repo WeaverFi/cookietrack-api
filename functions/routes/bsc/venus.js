@@ -9,6 +9,7 @@ const chain = 'bsc';
 const project = 'venus';
 const controller = '0xfD36E2c2a6789Db23113685031d7F16329158384';
 const vault = '0x0667eed0a0aab930af74a3dfedd263a73994f216';
+const xvsVault = '0x051100480289e704d20e9DB4804837068f3f9204';
 const vai = '0x4BD17003473389A42DAF6a0a729f6Fdb328BbBd7';
 const xvs = '0xcF6BB5389c92Bdda8a3747Ddb454cB7a64626C63';
 
@@ -34,6 +35,7 @@ exports.get = async (req) => {
         response.data.push(...(await getMarketBalances(wallet)));
         response.data.push(...(await getPendingRewards(wallet)));
         response.data.push(...(await getStakedVAI(wallet)));
+        response.data.push(...(await getStakedXVS(wallet)));
       } catch {
         response.status = 'error';
         response.data = [{error: 'Internal API Error'}];
@@ -113,4 +115,21 @@ const getStakedVAI = async (wallet) => {
     balances.push(newToken);
   }
   return balances;
+}
+
+// Function to get staked XVS balance:
+const getStakedXVS = async (wallet) => {
+  let xvsBalance = 0;
+  let balance = parseInt(await query(chain, xvsVault, venus.xvsVaultABI, 'getUserInfo', [xvs, 0, wallet]));
+  if(balance > 0) {
+    xvsBalance += balance;
+    let pendingRewards = parseInt(await query(chain, xvsVault, venus.xvsVaultABI, 'pendingReward', [xvs, 0, wallet]));
+    if(pendingRewards > 0) {
+      xvsBalance += pendingRewards;
+    }
+    let newToken = await addToken(chain, project, xvs, xvsBalance, wallet);
+    return [newToken];
+  } else {
+    return [];
+  }
 }
