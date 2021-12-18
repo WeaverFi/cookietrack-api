@@ -70,7 +70,8 @@ exports.avax_tokens = [
   { address: '0x321e7092a180bb43555132ec53aaa65a5bf84251', symbol: 'gOHM' },
   { address: '0x783c08b5f26e3daf8c4681f3bf49844e425b6393', symbol: 'AUSD' },
   { address: '0x97bB36F8dF689E0cA3b58FddC316b8514E86C5A7', symbol: 'COOKIE' },
-  { address: '0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e', symbol: 'USDC' }
+  { address: '0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e', symbol: 'USDC' },
+  { address: '0x9702230a8ea53601f5cd2dc00fdbc13d4df4a8c7', symbol: 'USDT' }
 ];
 
 // Token Logos:
@@ -174,7 +175,8 @@ exports.avax_token_logos = {
   'gOHM':               'https://assets.coingecko.com/coins/images/21129/small/token_wsOHM_logo.png?1638764900',
   'AUSD':               'https://assets.coingecko.com/coins/images/21328/small/ausd.png?1638946188',
   'USDC-AM3D':          'https://assets.coingecko.com/coins/images/20502/small/E5nD9pPv_400x400.jpg?1637139692',
-  'USDC':               'https://snowtrace.io/token/images/usdc_32.png'
+  'USDC':               'https://snowtrace.io/token/images/usdc_32.png',
+  'USDT':               'https://snowtrace.io/token/images/tether_32.png'
   // 'COOKIE':             ''
 }
 
