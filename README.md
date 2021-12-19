@@ -107,6 +107,7 @@ A list of available endpoints can be found through `https://api.cookietrack.io/r
 **Harmony Projects Available:**
 - `beefy`
 - `sushiswap`
+- `autofarm`
 
 **Solana Projects Available:**
 - None.
