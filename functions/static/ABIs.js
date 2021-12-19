@@ -596,18 +596,10 @@ exports.pangolin = {
   ]
 }
 
-// Cookie Game ABIs:
-exports.cookiegame = {
-  bakeryABI: [
-    { constant: true, inputs: [{ name: "<input>", type: "address" }], name: "ownedStakesBalance", outputs: [{ name: "", type: "uint256" }], type: "function" }
-  ]
-}
-
 // Avalaunch ABIs:
 exports.avalaunch = {
   stakingABI: [
-    { constant: true, inputs: [{ name: "_pid", type: "uint256" }, { name: "_user", type: "address" }], name: "deposited", outputs: [{ name: "", type: "uint256" }], type: "function" },
-    { constant: true, inputs: [{ name: "_pid", type: "uint256" }, { name: "_user", type: "address" }], name: "pending", outputs: [{ name: "", type: "uint256" }], type: "function" }
+    { constant: true, inputs: [{ name: "_pid", type: "uint256" }, { name: "_user", type: "address" }], name: "deposited", outputs: [{ name: "", type: "uint256" }], type: "function" }
   ]
 }
 
@@ -618,5 +610,12 @@ exports.xmaspast = {
     { constant: true, inputs: [{ name: "<input>", type: "uint256" }, { name: "<input>", type: "address" }], name: "userInfo", outputs: [{ name: "amount", type: "uint256" }, { name: "rewardDebt", type: "uint256" }], type: "function" },
     { constant: true, inputs: [{ name: "<input>", type: "uint256" }], name: "poolInfo", outputs: [{ name: "lpToken", type: "address" }, { name: "allocPoint", type: "uint256" }, { name: "lastRewardSecond", type: "uint256" }, { name: "accXpastPerShare", type: "uint256" }, { name: "depositFeeBP", type: "uint16" }, { name: "lpSupply", type: "uint256" }], type: "function" },
     { constant: true, inputs: [{ name: "_pid", type: "uint256" }, { name: "_user", type: "address" }], name: "pendingXpast", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ]
+}
+
+// Cookie Game ABIs:
+exports.cookiegame = {
+  bakeryABI: [
+    { constant: true, inputs: [{ name: "_owner", type: "address" }, { name: "_offset", type: "uint256" }, { name: "_maxSize", type: "uint256" }], name: "batchedStakesOfOwner", outputs: [{ type: "tuple[]", components: [{ name: "", type: "uint256" }, { name: "", type: "uint256" }, { name: "", type: "uint256" }] }], type: "function" }
   ]
 }

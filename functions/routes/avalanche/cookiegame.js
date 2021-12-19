@@ -53,9 +53,14 @@ exports.get = async (req) => {
 
 // Function to get bakery COOKIE balance:
 const getBakeryBalance = async (wallet) => {
-  let balance = parseInt(await query(chain, bakery, cookiegame.bakeryABI, 'ownedStakesBalance', [wallet]));
-  if(balance > 0) {
-    let newToken = await addToken(chain, project, cookie, balance, wallet);
+  let cookieBalance = 0;
+  let userInfo = await query(chain, bakery, cookiegame.bakeryABI, 'batchedStakesOfOwner', [wallet, 0, 9999]);
+  userInfo.forEach(info => {
+    let balance = parseInt(info[2]);
+    cookieBalance += balance;
+  });
+  if(cookieBalance > 0) {
+    let newToken = await addToken(chain, project, cookie, cookieBalance, wallet);
     return [newToken];
   } else {
     return [];
@@ -66,7 +71,9 @@ const getBakeryBalance = async (wallet) => {
 const getPantryBalance = async (wallet) => {
   let balance = parseInt(await query(chain, pantry, minABI, 'balanceOf', [wallet]));
   if(balance > 0) {
-    let newToken = await addToken(chain, project, cookie, balance, wallet);
+    let supply = await query(chain, pantry, minABI, 'totalSupply', []);
+    let cookiesStaked = parseInt(await query(chain, cookie, minABI, 'balanceOf', [pantry]));
+    let newToken = await addToken(chain, project, cookie, (balance / supply) * cookiesStaked, wallet);
     return [newToken];
   } else {
     return [];
