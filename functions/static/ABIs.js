@@ -597,3 +597,11 @@ exports.cookiegame = {
     { constant: true, inputs: [{ name: "<input>", type: "address" }], name: "ownedStakesBalance", outputs: [{ name: "", type: "uint256" }], type: "function" }
   ]
 }
+
+// Avalaunch ABIs:
+exports.avalaunch = {
+  stakingABI: [
+    { constant: true, inputs: [{ name: "_pid", type: "uint256" }, { name: "_user", type: "address" }], name: "deposited", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "_pid", type: "uint256" }, { name: "_user", type: "address" }], name: "pending", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ]
+}

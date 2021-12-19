@@ -101,6 +101,7 @@ A list of available endpoints can be found through `https://api.cookietrack.io/r
 - `axial`
 - `pangolin`
 - `cookiegame`
+- `avalaunch`
 
 **Harmony Projects Available:**
 - `beefy`
