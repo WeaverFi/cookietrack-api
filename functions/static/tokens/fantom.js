@@ -39,7 +39,8 @@ exports.ftm_tokens = [
   { address: '0x7BEB05cf5681f402E762F8569c2Fc138a2172978', symbol: 'BHC' },
   { address: '0x6c021Ae822BEa943b2E66552bDe1D2696a53fbB7', symbol: 'TOMB' },
   { address: '0x37F70aa9fEfc8971117BD53A1Ddc2372aa7Eec41', symbol: 'BOUJE' },
-  { address: '0x91fa20244fb509e8289ca630e5db3e9166233fdc', symbol: 'gOHM' }
+  { address: '0x91fa20244fb509e8289ca630e5db3e9166233fdc', symbol: 'gOHM' },
+  { address: '0xd3111fb8bdf936b11ffc9eba3b597bea21e72724', symbol: 'XPAST' }
 ];
 
 // Token Logos:
@@ -92,7 +93,8 @@ exports.ftm_token_logos = {
   'g3CRV':          'https://assets.coingecko.com/coins/images/18832/small/GEIST-token.png?1633560935',
   'BOUJE':          'https://assets.coingecko.com/coins/images/19588/small/logo_%283%29.png?1635472943',
   'SPIRIT-LP':      'https://ftmscan.com/token/images/spiritswap_32.png',
-  'gOHM':           'https://assets.coingecko.com/coins/images/21129/small/token_wsOHM_logo.png?1638764900'
+  'gOHM':           'https://assets.coingecko.com/coins/images/21129/small/token_wsOHM_logo.png?1638764900',
+  // 'XPAST':          ''
 }
 
 // Token Blacklist:

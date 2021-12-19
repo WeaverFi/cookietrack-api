@@ -1,14 +1,14 @@
 
 // Imports:
 const { ethers } = require('ethers');
-const { minABI, bouje } = require('../../static/ABIs.js');
+const { minABI, xmaspast } = require('../../static/ABIs.js');
 const { query, addToken, addLPToken } = require('../../static/functions.js');
 
 // Initializations:
 const chain = 'ftm';
-const project = 'bouje';
-const masterChef = '0x89dcd1DC698Ad6A422ad505eFE66261A4320D8B5';
-const boujeToken = '0x37F70aa9fEfc8971117BD53A1Ddc2372aa7Eec41';
+const project = 'xmaspast';
+const masterChef = '0x138c4dB5D4Ab76556769e4ea09Bce1D452c2996F';
+const xpast = '0xD3111Fb8BDf936B11fFC9eba3b597BeA21e72724';
 
 /* ========================================================================================================================================================================= */
 
@@ -52,12 +52,12 @@ exports.get = async (req) => {
 // Function to get all pool balances:
 const getPoolBalances = async (wallet) => {
   let balances = [];
-  let poolCount = parseInt(await query(chain, masterChef, bouje.masterChefABI, 'poolLength', []));
+  let poolCount = parseInt(await query(chain, masterChef, xmaspast.masterChefABI, 'poolLength', []));
   let pools = [...Array(poolCount).keys()];
   let promises = pools.map(poolID => (async () => {
-    let balance = parseInt((await query(chain, masterChef, bouje.masterChefABI, 'userInfo', [poolID, wallet])).amount);
+    let balance = parseInt((await query(chain, masterChef, xmaspast.masterChefABI, 'userInfo', [poolID, wallet])).amount);
     if(balance > 0) {
-      let token = (await query(chain, masterChef, bouje.masterChefABI, 'poolInfo', [poolID])).lpToken;
+      let token = (await query(chain, masterChef, xmaspast.masterChefABI, 'poolInfo', [poolID])).lpToken;
       let symbol = await query(chain, token, minABI, 'symbol', []);
 
       // LP Token Pools:
@@ -71,10 +71,10 @@ const getPoolBalances = async (wallet) => {
         balances.push(newToken);
       }
 
-      // Pending BOUJE Rewards:
-      let rewards = parseInt(await query(chain, masterChef, bouje.masterChefABI, 'pendingBouje', [poolID, wallet]));
+      // Pending XPAST Rewards:
+      let rewards = parseInt(await query(chain, masterChef, xmaspast.masterChefABI, 'pendingXpast', [poolID, wallet]));
       if(rewards > 0) {
-        let newToken = await addToken(chain, project, boujeToken, rewards, wallet);
+        let newToken = await addToken(chain, project, xpast, rewards, wallet);
         balances.push(newToken);
       }
     }

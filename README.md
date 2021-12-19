@@ -81,6 +81,7 @@ A list of available endpoints can be found through `https://api.cookietrack.io/r
 - `cream`
 - `curve`
 - `bouje`
+- `xmaspast`
 
 **Avalanche Projects Available:**
 - `aave`

@@ -605,3 +605,13 @@ exports.avalaunch = {
     { constant: true, inputs: [{ name: "_pid", type: "uint256" }, { name: "_user", type: "address" }], name: "pending", outputs: [{ name: "", type: "uint256" }], type: "function" }
   ]
 }
+
+// XmasPast ABIs:
+exports.xmaspast = {
+  masterChefABI: [
+    { constant: true, inputs: [], name: "poolLength", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "<input>", type: "uint256" }, { name: "<input>", type: "address" }], name: "userInfo", outputs: [{ name: "amount", type: "uint256" }, { name: "rewardDebt", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "<input>", type: "uint256" }], name: "poolInfo", outputs: [{ name: "lpToken", type: "address" }, { name: "allocPoint", type: "uint256" }, { name: "lastRewardSecond", type: "uint256" }, { name: "accXpastPerShare", type: "uint256" }, { name: "depositFeeBP", type: "uint16" }, { name: "lpSupply", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "_pid", type: "uint256" }, { name: "_user", type: "address" }], name: "pendingXpast", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ]
+}
