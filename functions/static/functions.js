@@ -1617,49 +1617,6 @@ exports.addAxialToken = async (chain, location, address, balance, owner) => {
 
 /* ========================================================================================================================================================================= */
 
-// Function to get Axial Metapool token info:
-exports.addAxialMetaToken = async (chain, location, address, balance, owner) => {
-  
-  // Initializing New Token:
-  let newToken = {
-    type: 'token',
-    chain: chain,
-    location: location,
-    owner: owner,
-    symbol: '',
-    address: address,
-    balance: 0,
-    price: 0,
-    logo: ''
-  }
-  
-  // Getting Missing Token Info:
-  let decimals = parseInt(await exports.query(chain, address, minABI, 'decimals', []));
-  newToken.balance = balance / (10 ** decimals);
-  newToken.symbol = await exports.query(chain, address, minABI, 'symbol', []);
-  newToken.logo = exports.getTokenLogo(chain, newToken.symbol);
-  let swapAddress = await exports.query(chain, address, axial.tokenABI, 'owner', []);
-
-  // First Paired Token:
-  let token0 = await exports.query(chain, swapAddress, axial.swapABI, 'getToken', [0]);
-  let decimals0 = parseInt(await exports.query(chain, token0, minABI, 'decimals', []));
-  let supply0 = parseInt(await exports.query(chain, token0, minABI, 'balanceOf', [swapAddress])) / (10 ** decimals0);
-  let price0 = await exports.getTokenPrice(chain, token0, decimals0);
-
-  // Second Paired Token (Axial LP Token):
-  let token1 = await exports.query(chain, swapAddress, axial.swapABI, 'getToken', [1]);
-  let decimals1 = parseInt(await exports.query(chain, token1, minABI, 'decimals', []));
-  let supply1 = parseInt(await exports.query(chain, token1, minABI, 'balanceOf', [swapAddress])) / (10 ** decimals1);
-  let price1 = (await exports.addAxialToken(chain, location, token1, 0, swapAddress)).price;
-
-  // Calculating Price:
-  newToken.price = ((price0 * supply0) + (price1 * supply1)) / (supply0 + supply1);
-
-  return newToken;
-}
-
-/* ========================================================================================================================================================================= */
-
 // Function to get mStable token info:
 exports.addStableToken = async (chain, location, address, balance, owner) => {
 
