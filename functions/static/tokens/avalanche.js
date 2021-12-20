@@ -177,7 +177,9 @@ exports.avax_token_logos = {
   'USDC-AM3D':          'https://assets.coingecko.com/coins/images/20502/small/E5nD9pPv_400x400.jpg?1637139692',
   'USDC':               'https://snowtrace.io/token/images/usdc_32.png',
   'USDT':               'https://snowtrace.io/token/images/tether_32.png',
-  'COOKIE':             'https://cookie.game/android-chrome-512x512.png'
+  'COOKIE':             'https://cookie.game/android-chrome-512x512.png',
+  'sCOOKIE':            'https://cookie.game/android-chrome-512x512.png',
+  'COOKIE-BAKER':       'https://cookie.game/android-chrome-512x512.png'
 }
 
 // Token Blacklist:
