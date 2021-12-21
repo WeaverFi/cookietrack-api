@@ -8,6 +8,7 @@ const { ckey } = require('../../static/keys.js');
 // Initializations:
 const chain = 'avax';
 const id = 43114;
+const nativeToken = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 
 /* ========================================================================================================================================================================= */
 
@@ -75,6 +76,11 @@ const getTaxTXs = async (wallet) => {
   })());
   await Promise.all(promises);
 
+  // Adding Native Token:
+  if(!tokens.has(nativeToken)) {
+    tokens.add(nativeToken);
+  }
+
   // Formatting Data:
   let tokenArray = Array.from(tokens);
   tokenArray.forEach(token => {
@@ -97,13 +103,25 @@ const getTaxTXs = async (wallet) => {
 
   // Adding TX Token Prices:
   txs.forEach(tx => {
-    let txDate = Math.max(...(tokenPrices[tx.token.address].filter(entry => entry.time < tx.time).map(i => i.time)));
-    let foundEntry = tokenPrices[tx.token.address].find(entry => entry.time === txDate);
-    if(foundEntry) {
-      tx.token.price = foundEntry.price;
+
+    // Token:
+    if(tokenPrices[tx.token.address].length > 0) {
+      let txDate = Math.max(...(tokenPrices[tx.token.address].filter(entry => entry.time < tx.time).map(i => i.time)));
+      let foundEntry = tokenPrices[tx.token.address].find(entry => entry.time === txDate);
+      foundEntry ? tx.token.price = foundEntry.price : tx.token.price = 0;
     } else {
       tx.token.price = 0;
     }
+
+    // Native Token:
+    if(tokenPrices[nativeToken].length > 0) {
+      let txDate = Math.max(...(tokenPrices[nativeToken].filter(entry => entry.time < tx.time).map(i => i.time)));
+      let foundEntry = tokenPrices[nativeToken].find(entry => entry.time === txDate);
+      foundEntry ? tx.nativeTokenPrice = foundEntry.price : tx.nativeTokenPrice = 0;
+    } else {
+      tx.nativeTokenPrice = 0;
+    }
+
     taxTXs.push(tx);
   });
 

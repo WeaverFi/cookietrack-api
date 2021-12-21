@@ -13,7 +13,7 @@ Want a new dapp to be supported by CookieTrack? Feel free to create a new issue 
 
 Found a bug? You can either choose to report it in our [Discord server](https://discord.com/invite/DzADcq7y75) in the #bug-reports channel, or by creating an issue on this repository. To do so, go to `Issues`, `New Issue`, and you'll see a template for bug reports to facilitate your report.
 
-## Adding new API routes
+## Adding New API Routes
 
 Want to create a new route for a dapp that is currently not supported? Feel free to submit a pull request with the following:
 

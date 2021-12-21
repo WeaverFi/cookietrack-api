@@ -8,8 +8,8 @@ const { ckey } = require('../../static/keys.js');
 // Initializations:
 const chain = 'ftm';
 const id = 250;
-const nativeTokenOnETH = '0x4e15361fd6b4bb609fa63c81a2be19d873717870';
 const nativeToken = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
+const nativeTokenOnETH = '0x4e15361fd6b4bb609fa63c81a2be19d873717870';
 const wrappedNativeToken = '0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83';
 
 /* ========================================================================================================================================================================= */
@@ -78,6 +78,11 @@ const getTaxTXs = async (wallet) => {
   })());
   await Promise.all(promises);
 
+  // Adding Native Token:
+  if(!tokens.has(nativeToken)) {
+    tokens.add(nativeToken);
+  }
+
   // Formatting Data:
   let tokenArray = Array.from(tokens);
   tokenArray.forEach(token => {
@@ -106,13 +111,25 @@ const getTaxTXs = async (wallet) => {
 
   // Adding TX Token Prices:
   txs.forEach(tx => {
-    let txDate = Math.max(...(tokenPrices[tx.token.address].filter(entry => entry.time < tx.time).map(i => i.time)));
-    let foundEntry = tokenPrices[tx.token.address].find(entry => entry.time === txDate);
-    if(foundEntry) {
-      tx.token.price = foundEntry.price;
+
+    // Token:
+    if(tokenPrices[tx.token.address].length > 0) {
+      let txDate = Math.max(...(tokenPrices[tx.token.address].filter(entry => entry.time < tx.time).map(i => i.time)));
+      let foundEntry = tokenPrices[tx.token.address].find(entry => entry.time === txDate);
+      foundEntry ? tx.token.price = foundEntry.price : tx.token.price = 0;
     } else {
       tx.token.price = 0;
     }
+
+    // Native Token:
+    if(tokenPrices[nativeToken].length > 0) {
+      let txDate = Math.max(...(tokenPrices[nativeToken].filter(entry => entry.time < tx.time).map(i => i.time)));
+      let foundEntry = tokenPrices[nativeToken].find(entry => entry.time === txDate);
+      foundEntry ? tx.nativeTokenPrice = foundEntry.price : tx.nativeTokenPrice = 0;
+    } else {
+      tx.nativeTokenPrice = 0;
+    }
+
     taxTXs.push(tx);
   });
 
