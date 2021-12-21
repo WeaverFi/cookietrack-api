@@ -1,5 +1,10 @@
 # Contribution Guidelines
 
+The easiest way to find ways to contribute to CookieTrack's development is to browse the following:
+
+- The `Projects` section of this repository will have many issues listed as `To Do`.
+- The `Issues` section of this repository can be sorted by items with the `Help Wanted` label.
+
 ## Suggesting Support for New Dapp
 
 Want a new dapp to be supported by CookieTrack? Feel free to create a new issue here by going to `Issues`, `New Issue` and selecting the `New Project` template to make it easier for all involved to see what you are suggesting.
@@ -18,7 +23,7 @@ Want to create a new route for a dapp that is currently not supported? Feel free
 
 There is a route template at `/functions/routes/template.js` to help new contributors.
 
-If your PR isn't reviewed straight away, reach out in our [Discord server](https://discord.com/invite/DzADcq7y75)!
+If your PR isn't reviewed right away, reach out in our [Discord server](https://discord.com/invite/DzADcq7y75)!
 
 ## Donations
 
