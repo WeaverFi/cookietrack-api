@@ -6,8 +6,7 @@
     "start": "node functions/index.js",
     "emulator": "firebase emulators:start",
     "update": "node functions/routes.js",
-    "deploy": "node functions/routes.js && firebase deploy",
-    "update-snowball": "node functions/routes/partnerships/snowball/update.js"
+    "deploy": "node functions/routes.js && firebase deploy"
   },
   "dependencies": {}
 }

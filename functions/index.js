@@ -7,12 +7,6 @@ const cors = require('cors');
 // Routes Endpoint:
 const routes = require('./static/routes.json');
 
-// Partnership Routes:
-const snowball_index = require('./routes/partnerships/snowball/index.js');
-const snowball_wallet = require('./routes/partnerships/snowball/wallet.js');
-const snowball_strats = require('./routes/partnerships/snowball/strats.js');
-const snowball_deposits = require('./routes/partnerships/snowball/deposits.js');
-
 // Initializing Express Server:
 const app = express();
 app.use(cors());
@@ -108,22 +102,6 @@ app.get('/solana/*', async (req, res) => {
   } catch {
     res.send(errorResponse);
   }
-});
-
-/* ========================================================================================================================================================================= */
-
-// Snowball Partnership Endpoints (WIP):
-app.get('/snowball', async (req, res) => {
-  res.end(await snowball_index.get(req));
-});
-app.get('/snowball/wallet', async (req, res) => {
-  res.end(await snowball_wallet.get(req));
-});
-app.get('/snowball/strats', async (req, res) => {
-  res.end(await snowball_strats.get(req));
-});
-app.get('/snowball/deposits', async (req, res) => {
-  res.end(await snowball_deposits.get(req));
 });
 
 /* ========================================================================================================================================================================= */

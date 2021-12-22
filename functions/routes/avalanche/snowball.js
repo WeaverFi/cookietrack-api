@@ -11,6 +11,39 @@ const registry = '0x215D5eDEb6A6a3f84AE9d72962FEaCCdF815BF27';
 const snob = '0xC38f41A296A4493Ff429F1238e030924A1542e50';
 const xsnob = '0x83952E7ab4aca74ca96217D6F8f7591BEaD6D64E';
 
+// <TODO> Migrate to Snowball's API - Sample Query Below
+// {
+//   LastSnowballInfo {
+//     poolsInfo {
+//       address,
+//       lpAddress,
+//       source,
+//       symbol,
+//       yearlyAPY,
+//       token0 {
+//         address,
+//         symbol,
+//       },
+//       token1 {
+//         address,
+//         symbol,
+//       },
+//       token2 {
+//         address,
+//         symbol,
+//       },
+//       token3 {
+//         address,
+//         symbol,
+//       },
+//       deprecated,
+//       gaugeInfo {
+//         address
+//       }
+//     }
+//   }
+// }
+
 /* ========================================================================================================================================================================= */
 
 // GET Function:

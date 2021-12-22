@@ -11,7 +11,7 @@ let routes = {};
 const update = () => {
 
   // Fetching Data:
-  let chains = fs.readdirSync('./functions/routes').filter(i => i != 'partnerships' && i != 'template.js');
+  let chains = fs.readdirSync('./functions/routes').filter(i => i != 'template.js');
   chains.forEach(chain => {
     let endpoints = fs.readdirSync(`./functions/routes/${chain}`).map(e => e.slice(0, -3));
     routes[chain] = [...endpoints];
