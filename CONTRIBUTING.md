@@ -25,6 +25,12 @@ There is a route template at `/functions/routes/template.js` to help new contrib
 
 If your PR isn't reviewed right away, reach out in our [Discord server](https://discord.com/invite/DzADcq7y75)!
 
+## Tracking New Token
+
+In order to track a new token, first ensure it has a price feed available either through CoinGecko, ParaSwap or 1Inch.
+
+If so, simply add the token's address, symbol and logo to its respective chain file at `/static/tokens/`.
+
 ## Donations
 
 Donations can be made to the developers of CookieTrack through the following wallet addresses:
