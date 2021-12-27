@@ -32,7 +32,8 @@ exports.get = async (req) => {
       try {
         response.data.push(...(await getStakedTIME(wallet)));
         response.data.push(...(await getWrappedMEMO(wallet)));
-      } catch {
+      } catch(err) {
+        console.error(err);
         response.status = 'error';
         response.data = [{error: 'Internal API Error'}];
       }

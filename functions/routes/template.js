@@ -29,7 +29,8 @@ exports.get = async (req) => {
     if(ethers.utils.isAddress(wallet)) {
       try {
         response.data.push(...(await getSomething(wallet))); // <TODO> Edit to include all data necessary in response. You can have multiples of these.
-      } catch {
+      } catch(err) {
+        console.error(err);
         response.status = 'error';
         response.data = [{error: 'Internal API Error'}];
       }

@@ -34,7 +34,8 @@ exports.get = async (req) => {
         let vaults = ((await axios.get('https://api.beefy.finance/vaults')).data).filter(vault => vault.chain === 'avax' && vault.status === 'active' && vault.tokenAddress);
         response.data.push(...(await getVaultBalances(wallet, vaults)));
         response.data.push(...(await getStakedBIFI(wallet)));
-      } catch {
+      } catch(err) {
+        console.error(err);
         response.status = 'error';
         response.data = [{error: 'Internal API Error'}];
       }

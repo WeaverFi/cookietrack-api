@@ -33,7 +33,7 @@ exports.query = async (chain, address, abi, method, args) => {
       let result = await contract[method](...args);
       return result;
     } catch {
-      console.error(`ERROR: Calling ${method}(${args}) on ${address} (Chain: ${chain.toUpperCase()})`);
+      console.error(`Calling ${method}(${args}) on ${address} (Chain: ${chain.toUpperCase()})`);
     }
   }
 }

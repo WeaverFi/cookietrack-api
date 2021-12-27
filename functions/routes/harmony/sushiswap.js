@@ -30,7 +30,8 @@ exports.get = async (req) => {
     if(ethers.utils.isAddress(wallet)) {
       try {
         response.data.push(...(await getFarmBalances(wallet)));
-      } catch {
+      } catch(err) {
+        console.error(err);
         response.status = 'error';
         response.data = [{error: 'Internal API Error'}];
       }

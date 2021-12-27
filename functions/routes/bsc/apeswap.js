@@ -32,7 +32,8 @@ exports.get = async (req) => {
       try {
         response.data.push(...(await getFarmBalances(wallet)));
         response.data.push(...(await getVaultBalances(wallet)));
-      } catch {
+      } catch(err) {
+        console.error(err);
         response.status = 'error';
         response.data = [{error: 'Internal API Error'}];
       }

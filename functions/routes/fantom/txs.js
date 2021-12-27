@@ -26,7 +26,8 @@ exports.get = async (req) => {
     if(ethers.utils.isAddress(wallet)) {
       try {
         req.query.hasOwnProperty('last50') ? response.data.push(...(await getTXs(chain, wallet, true))) : response.data.push(...(await getTXs(chain, wallet)));
-      } catch {
+      } catch(err) {
+        console.error(err);
         response.status = 'error';
         response.data = [{error: 'Internal API Error'}];
       }

@@ -33,7 +33,8 @@ exports.get = async (req) => {
         if(walletCheck[1] === 0) {
           response.data.push(...(await getTokenBalances(wallet)));
         }
-      } catch {
+      } catch(err) {
+        console.error(err);
         response.status = 'error';
         response.data = [{error: 'Internal API Error'}];
       }

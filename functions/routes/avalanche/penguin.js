@@ -34,7 +34,8 @@ exports.get = async (req) => {
         response.data.push(...(await getIglooBalances(wallet)));
         response.data.push(...(await getStakedPEFI(wallet)));
         response.data.push(...(await getClubPenguinBalance(wallet)));
-      } catch {
+      } catch(err) {
+        console.error(err);
         response.status = 'error';
         response.data = [{error: 'Internal API Error'}];
       }

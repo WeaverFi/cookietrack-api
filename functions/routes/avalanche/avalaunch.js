@@ -33,7 +33,8 @@ exports.get = async (req) => {
       try {
         response.data.push(...(await getStakedXAVA(wallet)));
         response.data.push(...(await getStakedLP(wallet)));
-      } catch {
+      } catch(err) {
+        console.error(err);
         response.status = 'error';
         response.data = [{error: 'Internal API Error'}];
       }

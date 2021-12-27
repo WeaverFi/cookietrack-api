@@ -42,7 +42,8 @@ exports.get = async (req) => {
         response.data.push(...(await getFarmBalances(wallet)));
         response.data.push(...(await getAutoLYDFarmBalance(wallet)));
         response.data.push(...(await getMaximusFarmBalances(wallet)));
-      } catch {
+      } catch(err) {
+        console.error(err);
         response.status = 'error';
         response.data = [{ error: 'Internal API Error' }];
       }

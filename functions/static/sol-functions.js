@@ -18,7 +18,7 @@ exports.query = async (method, args) => {
     let result = await sol[method](...args);
     return result;
   } catch {
-    console.error(`ERROR: Calling ${method}(${args}) (Chain: SOL)`);
+    console.error(`Calling ${method}(${args}) (Chain: SOL)`);
   }
 }
 

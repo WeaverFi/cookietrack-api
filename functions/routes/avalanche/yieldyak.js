@@ -35,7 +35,8 @@ exports.get = async (req) => {
         let farms = Object.getOwnPropertyNames((await axios.get('https://staging-api.yieldyak.com/apys')).data);
         response.data.push(...(await getFarmBalances(wallet, farms)));
         response.data.push(...(await getStakedBalances(wallet)));
-      } catch {
+      } catch(err) {
+        console.error(err);
         response.status = 'error';
         response.data = [{error: 'Internal API Error'}];
       }

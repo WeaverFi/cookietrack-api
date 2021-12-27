@@ -36,7 +36,8 @@ exports.get = async (req) => {
         response.data.push(...(await getPendingRewards(wallet)));
         response.data.push(...(await getStakedVAI(wallet)));
         response.data.push(...(await getStakedXVS(wallet)));
-      } catch {
+      } catch(err) {
+        console.error(err);
         response.status = 'error';
         response.data = [{error: 'Internal API Error'}];
       }
