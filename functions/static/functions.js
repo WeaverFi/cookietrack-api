@@ -465,7 +465,7 @@ exports.getTXs = async (chain, address, last50) => {
           // Approval TXs:
           } else if(tx.log_events.length < 3) {
             tx.log_events.forEach(event => {
-              if(event.decoded != null) {
+              if(event.decoded != null && event.sender_contract_ticker_symbol != null) {
                 if(event.decoded.name === 'Approval') {
                   if(event.decoded.params[0].name === 'owner' && event.decoded.params[0].value === address.toLowerCase()) {
                     txs.push({
@@ -497,7 +497,7 @@ exports.getTXs = async (chain, address, last50) => {
               if(event.decoded.name === 'Transfer') {
 
                 // Filtering Blacklisted Tokens:
-                if(!chains[chain].blacklist.includes(event.sender_address.toLowerCase())) {
+                if(!chains[chain].blacklist.includes(event.sender_address.toLowerCase()) && event.sender_contract_ticker_symbol != null) {
 
                   // Outbound:
                   if(event.decoded.params[0].name === 'from' && event.decoded.params[0].value === address.toLowerCase() && event.decoded.params[2].decoded) {
