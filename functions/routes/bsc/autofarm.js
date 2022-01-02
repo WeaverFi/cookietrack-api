@@ -10,6 +10,7 @@ const project = 'autofarm';
 const registry = '0x0895196562C7868C5Be92459FaE7f877ED450452';
 const autoVault = '0x763a05bdb9f8946d8C3FA72d1e0d3f5E68647e5C';
 const auto = '0xa184088a740c695e156f91f5cc086a06bb78b827';
+const ignoreVaults = [331];
 
 /* ========================================================================================================================================================================= */
 
@@ -68,7 +69,7 @@ const getVaultBalances = async (wallet) => {
       }
     
     // All Other Vaults:
-    } else if(vaultID != 331) {
+    } else if(!ignoreVaults.includes(vaultID)) {
       let balance = parseInt(await query(chain, registry, autofarm.registryABI, 'stakedWantTokens', [vaultID, wallet]));
       if(balance > 99) {
         let token = (await query(chain, registry, autofarm.registryABI, 'poolInfo', [vaultID]))[0];

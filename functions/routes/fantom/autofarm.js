@@ -8,6 +8,7 @@ const { query, addToken, addLPToken, addCurveToken } = require('../../static/fun
 const chain = 'ftm';
 const project = 'autofarm';
 const registry = '0x76b8c3ECdF99483335239e66F34191f11534cbAA';
+const ignoreVaults = [75, 76];
 
 /* ========================================================================================================================================================================= */
 
@@ -55,7 +56,7 @@ const getVaultBalances = async (wallet) => {
   let poolLength = parseInt(await query(chain, registry, autofarm.registryABI, 'poolLength', []));
   let vaults = [...Array(poolLength).keys()];
   let promises = vaults.map(vaultID => (async () => {
-    if(vaultID != 75 && vaultID != 76) {
+    if(!ignoreVaults.includes(vaultID)) {
       let balance = parseInt(await query(chain, registry, autofarm.registryABI, 'stakedWantTokens', [vaultID, wallet]));
       if(balance > 99) {
         let token = (await query(chain, registry, autofarm.registryABI, 'poolInfo', [vaultID]))[0];

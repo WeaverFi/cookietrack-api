@@ -8,6 +8,7 @@ const { query, addToken, addLPToken, addTraderJoeToken } = require('../../static
 const chain = 'avax';
 const project = 'autofarm';
 const registry = '0x864A0B7F8466247A0e44558D29cDC37D4623F213';
+const ignoreVaults = [67];
 
 /* ========================================================================================================================================================================= */
 
@@ -55,25 +56,27 @@ const getVaultBalances = async (wallet) => {
   let poolLength = parseInt(await query(chain, registry, autofarm.registryABI, 'poolLength', []));
   let vaults = [...Array(poolLength).keys()];
   let promises = vaults.map(vaultID => (async () => {
-    let balance = parseInt(await query(chain, registry, autofarm.registryABI, 'stakedWantTokens', [vaultID, wallet]));
-    if(balance > 99) {
-      let token = (await query(chain, registry, autofarm.registryABI, 'poolInfo', [vaultID]))[0];
-      let symbol = await query(chain, token, minABI, 'symbol', []);
-
-      // xJOE Vault:
-      if(vaultID === 17) {
-        let newToken = await addTraderJoeToken(chain, project, token, balance, wallet);
-        balances.push(newToken);
-
-      // LP Token Vaults:
-      } else if(symbol.includes('LP')) {
-        let newToken = await addLPToken(chain, project, token, balance, wallet);
-        balances.push(newToken);
-
-      // Single-Asset Vaults:
-      } else {
-        let newToken = await addToken(chain, project, token, balance, wallet);
-        balances.push(newToken);
+    if(!ignoreVaults.includes(vaultID)) {
+      let balance = parseInt(await query(chain, registry, autofarm.registryABI, 'stakedWantTokens', [vaultID, wallet]));
+      if(balance > 99) {
+        let token = (await query(chain, registry, autofarm.registryABI, 'poolInfo', [vaultID]))[0];
+        let symbol = await query(chain, token, minABI, 'symbol', []);
+  
+        // xJOE Vault:
+        if(vaultID === 17) {
+          let newToken = await addTraderJoeToken(chain, project, token, balance, wallet);
+          balances.push(newToken);
+  
+        // LP Token Vaults:
+        } else if(symbol.includes('LP')) {
+          let newToken = await addLPToken(chain, project, token, balance, wallet);
+          balances.push(newToken);
+  
+        // Single-Asset Vaults:
+        } else {
+          let newToken = await addToken(chain, project, token, balance, wallet);
+          balances.push(newToken);
+        }
       }
     }
   })());
