@@ -11,7 +11,8 @@ const project = 'yieldyak';
 const staking = '0x0cf605484A512d3F3435fed77AB5ddC0525Daf5f';
 const yak = '0x59414b3089ce2AF0010e7523Dea7E2b35d776ec7';
 const wavax = '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7';
-const lpSymbols = ['JLP', 'PGL', 'Lydia-LP', 'YSL', 'CRL', 'BGL', 'GDL', 'Olive-LP'];
+const lpSymbols = ['JLP', 'PGL', 'Lydia-LP', 'YSL', 'CRL', 'BGL', 'Olive-LP'];
+const lpAxialSymbols = ['AS4D', 'AC4D', 'AM3D', 'AA3D'];
 
 /* ========================================================================================================================================================================= */
 
@@ -77,7 +78,7 @@ const getFarmBalances = async (wallet, farms) => {
           balances.push(newToken);
 
         // Axial Farms:
-        } else if(symbol === 'AS4D' || symbol === 'AC4D' || symbol === 'AM3D') {
+        } else if(lpAxialSymbols.includes(symbol)) {
           let newToken = await addAxialToken(chain, project, token, underlyingBalance, wallet);
           balances.push(newToken);
 
