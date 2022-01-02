@@ -19,7 +19,7 @@ app.use(cors());
 // Initializing Text Reponses:
 const repository = 'https://github.com/Ncookiez/cookietrack-api';
 const rootResponse = `<title>CookieTrack API</title><p>Click <a href="${repository}">here</a> to see the API's repository, or <a href="/docs">here</a> to see its OpenAPI documentation.</p>`;
-const errorResponse = `<p>Invalid route. Click <a href="${repository}">here</a> to see the docs and endpoints available.</p>`;
+const errorResponse = `<p>Invalid route.</p>`;
 
 // Initializing Regex Filter:
 const filter = /[^a-zA-Z0-9]/;
