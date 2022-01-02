@@ -390,6 +390,13 @@ exports.getTokenPrice = async (chain, address, decimals) => {
     }
   }
 
+  // Avalanche Redirections:
+  if(chain === 'avax') {
+    if(address.toLowerCase() === '0x4f60a160D8C2DDdaAfe16FCC57566dB84D674BD6'.toLowerCase()) { // JEWEL
+      return exports.getTokenPrice('one', '0x72cb10c6bfa5624dd07ef608027e366bd690048f', 18);
+    }
+  }
+
   // Harmony Redirections:
   if(chain === 'one') {
     if(address.toLowerCase() === '0xcf664087a5bb0237a0bad6742852ec6c8d69a27a'.toLowerCase()) { // WONE
