@@ -1,0 +1,494 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This API is the back-end of CookieTrack. Find out more on [GitHub](https://github.com/Ncookiez/cookietrack-api), or join our [Discord Server](https://discord.com/invite/DzADcq7y75).",
+    "version": "1.4.0",
+    "title": "CookieTrack API",
+    "license": {
+      "name": "MIT License",
+      "url": "https://github.com/Ncookiez/cookietrack-api/blob/master/LICENSE.md"
+    }
+  },
+  "schemes": [
+    "https"
+  ],
+  "host": "api.cookietrack.io",
+  "tags": [
+    {
+      "name": "Endpoints",
+      "description": "Query information about wallet addresses."
+    },
+    {
+      "name": "Info",
+      "description": "Query information about the API."
+    }
+  ],
+  "paths": {
+    "/{chain}/wallet": {
+      "get": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Returns a wallet's token balances.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "chain",
+            "in": "path",
+            "description": "Blockchain to query. (see /routes endpoint for possible inputs)",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "address",
+            "in": "query",
+            "description": "Wallet address.",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful query.",
+            "schema": {
+              "$ref": "#/definitions/Wallet"
+            }
+          },
+          "404": {
+            "description": "Path not found."
+          }
+        }
+      }
+    },
+    "/{chain}/{project}": {
+      "get": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Returns a wallet's token balances in a specific project.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "chain",
+            "in": "path",
+            "description": "Blockchain to query. (see /routes endpoint for possible inputs)",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "project",
+            "in": "path",
+            "description": "Project to query. (see /routes endpoint for possible inputs)",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "address",
+            "in": "query",
+            "description": "Wallet address.",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful query.",
+            "schema": {
+              "$ref": "#/definitions/Project"
+            }
+          },
+          "404": {
+            "description": "Path not found."
+          }
+        }
+      }
+    },
+    "/{chain}/txs": {
+      "get": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Returns a wallet's transaction history.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "chain",
+            "in": "path",
+            "description": "Blockchain to query. (see /routes endpoint for possible inputs)",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "address",
+            "in": "query",
+            "description": "Wallet address.",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful query.",
+            "schema": {
+              "$ref": "#/definitions/Transactions"
+            }
+          },
+          "404": {
+            "description": "Path not found."
+          }
+        }
+      }
+    },
+    "/{chain}/fees": {
+      "get": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Returns a wallet's total transaction fees.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "chain",
+            "in": "path",
+            "description": "Blockchain to query. (see /routes endpoint for possible inputs)",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "address",
+            "in": "query",
+            "description": "Wallet address.",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful query.",
+            "schema": {
+              "$ref": "#/definitions/Fees"
+            }
+          },
+          "404": {
+            "description": "Path not found."
+          }
+        }
+      }
+    },
+    "/{chain}/taxes": {
+      "get": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Returns a wallet's transaction history alongside token prices for tax purposes.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "chain",
+            "in": "path",
+            "description": "Blockchain to query. (see /routes endpoint for possible inputs)",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "address",
+            "in": "query",
+            "description": "Wallet address.",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful query.",
+            "schema": {
+              "$ref": "#/definitions/Taxes"
+            }
+          },
+          "404": {
+            "description": "Path not found."
+          }
+        }
+      }
+    },
+    "/routes": {
+      "get": {
+        "tags": [
+          "Info"
+        ],
+        "summary": "Get all routes available.",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful query.",
+            "schema": {
+              "$ref": "#/definitions/Routes"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Wallet": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Token"
+          }
+        },
+        "request": {
+          "type": "string"
+        }
+      }
+    },
+    "Project": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Token"
+          }
+        },
+        "request": {
+          "type": "string"
+        }
+      }
+    },
+    "Transactions": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TX"
+          }
+        },
+        "request": {
+          "type": "string"
+        }
+      }
+    },
+    "Fees": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "amount": {
+                "type": "integer"
+              },
+              "txs": {
+                "type": "integer"
+              },
+              "price": {
+                "type": "integer"
+              }
+            }
+          }
+        },
+        "request": {
+          "type": "string"
+        }
+      }
+    },
+    "Taxes": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TaxTX"
+          }
+        },
+        "request": {
+          "type": "string"
+        }
+      }
+    },
+    "Token": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "chain": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "owner": {
+          "type": "string"
+        },
+        "symbol": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "balance": {
+          "type": "integer"
+        },
+        "price": {
+          "type": "integer"
+        },
+        "logo": {
+          "type": "string"
+        }
+      }
+    },
+    "TX": {
+      "type": "object",
+      "properties": {
+        "wallet": {
+          "type": "string"
+        },
+        "chain": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "hash": {
+          "type": "string"
+        },
+        "time": {
+          "type": "integer"
+        },
+        "direction": {
+          "type": "string"
+        },
+        "from": {
+          "type": "string"
+        },
+        "to": {
+          "type": "string"
+        },
+        "token": {
+          "type": "object",
+          "properties": {
+            "address": {
+              "type": "string"
+            },
+            "symbol": {
+              "type": "string"
+            },
+            "logo": {
+              "type": "string"
+            }
+          }
+        },
+        "value": {
+          "type": "integer"
+        },
+        "fee": {
+          "type": "integer"
+        },
+        "nativeToken": {
+          "type": "string"
+        }
+      }
+    },
+    "TaxTX": {
+      "type": "object",
+      "properties": {
+        "wallet": {
+          "type": "string"
+        },
+        "chain": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "hash": {
+          "type": "string"
+        },
+        "time": {
+          "type": "integer"
+        },
+        "direction": {
+          "type": "string"
+        },
+        "from": {
+          "type": "string"
+        },
+        "to": {
+          "type": "string"
+        },
+        "token": {
+          "type": "object",
+          "properties": {
+            "address": {
+              "type": "string"
+            },
+            "symbol": {
+              "type": "string"
+            },
+            "logo": {
+              "type": "string"
+            },
+            "price": {
+              "type": "integer"
+            }
+          }
+        },
+        "value": {
+          "type": "integer"
+        },
+        "fee": {
+          "type": "integer"
+        },
+        "nativeToken": {
+          "type": "string"
+        },
+        "nativeTokenPrice": {
+          "type": "integer"
+        }
+      }
+    },
+    "Routes": {
+      "type": "object",
+      "properties": {
+        "chain": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "API Contribution Guidelines",
+    "url": "https://github.com/Ncookiez/cookietrack-api/blob/master/CONTRIBUTING.md"
+  }
+}

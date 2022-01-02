@@ -3,12 +3,14 @@
 const functions = require('firebase-functions');
 const express = require('express');
 const cors = require('cors');
+const swagger = require('swagger-ui-express');
 
 // Fetching Firebase Logger Compatibility Patch:
 require("firebase-functions/lib/logger/compat");
 
-// Routes Endpoint:
+// Fetching Required JSON Files:
 const routes = require('./static/routes.json');
+const swaggerDocs = require('./static/swagger.json');
 
 // Initializing Express Server:
 const app = express();
@@ -16,7 +18,7 @@ app.use(cors());
 
 // Initializing Text Reponses:
 const repository = 'https://github.com/Ncookiez/cookietrack-api';
-const rootResponse = `<title>CookieTrack API</title><p>Click <a href="${repository}">here</a> to see the docs and endpoints available.</p>`;
+const rootResponse = `<title>CookieTrack API</title><p>Click <a href="${repository}">here</a> to see the API's repository, or <a href="/docs">here</a> to see its OpenAPI documentation.</p>`;
 const errorResponse = `<p>Invalid route. Click <a href="${repository}">here</a> to see the docs and endpoints available.</p>`;
 
 // Initializing Regex Filter:
@@ -29,6 +31,9 @@ app.get('/', (req, res) => {
   console.info(`Loading: ${req.originalUrl}`);
   res.send(rootResponse);
 });
+
+// Swagger Documentation Endpoint:
+app.use('/docs', swagger.serve, swagger.setup(swaggerDocs));
 
 // Routes Endpoint:
 app.get('/routes', (req, res) => {
