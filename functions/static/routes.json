@@ -96,5 +96,9 @@
  ],
  "solana": [
   "wallet"
+ ],
+ "terra": [
+  "anchor",
+  "wallet"
  ]
 }
