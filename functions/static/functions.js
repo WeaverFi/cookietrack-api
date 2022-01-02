@@ -16,6 +16,10 @@ const { one_token_logos, one_token_blacklist } = require('./tokens/harmony.js');
 
 // Initializations:
 const defaultTokenLogo = 'https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@d5c68edec1f5eaec59ac77ff2b48144679cebca1/32/icon/generic.png';
+const ignoreErrors = [
+  {chain: 'poly', address: '0x8aaa5e259f74c8114e0a471d9f2adfc66bfe09ed'}, // QuickSwap Registry
+  {chain: 'poly', address: '0x9dd12421c637689c3fc6e661c9e2f02c2f61b3eb'}  // QuickSwap Dual Rewards Registry
+];
 
 /* ========================================================================================================================================================================= */
 
@@ -33,7 +37,9 @@ exports.query = async (chain, address, abi, method, args) => {
       let result = await contract[method](...args);
       return result;
     } catch {
-      console.error(`Calling ${method}(${args}) on ${address} (Chain: ${chain.toUpperCase()})`);
+      if(!ignoreErrors.find(i => i.chain === chain && i.address === address.toLowerCase())) {
+        console.error(`Calling ${method}(${args}) on ${address} (Chain: ${chain.toUpperCase()})`);
+      }
     }
   }
 }

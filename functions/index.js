@@ -164,4 +164,4 @@ app.get('/solana/*', async (req, res) => {
 // app.listen(3000, () => { console.info('API Up on 127.0.0.1:3000'); });
 
 // Exporting Express App:
-exports.app = functions.runWith({ memory: '512MB', timeoutSeconds: 120 }).https.onRequest(app);
+exports.app = functions.runWith({ memory: '1GB', timeoutSeconds: 120 }).https.onRequest(app);
