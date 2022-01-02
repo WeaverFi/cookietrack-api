@@ -18,7 +18,7 @@ const update = () => {
   });
 
   // Writing File:
-  fs.writeFile('./functions/static/routes.json', JSON.stringify(routes), 'utf8', (err) => {
+  fs.writeFile('./functions/static/routes.json', JSON.stringify(routes, null, ' '), 'utf8', (err) => {
     if(err) {
       console.error(err);
     } else {

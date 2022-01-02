@@ -620,3 +620,10 @@ exports.cookiegame = {
     { constant: true, inputs: [{ name: "_owner", type: "address" }, { name: "_offset", type: "uint256" }, { name: "_maxSize", type: "uint256" }], name: "batchedStakesOfOwner", outputs: [{ type: "tuple[]", components: [{ name: "", type: "uint256" }, { name: "", type: "uint256" }, { name: "", type: "uint256" }] }], type: "function" }
   ]
 }
+
+// Moonpot ABIs:
+exports.moonpot = {
+  potABI: [
+    { constant: true, inputs: [{ name: "user", type: "address" }], name: "userTotalBalance", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ]
+}

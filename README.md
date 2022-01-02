@@ -57,6 +57,7 @@ A list of available endpoints can be found through `https://api.cookietrack.io/r
 - `pooltogether`
 - `apeswap`
 - `cream`
+- `moonpot`
 
 **Polygon Projects Available:**
 - `aave`
