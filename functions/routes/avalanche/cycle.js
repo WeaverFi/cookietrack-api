@@ -54,7 +54,7 @@ exports.get = async (req) => {
   }
 
   // Returning Response:
-  return JSON.stringify(response);
+  return JSON.stringify(response, null, ' ');
 }
 
 /* ========================================================================================================================================================================= */
