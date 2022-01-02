@@ -33,7 +33,7 @@ app.get('/', (req, res) => {
 // Routes Endpoint:
 app.get('/routes', (req, res) => {
   console.info(`Loading: ${req.originalUrl}`);
-  res.end(JSON.stringify(routes));
+  res.end(JSON.stringify(routes, null, ' '));
 });
 
 
