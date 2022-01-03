@@ -31,7 +31,7 @@ exports.get = async (req) => {
       }
     } else {
       response.status = 'error';
-      response.data = [{error: 'Invalid Wallet Address'}];
+      response.data = [{ error: 'Invalid Wallet Address' }];
     }
   } else {
     response.status = 'error';
