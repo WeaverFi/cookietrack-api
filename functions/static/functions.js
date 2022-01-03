@@ -16,6 +16,7 @@ const { one_token_logos, one_token_blacklist } = require('./tokens/harmony.js');
 
 // Initializations:
 const defaultTokenLogo = 'https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@d5c68edec1f5eaec59ac77ff2b48144679cebca1/32/icon/generic.png';
+const defaultAddress = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 const ignoreErrors = [
   {chain: 'poly', address: '0x8aaa5e259f74c8114e0a471d9f2adfc66bfe09ed'}, // QuickSwap Registry
   {chain: 'poly', address: '0x9dd12421c637689c3fc6e661c9e2f02c2f61b3eb'}  // QuickSwap Dual Rewards Registry
@@ -56,7 +57,7 @@ exports.addNativeToken = async (chain, balance, owner) => {
     location: 'wallet',
     owner: owner,
     symbol: '',
-    address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+    address: defaultAddress,
     balance: balance / (10 ** 18),
     price: 0,
     logo: ''
@@ -113,7 +114,7 @@ exports.addToken = async (chain, location, address, balance, owner) => {
   let decimals = 18;
 
   // Native Tokens:
-  if(address.toLowerCase() === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
+  if(address.toLowerCase() === defaultAddress) {
     switch(chain) {
       case 'eth':
         newToken.symbol = 'ETH';
@@ -217,7 +218,7 @@ exports.addDebtToken = async (chain, location, address, balance, owner) => {
   let decimals = 18;
 
   // Native Tokens:
-  if(address.toLowerCase() === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
+  if(address.toLowerCase() === defaultAddress) {
     switch(chain) {
       case 'eth':
         newToken.symbol = 'ETH';
@@ -319,7 +320,7 @@ exports.getTokenPrice = async (chain, address, decimals) => {
 
   // Fetching CoinGecko Price:
   let apiQuery = '';
-  if(address === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
+  if(address === defaultAddress) {
     apiQuery = `https://api.coingecko.com/api/v3/simple/price/?ids=${chains[chain].nativeID}&vs_currencies=usd`;
   } else {
     apiQuery = `https://api.coingecko.com/api/v3/simple/token_price/${chains[chain].cgID}?contract_addresses=${address}&vs_currencies=usd`;
@@ -400,11 +401,11 @@ exports.getTokenPrice = async (chain, address, decimals) => {
   // Harmony Redirections:
   if(chain === 'one') {
     if(address.toLowerCase() === '0xcf664087a5bb0237a0bad6742852ec6c8d69a27a'.toLowerCase()) { // WONE
-      return exports.getTokenPrice('one', '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', 18);
+      return exports.getTokenPrice('one', defaultAddress, 18);
     } else if(address.toLowerCase() === '0x224e64ec1bdce3870a6a6c777edd450454068fec'.toLowerCase()) { // UST
       return exports.getTokenPrice('eth', '0xa47c8bf37f92abed4a126bda807a7b7498661acd', 18);
     } else if(address.toLowerCase() === '0x783ee3e955832a3d52ca4050c4c251731c156020'.toLowerCase()) { // bscETH
-      return exports.getTokenPrice('eth', '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', 18);
+      return exports.getTokenPrice('eth', defaultAddress, 18);
     } else if(address.toLowerCase() === '0x0ab43550a6915f9f67d0c454c2e90385e6497eaa'.toLowerCase()) { // bscBUSD
       return exports.getTokenPrice('bsc', '0xe9e7cea3dedca5984780bafc599bd69add087d56', 18);
     } else if(address.toLowerCase() === '0x44ced87b9f1492bf2dcf5c16004832569f7f6cba'.toLowerCase()) { // bscUSDC
@@ -414,7 +415,7 @@ exports.getTokenPrice = async (chain, address, decimals) => {
     } else if(address.toLowerCase() === '0x08cb2917245bbe75c8c9c6dc4a7b3765dae02b31'.toLowerCase()) { // bscDOT
       return exports.getTokenPrice('bsc', '0x7083609fce4d1d8dc0c979aab8c869ea2c873402', 18);
     } else if(address.toLowerCase() === '0x6e7be5b9b4c9953434cd83950d61408f1ccc3bee'.toLowerCase()) { // bscMATIC
-      return exports.getTokenPrice('poly', '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', 18);
+      return exports.getTokenPrice('poly', defaultAddress, 18);
     } else if(address.toLowerCase() === '0x7a791e76bf4d4f3b9b492abb74e5108180be6b5a'.toLowerCase()) { // 1LINK
       return exports.getTokenPrice('eth', '0x514910771af9ca656af840dff83e8264ecf986ca', 18);
     } else if(address.toLowerCase() === '0x352cd428efd6f31b5cae636928b7b84149cf369f'.toLowerCase()) { // 1CRV
@@ -423,7 +424,7 @@ exports.getTokenPrice = async (chain, address, decimals) => {
   }
 
   // Logging tokens with no working price feed for debugging purposes:
-  console.error(chain.toUpperCase() + ': Token Price Not Found -', address);
+  console.error(`${chain.toUpperCase()}: Token Price Not Found - ${address}`);
 
   return 0;
 }
@@ -466,7 +467,7 @@ exports.getTXs = async (chain, address, last50) => {
               from: tx.from_address,
               to: tx.to_address,
               token: {
-                address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+                address: defaultAddress,
                 symbol: chains[chain].token,
                 logo: exports.getTokenLogo(chain, chains[chain].token)
               },
@@ -579,7 +580,7 @@ exports.getTXs = async (chain, address, last50) => {
                         from: tx.to_address,
                         to: tx.from_address,
                         token: {
-                          address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+                          address: defaultAddress,
                           symbol: chains[chain].token,
                           logo: exports.getTokenLogo(chain, chains[chain].token)
                         },
@@ -600,7 +601,7 @@ exports.getTXs = async (chain, address, last50) => {
                     from: tx.to_address,
                     to: tx.from_address,
                     token: {
-                      address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+                      address: defaultAddress,
                       symbol: chains[chain].token,
                       logo: exports.getTokenLogo(chain, chains[chain].token)
                     },
@@ -939,8 +940,8 @@ exports.addCurveToken = async (chain, location, address, balance, owner) => {
       }
 
       // First Paired Token:
-      if(tokens[0].toLowerCase() === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
-        newToken.token0.address = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
+      if(tokens[0].toLowerCase() === defaultAddress) {
+        newToken.token0.address = defaultAddress;
         newToken.token0.symbol = 'ETH';
         newToken.token0.price = await getPrice(chain, newToken.token0.address, 18);
         newToken.token0.balance = parseInt(reserves[0]) * ((newToken.balance / (10 ** 18)) / lpTokenSupply);
@@ -955,8 +956,8 @@ exports.addCurveToken = async (chain, location, address, balance, owner) => {
       }
 
       // Second Paired Token:
-      if(tokens[1].toLowerCase() === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
-        newToken.token1.address = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
+      if(tokens[1].toLowerCase() === defaultAddress) {
+        newToken.token1.address = defaultAddress;
         newToken.token1.symbol = 'ETH';
         newToken.token1.price = await getPrice(chain, newToken.token1.address, 18);
         newToken.token1.balance = parseInt(reserves[1]) * ((newToken.balance / (10 ** 18)) / lpTokenSupply);

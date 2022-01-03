@@ -21,7 +21,7 @@ exports.get = async (req) => {
   const wallet = req.query.address;
 
   // Checking Parameters:
-  if (wallet != undefined) {
+  if(wallet != undefined) {
     try {
       response.data.push(...(await getNativeBalances(wallet)));
     } catch {
@@ -42,10 +42,10 @@ exports.get = async (req) => {
 // Function to get native wallet balance:
 const getNativeBalances = async (wallet) => {
   try {
-    const res = await query(async (terra) => {
+    let res = await query(async (terra) => {
       return await terra.bank.balance(wallet);
-    }, `Get Native Balances for: ${wallet}`);
-    const balances = await Promise.all(res[0].filter(coin => coin.denom.charAt(0) == 'u').map(coin => addNativeToken(chain, coin.amount, wallet, coin.denom.slice(1).toUpperCase())));
+    }, `getNativeBalances(${wallet})`);
+    let balances = await Promise.all(res[0].filter(token => token.denom.charAt(0) == 'u').map(token => addNativeToken(chain, token.amount, wallet, token.denom.slice(1).toUpperCase())));
     return balances;
   } catch {
     return [];

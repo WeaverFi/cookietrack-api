@@ -7,14 +7,18 @@ const axios = require('axios');
 const { sol_tokens, sol_token_logos, sol_token_blacklist } = require('./tokens/solana.js');
 
 // Initializations:
+const defaultTokenLogo = 'https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@d5c68edec1f5eaec59ac77ff2b48144679cebca1/32/icon/generic.png';
+const defaultAddress = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 let solTokenPrices = [];
+
+// Setting Up Web3 Connection:
+const sol = new web3.Connection(web3.clusterApiUrl('mainnet-beta'), 'confirmed');
 
 /* ========================================================================================================================================================================= */
 
 // Function to make blockchain queries:
 exports.query = async (method, args) => {
   try {
-    let sol = new web3.Connection(web3.clusterApiUrl('mainnet-beta'), 'confirmed');
     let result = await sol[method](...args);
     return result;
   } catch {
@@ -59,7 +63,7 @@ exports.addNativeToken = async (chain, balance, owner) => {
     location: 'wallet',
     owner: owner,
     symbol: 'SOL',
-    address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+    address: defaultAddress,
     balance: balance / (10 ** 9),
     price: 0,
     logo: ''
@@ -103,7 +107,7 @@ exports.addToken = async (chain, location, address, symbol, decimals, balance, o
 exports.getTokenLogo = (symbol) => {
 
   // Initializing Default Logo:
-  let logo = 'https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@d5c68edec1f5eaec59ac77ff2b48144679cebca1/32/icon/generic.png';
+  let logo = defaultTokenLogo;
 
   // Solana Token:
   if(sol_token_logos.hasOwnProperty(symbol)) {
@@ -130,7 +134,7 @@ exports.getTokenPrice = async (address) => {
       let solQuery = 'https://api.coingecko.com/api/v3/coins/solana?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false';
       try {
         let solResult = await axios.get(solQuery);
-        solTokenPrices.push({token: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', price: solResult.data.market_data.current_price.usd});
+        solTokenPrices.push({token: defaultAddress, price: solResult.data.market_data.current_price.usd});
         let result = await axios.get(apiQuery);
         let tokens = Object.keys(result.data);
         tokens.forEach(token => {

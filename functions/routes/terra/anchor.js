@@ -3,9 +3,9 @@
 const { query, addToken } = require('../../static/terra-functions.js');
 
 // Initializations:
-const chain = "terra";
-const project = "anchor";
-const aUST = "terra1hzh9vpxhsk8253se0vv5jj6etdvxu3nv8z07zu";
+const chain = 'terra';
+const project = 'anchor';
+const aust = 'terra1hzh9vpxhsk8253se0vv5jj6etdvxu3nv8z07zu';
 
 /* ========================================================================================================================================================================= */
 
@@ -23,9 +23,9 @@ exports.get = async (req) => {
   const wallet = req.query.address;
 
   // Checking Parameters:
-  if (wallet != undefined) {
+  if(wallet != undefined) {
     try {
-      response.data.push(...(await getAnchorEarnBalance(wallet)));
+      response.data.push(...(await getEarnBalance(wallet)));
     } catch {
       response.status = 'error';
       response.data = [{ error: 'Internal API Error' }];
@@ -41,18 +41,15 @@ exports.get = async (req) => {
 
 /* ========================================================================================================================================================================= */
 
-// Function to get anchor earn aUST balance:
-const getAnchorEarnBalance = async (wallet) => {
-  try {
-    const res = await query(async (terra) => {
-      return await terra.wasm.contractQuery(aUST, {
-        balance: {
-          address: wallet
-        },
-      })
-    }, `Get aUST Balance for: ${wallet}`);
-    return [await addToken(chain, project, aUST, 'aUST', 6, parseInt(res.balance), wallet)];
-  } catch {
+// Function to get Earn aUST balance:
+const getEarnBalance = async (wallet) => {
+  let res = await query(async (terra) => {
+    return await terra.wasm.contractQuery( aust, { balance: { address: wallet } });
+  }, `getEarnBalance(${wallet})`);
+  if(res.balance > 0) {
+    let newToken = await addToken(chain, project, aust, 'aUST', 6, parseInt(res.balance), wallet);
+    return [newToken];
+  } else {
     return [];
   }
 }

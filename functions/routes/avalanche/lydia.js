@@ -36,8 +36,8 @@ exports.get = async (req) => {
   const wallet = req.query.address;
 
   // Checking Parameters:
-  if (wallet != undefined) {
-    if (ethers.utils.isAddress(wallet)) {
+  if(wallet != undefined) {
+    if(ethers.utils.isAddress(wallet)) {
       try {
         response.data.push(...(await getFarmBalances(wallet)));
         response.data.push(...(await getAutoLYDFarmBalance(wallet)));
