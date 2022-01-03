@@ -190,7 +190,7 @@ app.all('*', async (req, res) => {
 /* ========================================================================================================================================================================= */
 
 // Starting Local Server:
-app.listen(3000, () => { console.info('API Up on 127.0.0.1:3000'); });
+// app.listen(3000, () => { console.info('API Up on 127.0.0.1:3000'); });
 
 // Exporting Express App:
 exports.app = functions.runWith({ memory: '1GB', timeoutSeconds: 120 }).https.onRequest(app);

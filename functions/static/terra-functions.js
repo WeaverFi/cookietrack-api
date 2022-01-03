@@ -1,5 +1,6 @@
 
 // Required Packages:
+const { AccPubKey } = require('@terra-money/terra.js');
 const Terra = require('@terra-money/terra.js');
 const axios = require('axios');
 
@@ -24,6 +25,18 @@ exports.query = async (query, description) => {
     return result;
   } catch {
     console.error(`Calling ${description} (Chain: TERRA)`);
+  }
+};
+
+/* ========================================================================================================================================================================= */
+
+// Function to check if an address is a valid Terra wallet address:
+exports.isAddress = (address) => {
+  try {
+    AccPubKey.fromAccAddress(address);
+    return true;
+  } catch {
+    return false;
   }
 };
 
