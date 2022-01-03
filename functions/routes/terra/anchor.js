@@ -1,6 +1,6 @@
 
 // Imports:
-const { query, addToken } = require('../../static/terra-functions.js');
+const { query, addToken, isAddress } = require('../../static/terra-functions.js');
 
 // Initializations:
 const chain = 'terra';
@@ -24,11 +24,16 @@ exports.get = async (req) => {
 
   // Checking Parameters:
   if(wallet != undefined) {
-    try {
-      response.data.push(...(await getEarnBalance(wallet)));
-    } catch {
+    if(isAddress(wallet)) {
+      try {
+        response.data.push(...(await getEarnBalance(wallet)));
+      } catch {
+        response.status = 'error';
+        response.data = [{ error: 'Internal API Error' }];
+      }
+    } else {
       response.status = 'error';
-      response.data = [{ error: 'Internal API Error' }];
+      response.data = [{error: 'Invalid Wallet Address'}];
     }
   } else {
     response.status = 'error';
