@@ -30,10 +30,9 @@ exports.query = async (query, description) => {
 
 /* ========================================================================================================================================================================= */
 
-// Function to check if an address is valid
+// Function to check if an address is a valid Terra wallet address:
 exports.isAddress = (address) => {
   try {
-    // Try to get the public key. Catches error if invalid
     AccPubKey.fromAccAddress(address);
     return true;
   } catch {
