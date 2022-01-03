@@ -3,7 +3,7 @@
 const { query, addNativeToken } = require('../../static/terra-functions.js');
 
 // Initializations:
-const chain = "TERRA";
+const chain = 'terra';
 
 /* ========================================================================================================================================================================= */
 
@@ -34,7 +34,7 @@ exports.get = async (req) => {
   }
 
   // Returning Response:
-  return JSON.stringify(response);
+  return JSON.stringify(response, null, ' ');
 }
 
 /* ========================================================================================================================================================================= */
