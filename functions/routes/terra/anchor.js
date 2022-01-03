@@ -3,9 +3,9 @@
 const { query, addToken } = require('../../static/terra-functions.js');
 
 // Initializations:
-const chain = "TERRA";
+const chain = "terra";
 const project = "anchor";
-const aUSTContract = "terra1hzh9vpxhsk8253se0vv5jj6etdvxu3nv8z07zu";
+const aUST = "terra1hzh9vpxhsk8253se0vv5jj6etdvxu3nv8z07zu";
 
 /* ========================================================================================================================================================================= */
 
@@ -36,7 +36,7 @@ exports.get = async (req) => {
   }
 
   // Returning Response:
-  return JSON.stringify(response);
+  return JSON.stringify(response, null, ' ');
 }
 
 /* ========================================================================================================================================================================= */
@@ -45,13 +45,13 @@ exports.get = async (req) => {
 const getAnchorEarnBalance = async (wallet) => {
   try {
     const res = await query(async (terra) => {
-      return await terra.wasm.contractQuery(aUSTContract, {
+      return await terra.wasm.contractQuery(aUST, {
         balance: {
           address: wallet
         },
       })
     }, `Get aUST Balance for: ${wallet}`);
-    return [await addToken(chain, project, aUSTContract, 'aUST', 6, parseInt(res.balance), wallet)];
+    return [await addToken(chain, project, aUST, 'aUST', 6, parseInt(res.balance), wallet)];
   } catch {
     return [];
   }
