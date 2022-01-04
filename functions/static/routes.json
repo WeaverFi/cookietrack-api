@@ -37,8 +37,7 @@
   "taxes",
   "txs",
   "venus",
-  "wallet",
-  "wault"
+  "wallet"
  ],
  "ethereum": [
   "aave",
@@ -91,8 +90,7 @@
   "sushiswap",
   "taxes",
   "txs",
-  "wallet",
-  "wault"
+  "wallet"
  ],
  "solana": [
   "wallet"
