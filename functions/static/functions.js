@@ -26,23 +26,30 @@ const ignoreErrors = [
 
 // Function to make blockchain queries:
 exports.query = async (chain, address, abi, method, args) => {
-  try {
-    let ethers_provider = new ethers.providers.JsonRpcProvider(rpcs[chain]);
-    let contract = new ethers.Contract(address, abi, ethers_provider);
-    let result = await contract[method](...args);
-    return result;
-  } catch {
+  let result;
+  let errors = 0;
+  while(!result && errors < 3) {
     try {
-      let ethers_provider = new ethers.providers.JsonRpcProvider(rpcs.backups[chain]);
+      let ethers_provider = new ethers.providers.JsonRpcProvider(rpcs[chain]);
       let contract = new ethers.Contract(address, abi, ethers_provider);
-      let result = await contract[method](...args);
-      return result;
+      result = await contract[method](...args);
     } catch {
       if(!ignoreErrors.find(i => i.chain === chain && i.address === address.toLowerCase())) {
-        console.error(`Calling ${method}(${args}) on ${address} (Chain: ${chain.toUpperCase()})`);
+        try {
+          let ethers_provider = new ethers.providers.JsonRpcProvider(rpcs.backups[chain]);
+          let contract = new ethers.Contract(address, abi, ethers_provider);
+          result = await contract[method](...args);
+        } catch {
+          if(++errors > 2) {
+            console.error(`Calling ${method}(${args}) on ${address} (Chain: ${chain.toUpperCase()})`);
+          }
+        }
+      } else {
+        errors = 3;
       }
     }
   }
+  return result;
 }
 
 /* ========================================================================================================================================================================= */
@@ -449,127 +456,151 @@ exports.getTXs = async (chain, address, last50) => {
 
   // Fetching TXs:
   do {
-    let response = (await axios.get(`https://api.covalenthq.com/v1/${chains[chain].id}/address/${address}/transactions_v2/?page-size=${last50 ? 50 : 1000}&page-number=${page++}&key=${ckey}`)).data;
-    if(!response.error) {
-      last50 ? hasNextPage = false : hasNextPage = response.data.pagination.has_more;
-      let promises = response.data.items.map(tx => (async () => {
-        if(tx.successful) {
-
-          // Native Transfer TXs:
-          if(parseInt(tx.value) > 0) {
-            txs.push({
-              wallet: address,
-              chain: chain,
-              type: 'transfer',
-              hash: tx.tx_hash,
-              time: (new Date(tx.block_signed_at)).getTime() / 1000,
-              direction: tx.to_address === address.toLowerCase() ? 'in' : 'out',
-              from: tx.from_address,
-              to: tx.to_address,
-              token: {
-                address: defaultAddress,
-                symbol: chains[chain].token,
-                logo: exports.getTokenLogo(chain, chains[chain].token)
-              },
-              value: parseInt(tx.value) / (10 ** 18),
-              fee: (tx.gas_spent * tx.gas_price) / (10 ** 18),
-              nativeToken: chains[chain].token
-            });
-
-          // Approval TXs:
-          } else if(tx.log_events.length < 3) {
-            tx.log_events.forEach(event => {
-              if(event.decoded != null && event.sender_contract_ticker_symbol != null) {
-                if(event.decoded.name === 'Approval') {
-                  if(event.decoded.params[0].name === 'owner' && event.decoded.params[0].value === address.toLowerCase()) {
-                    txs.push({
-                      wallet: address,
-                      chain: chain,
-                      type: parseInt(event.decoded.params[2].value) > 0 ? 'approve' : 'revoke',
-                      hash: tx.tx_hash,
-                      time: (new Date(tx.block_signed_at)).getTime() / 1000,
-                      direction: 'out',
-                      token: {
-                        address: event.sender_address,
-                        symbol: event.sender_contract_ticker_symbol,
-                        logo: exports.getTokenLogo(chain, event.sender_contract_ticker_symbol)
-                      },
-                      fee: (tx.gas_spent * tx.gas_price) / (10 ** 18),
-                      nativeToken: chains[chain].token
-                    });
+    let response;
+    while(!response && errors < 3) {
+      try {
+        response = (await axios.get(`https://api.covalenthq.com/v1/${chains[chain].id}/address/${address}/transactions_v2/?page-size=${last50 ? 50 : 1000}&page-number=${page++}&key=${ckey}`)).data;
+        if(!response.error) {
+          last50 ? hasNextPage = false : hasNextPage = response.data.pagination.has_more;
+          let promises = response.data.items.map(tx => (async () => {
+            if(tx.successful) {
+    
+              // Native Transfer TXs:
+              if(parseInt(tx.value) > 0) {
+                txs.push({
+                  wallet: address,
+                  chain: chain,
+                  type: 'transfer',
+                  hash: tx.tx_hash,
+                  time: (new Date(tx.block_signed_at)).getTime() / 1000,
+                  direction: tx.to_address === address.toLowerCase() ? 'in' : 'out',
+                  from: tx.from_address,
+                  to: tx.to_address,
+                  token: {
+                    address: defaultAddress,
+                    symbol: chains[chain].token,
+                    logo: exports.getTokenLogo(chain, chains[chain].token)
+                  },
+                  value: parseInt(tx.value) / (10 ** 18),
+                  fee: (tx.gas_spent * tx.gas_price) / (10 ** 18),
+                  nativeToken: chains[chain].token
+                });
+    
+              // Approval TXs:
+              } else if(tx.log_events.length < 3) {
+                tx.log_events.forEach(event => {
+                  if(event.decoded != null && event.sender_contract_ticker_symbol != null) {
+                    if(event.decoded.name === 'Approval') {
+                      if(event.decoded.params[0].name === 'owner' && event.decoded.params[0].value === address.toLowerCase()) {
+                        txs.push({
+                          wallet: address,
+                          chain: chain,
+                          type: parseInt(event.decoded.params[2].value) > 0 ? 'approve' : 'revoke',
+                          hash: tx.tx_hash,
+                          time: (new Date(tx.block_signed_at)).getTime() / 1000,
+                          direction: 'out',
+                          token: {
+                            address: event.sender_address,
+                            symbol: event.sender_contract_ticker_symbol,
+                            logo: exports.getTokenLogo(chain, event.sender_contract_ticker_symbol)
+                          },
+                          fee: (tx.gas_spent * tx.gas_price) / (10 ** 18),
+                          nativeToken: chains[chain].token
+                        });
+                      }
+                    }
                   }
-                }
+                });
               }
-            });
-          }
-
-          // Other TXs:
-          tx.log_events.forEach(event => {
-            if(event.decoded != null) {
-
-              // Token Transfers:
-              if(event.decoded.name === 'Transfer') {
-
-                // Filtering Blacklisted Tokens:
-                if(!chains[chain].blacklist.includes(event.sender_address.toLowerCase()) && event.sender_contract_ticker_symbol != null) {
-
-                  // Outbound:
-                  if(event.decoded.params[0].name === 'from' && event.decoded.params[0].value === address.toLowerCase() && event.decoded.params[2].decoded) {
-                    if(parseInt(event.decoded.params[2].value) > 0) {
-                      txs.push({
-                        wallet: address,
-                        chain: chain,
-                        type: 'transfer',
-                        hash: tx.tx_hash,
-                        time: (new Date(tx.block_signed_at)).getTime() / 1000,
-                        direction: 'out',
-                        from: address,
-                        to: event.decoded.params[1].value,
-                        token: {
-                          address: event.sender_address,
-                          symbol: event.sender_contract_ticker_symbol,
-                          logo: exports.getTokenLogo(chain, event.sender_contract_ticker_symbol)
-                        },
-                        value: parseInt(event.decoded.params[2].value) / (10 ** event.sender_contract_decimals),
-                        fee: (tx.gas_spent * tx.gas_price) / (10 ** 18),
-                        nativeToken: chains[chain].token
-                      });
+    
+              // Other TXs:
+              tx.log_events.forEach(event => {
+                if(event.decoded != null) {
+    
+                  // Token Transfers:
+                  if(event.decoded.name === 'Transfer') {
+    
+                    // Filtering Blacklisted Tokens:
+                    if(!chains[chain].blacklist.includes(event.sender_address.toLowerCase()) && event.sender_contract_ticker_symbol != null) {
+    
+                      // Outbound:
+                      if(event.decoded.params[0].name === 'from' && event.decoded.params[0].value === address.toLowerCase() && event.decoded.params[2].decoded) {
+                        if(parseInt(event.decoded.params[2].value) > 0) {
+                          txs.push({
+                            wallet: address,
+                            chain: chain,
+                            type: 'transfer',
+                            hash: tx.tx_hash,
+                            time: (new Date(tx.block_signed_at)).getTime() / 1000,
+                            direction: 'out',
+                            from: address,
+                            to: event.decoded.params[1].value,
+                            token: {
+                              address: event.sender_address,
+                              symbol: event.sender_contract_ticker_symbol,
+                              logo: exports.getTokenLogo(chain, event.sender_contract_ticker_symbol)
+                            },
+                            value: parseInt(event.decoded.params[2].value) / (10 ** event.sender_contract_decimals),
+                            fee: (tx.gas_spent * tx.gas_price) / (10 ** 18),
+                            nativeToken: chains[chain].token
+                          });
+                        }
+                      
+                      // Inbound:
+                      } else if(event.decoded.params[1].name === 'to' && event.decoded.params[1].value === address.toLowerCase() && event.decoded.params[2].decoded) {
+                        if(parseInt(event.decoded.params[2].value) > 0) {
+                          txs.push({
+                            wallet: address,
+                            chain: chain,
+                            type: 'transfer',
+                            hash: tx.tx_hash,
+                            time: (new Date(tx.block_signed_at)).getTime() / 1000,
+                            direction: 'in',
+                            from: event.decoded.params[0].value,
+                            to: address,
+                            token: {
+                              address: event.sender_address,
+                              symbol: event.sender_contract_ticker_symbol,
+                              logo: exports.getTokenLogo(chain, event.sender_contract_ticker_symbol)
+                            },
+                            value: parseInt(event.decoded.params[2].value) / (10 ** event.sender_contract_decimals),
+                            fee: (tx.gas_spent * tx.gas_price) / (10 ** 18),
+                            nativeToken: chains[chain].token
+                          });
+                        }
+                      }
                     }
                   
-                  // Inbound:
-                  } else if(event.decoded.params[1].name === 'to' && event.decoded.params[1].value === address.toLowerCase() && event.decoded.params[2].decoded) {
-                    if(parseInt(event.decoded.params[2].value) > 0) {
-                      txs.push({
-                        wallet: address,
-                        chain: chain,
-                        type: 'transfer',
-                        hash: tx.tx_hash,
-                        time: (new Date(tx.block_signed_at)).getTime() / 1000,
-                        direction: 'in',
-                        from: event.decoded.params[0].value,
-                        to: address,
-                        token: {
-                          address: event.sender_address,
-                          symbol: event.sender_contract_ticker_symbol,
-                          logo: exports.getTokenLogo(chain, event.sender_contract_ticker_symbol)
-                        },
-                        value: parseInt(event.decoded.params[2].value) / (10 ** event.sender_contract_decimals),
-                        fee: (tx.gas_spent * tx.gas_price) / (10 ** 18),
-                        nativeToken: chains[chain].token
-                      });
-                    }
-                  }
-                }
-              
-              // Native Router Swaps:
-              } else if(event.decoded.name === 'Withdrawal' && event.decoded.params[0].value === tx.to_address) {
-                let nullEvent = tx.log_events.find(event => event.decoded === null);
-                if(nullEvent) {
-                  if(!nullEventNativeSwapTXs.includes(nullEvent.tx_hash)) {
-                    nullEventNativeSwapTXs.push(nullEvent.tx_hash);
-
-                    // ParaSwap TXs:
-                    if(nullEvent.raw_log_topics[0] === '0x680ad12fcfabafe9b1f08214caef968eb651cf010bee4a2824adfaec965903e8' && nullEvent.raw_log_topics[3].endsWith('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')) {
+                  // Native Router Swaps:
+                  } else if(event.decoded.name === 'Withdrawal' && event.decoded.params[0].value === tx.to_address) {
+                    let nullEvent = tx.log_events.find(event => event.decoded === null);
+                    if(nullEvent) {
+                      if(!nullEventNativeSwapTXs.includes(nullEvent.tx_hash)) {
+                        nullEventNativeSwapTXs.push(nullEvent.tx_hash);
+    
+                        // ParaSwap TXs:
+                        if(nullEvent.raw_log_topics[0] === '0x680ad12fcfabafe9b1f08214caef968eb651cf010bee4a2824adfaec965903e8' && nullEvent.raw_log_topics[3].endsWith('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')) {
+                          txs.push({
+                            wallet: address,
+                            chain: chain,
+                            type: 'transfer',
+                            hash: tx.tx_hash,
+                            time: (new Date(tx.block_signed_at)).getTime() / 1000,
+                            direction: 'in',
+                            from: tx.to_address,
+                            to: tx.from_address,
+                            token: {
+                              address: defaultAddress,
+                              symbol: chains[chain].token,
+                              logo: exports.getTokenLogo(chain, chains[chain].token)
+                            },
+                            value: ((parseInt(nullEvent.raw_log_data.slice(194, 258), 16) + parseInt(nullEvent.raw_log_data.slice(258, 322), 16)) / 2) / (10 ** 18),
+                            fee: (tx.gas_spent * tx.gas_price) / (10 ** 18),
+                            nativeToken: chains[chain].token
+                          });
+                        }
+                      }
+                    } else {
                       txs.push({
                         wallet: address,
                         chain: chain,
@@ -584,40 +615,26 @@ exports.getTXs = async (chain, address, last50) => {
                           symbol: chains[chain].token,
                           logo: exports.getTokenLogo(chain, chains[chain].token)
                         },
-                        value: ((parseInt(nullEvent.raw_log_data.slice(194, 258), 16) + parseInt(nullEvent.raw_log_data.slice(258, 322), 16)) / 2) / (10 ** 18),
+                        value: parseInt(event.decoded.params[1].value) / (10 ** 18),
                         fee: (tx.gas_spent * tx.gas_price) / (10 ** 18),
                         nativeToken: chains[chain].token
                       });
                     }
                   }
-                } else {
-                  txs.push({
-                    wallet: address,
-                    chain: chain,
-                    type: 'transfer',
-                    hash: tx.tx_hash,
-                    time: (new Date(tx.block_signed_at)).getTime() / 1000,
-                    direction: 'in',
-                    from: tx.to_address,
-                    to: tx.from_address,
-                    token: {
-                      address: defaultAddress,
-                      symbol: chains[chain].token,
-                      logo: exports.getTokenLogo(chain, chains[chain].token)
-                    },
-                    value: parseInt(event.decoded.params[1].value) / (10 ** 18),
-                    fee: (tx.gas_spent * tx.gas_price) / (10 ** 18),
-                    nativeToken: chains[chain].token
-                  });
                 }
-              }
+              });
             }
-          });
+          })());
+          await Promise.all(promises);
+        } else {
+          hasNextPage = false;
         }
-      })());
-      await Promise.all(promises);
-    } else {
-      hasNextPage = false;
+      } catch(err) {
+        if(++errors > 2) {
+          console.error(`Covalent API Error: ${err.response.status}`);
+        }
+        hasNextPage = false;
+      }
     }
   } while(hasNextPage);
 
@@ -643,22 +660,32 @@ exports.getSimpleTXs = async (chain, address) => {
 
   // Fetching TXs:
   do {
-    let response = (await axios.get(`https://api.covalenthq.com/v1/${chains[chain].id}/address/${address}/transactions_v2/?no-logs=true&page-size=1000&page-number=${page++}&key=${ckey}`)).data;
-    if(!response.error) {
-      hasNextPage = response.data.pagination.has_more;
-      let promises = response.data.items.map(tx => (async () => {
-        txs.push({
-          wallet: address,
-          chain: chain,
-          hash: tx.tx_hash,
-          time: (new Date(tx.block_signed_at)).getTime() / 1000,
-          direction: tx.from_address === address.toLowerCase() ? 'out' : 'in',
-          fee: tx.gas_price < 1000000000000 ? (tx.gas_spent * tx.gas_price) / (10 ** 18) : tx.gas_price / (10 ** 18)
-        });
-      })());
-      await Promise.all(promises);
-    } else {
-      hasNextPage = false;
+    let response;
+    while(!response && errors < 3) {
+      try {
+        response = (await axios.get(`https://api.covalenthq.com/v1/${chains[chain].id}/address/${address}/transactions_v2/?no-logs=true&page-size=1000&page-number=${page++}&key=${ckey}`)).data;
+        if(!response.error) {
+          hasNextPage = response.data.pagination.has_more;
+          let promises = response.data.items.map(tx => (async () => {
+            txs.push({
+              wallet: address,
+              chain: chain,
+              hash: tx.tx_hash,
+              time: (new Date(tx.block_signed_at)).getTime() / 1000,
+              direction: tx.from_address === address.toLowerCase() ? 'out' : 'in',
+              fee: tx.gas_price < 1000000000000 ? (tx.gas_spent * tx.gas_price) / (10 ** 18) : tx.gas_price / (10 ** 18)
+            });
+          })());
+          await Promise.all(promises);
+        } else {
+          hasNextPage = false;
+        }
+      } catch(err) {
+        if(++errors > 2) {
+          console.error(`Covalent API Error: ${err.response.status}`);
+        }
+        hasNextPage = false;
+      }
     }
   } while(hasNextPage);
 
