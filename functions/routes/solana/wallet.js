@@ -77,16 +77,26 @@ const getSOL = async (wallet, type) => {
 const getTokenBalances = async (wallet) => {
   let tokens = [];
   let apiQuery = 'https://api.solanabeach.io/v1/account/' + wallet + '/tokens';
-  let apiTokens = (await axios.get(apiQuery, { headers: { 'Authorization': `Bearer ${beachKey}` }})).data;
-  let promises = apiTokens.map(token => (async () => {
-    if(token.amount > 0) {
-      let sol_token = sol_tokens.find(i => i.address.toLowerCase() === token.mint.address.toLowerCase());
-      if(sol_token) {
-        let newToken = await addToken(chain, 'wallet', sol_token.address, sol_token.symbol, token.decimals, token.amount, wallet);
-        tokens.push(newToken);
+  let apiTokens;
+  let errors = 0;
+  while(!apiTokens && errors < 3) {
+    try {
+      apiTokens = (await axios.get(apiQuery, { headers: { 'Authorization': `Bearer ${beachKey}` }})).data;
+      let promises = apiTokens.map(token => (async () => {
+        if(token.amount > 0) {
+          let sol_token = sol_tokens.find(i => i.address.toLowerCase() === token.mint.address.toLowerCase());
+          if(sol_token) {
+            let newToken = await addToken(chain, 'wallet', sol_token.address, sol_token.symbol, token.decimals, token.amount, wallet);
+            tokens.push(newToken);
+          }
+        }
+      })());
+      await Promise.all(promises);
+    } catch(err) {
+      if(++errors > 2) {
+        console.error(`SolanaBeach API Error: ${err.response.status}`);
       }
     }
-  })());
-  await Promise.all(promises);
+  }
   return tokens;
 }
