@@ -457,8 +457,10 @@ exports.getTXs = async (chain, address, last50) => {
   // Fetching TXs:
   do {
     let response;
+    let errors = 0;
     while(!response && errors < 3) {
       try {
+        console.log('0', errors);
         response = (await axios.get(`https://api.covalenthq.com/v1/${chains[chain].id}/address/${address}/transactions_v2/?page-size=${last50 ? 50 : 1000}&page-number=${page++}&key=${ckey}`)).data;
         if(!response.error) {
           last50 ? hasNextPage = false : hasNextPage = response.data.pagination.has_more;
@@ -633,6 +635,7 @@ exports.getTXs = async (chain, address, last50) => {
         if(++errors > 2) {
           console.error(`Covalent API Error: ${err.response.status}`);
         }
+        console.log('1', errors);
         hasNextPage = false;
       }
     }
@@ -661,6 +664,7 @@ exports.getSimpleTXs = async (chain, address) => {
   // Fetching TXs:
   do {
     let response;
+    let errors = 0;
     while(!response && errors < 3) {
       try {
         response = (await axios.get(`https://api.covalenthq.com/v1/${chains[chain].id}/address/${address}/transactions_v2/?no-logs=true&page-size=1000&page-number=${page++}&key=${ckey}`)).data;
