@@ -31,7 +31,9 @@ exports.get = async (req) => {
   if(wallet != undefined) {
     if(ethers.utils.isAddress(wallet)) {
       try {
-        let vaults = ((await axios.get('https://api.beefy.finance/vaults')).data).filter(vault => vault.chain === 'polygon' && vault.status === 'active' && vault.tokenAddress);
+        let chars = 'abcdefghijklmnopqrstuvwxyz';
+        let randomChar = chars[Math.floor(Math.random() * chars.length)];
+        let vaults = ((await axios.get(`https://api.beefy.finance/vaults?${randomChar}`)).data).filter(vault => vault.chain === 'polygon' && vault.status === 'active' && vault.tokenAddress);
         response.data.push(...(await getVaultBalances(wallet, vaults)));
         response.data.push(...(await getStakedBIFI(wallet)));
       } catch(err) {
