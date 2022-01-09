@@ -1,11 +1,12 @@
 
 // Imports:
-const { query, addToken, isAddress } = require('../../static/terra-functions.js');
+const { isAddress, query, addNativeToken, addToken } = require('../../static/terra-functions.js');
 
 // Initializations:
 const chain = 'terra';
 const project = 'anchor';
 const aust = 'terra1hzh9vpxhsk8253se0vv5jj6etdvxu3nv8z07zu';
+const market = 'terra1sepfj7s0aeg5967uxnfk4thzlerrsktkpelm5s';
 
 /* ========================================================================================================================================================================= */
 
@@ -48,11 +49,10 @@ exports.get = async (req) => {
 
 // Function to get Earn aUST balance:
 const getEarnBalance = async (wallet) => {
-  let res = await query(async (terra) => {
-    return await terra.wasm.contractQuery( aust, { balance: { address: wallet } });
-  }, `getEarnBalance(${wallet})`);
-  if(res.balance > 0) {
-    let newToken = await addToken(chain, project, aust, 'aUST', 6, parseInt(res.balance), wallet);
+  let balance = parseInt((await query(aust, {balance: {address: wallet}})).balance);
+  if(balance > 0) {
+    let exchangeRate = (await query(market, {state: {}})).prev_exchange_rate;
+    let newToken = await addNativeToken(chain, project, balance * exchangeRate, wallet, 'usd');
     return [newToken];
   } else {
     return [];

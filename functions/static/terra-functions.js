@@ -44,13 +44,13 @@ exports.isAddress = (address) => {
 /* ========================================================================================================================================================================= */
 
 // Function to get native token info:
-exports.addNativeToken = async (chain, balance, owner, symbol) => {
+exports.addNativeToken = async (chain, location, balance, owner, symbol) => {
 
   // Initializing New Token:
   let newToken = {
     type: 'nativeToken',
     chain: chain,
-    location: 'wallet',
+    location: location,
     owner: owner,
     symbol: symbol.toUpperCase(),
     address: defaultAddress,

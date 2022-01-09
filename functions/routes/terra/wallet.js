@@ -56,7 +56,7 @@ const getNativeBalances = async (wallet) => {
   let ignoreTokens = ['unok', 'uidr'];
   let bankBalances = (await terra.bank.balance(wallet))[0].filter(token => token.denom.charAt(0) === 'u' && !ignoreTokens.includes(token.denom.toLowerCase()));
   let promises = bankBalances.map(token => (async () => {
-    let newToken = await addNativeToken(chain, token.amount, wallet, token.denom.slice(1));
+    let newToken = await addNativeToken(chain, 'wallet', token.amount, wallet, token.denom.slice(1));
     balances.push(newToken);
   })());
   await Promise.all(promises);
