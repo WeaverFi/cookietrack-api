@@ -10,6 +10,7 @@ const { terra_tokens, terra_token_logos, terra_token_blacklist } = require('./to
 // Initializations:
 const defaultTokenLogo = 'https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@d5c68edec1f5eaec59ac77ff2b48144679cebca1/32/icon/generic.png';
 const defaultAddress = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
+const nativeTokenSymbols = ['aud', 'cad', 'chf', 'cny', 'dkk', 'eur', 'gbp', 'hkd', 'idr', 'inr', 'jpy', 'krw', 'mnt', 'php', 'sdr', 'sek', 'sgd', 'thb', 'usd'];
 let terraTokenPrices = new Map();
 let tokenPricesPromise;
 
@@ -19,12 +20,12 @@ const terra = new Terra.LCDClient({ URL: "https://lcd.terra.dev", chainID: "colu
 /* ========================================================================================================================================================================= */
 
 // Function to make blockchain queries:
-exports.query = async (query, description) => {
+exports.query = async (address, query) => {
   try {
-    let result = await query(terra);
+    let result = await terra.wasm.contractQuery(address, query);
     return result;
   } catch {
-    console.error(`Calling ${description} (Chain: TERRA)`);
+    console.error(`Calling ${query} on ${address} (Chain: TERRA)`);
   }
 };
 
@@ -51,16 +52,20 @@ exports.addNativeToken = async (chain, balance, owner, symbol) => {
     chain: chain,
     location: 'wallet',
     owner: owner,
-    symbol: symbol ?? 'LUNA',
+    symbol: symbol.toUpperCase(),
     address: defaultAddress,
     balance: balance / (10 ** 6),
     price: 0,
     logo: ''
   }
 
-  // Correcting UST Symbol:
-  if(newToken.symbol === 'USD') {
-    newToken.symbol = 'UST';
+  // Correcting Symbols:
+  if(symbol != 'luna') {
+    if(nativeTokenSymbols.includes(symbol)) {
+      newToken.symbol = symbol.slice(0, -1).toUpperCase() + 'T';
+    } else {
+      console.error(`TERRA: Native Token Symbol Not Found - ${symbol}`);
+    }
   }
 
   // Getting Missing Token Info:
@@ -86,11 +91,6 @@ exports.addToken = async (chain, location, address, symbol, decimals, balance, o
     balance: balance / (10 ** decimals),
     price: 0,
     logo: ''
-  }
-
-  // Correcting UST Symbol:
-  if(newToken.symbol === 'USD') {
-    newToken.symbol = 'UST';
   }
 
   // Getting Missing Token Info:
@@ -120,7 +120,6 @@ exports.getTokenLogo = (symbol) => {
 
 // Function to get a token's current price:
 exports.getTokenPrice = async (address, symbol) => {
-
   try {
 
     // Getting Price Data (Runs Once):
@@ -133,7 +132,7 @@ exports.getTokenPrice = async (address, symbol) => {
     if(tokenPrice) {
       return tokenPrice;
     } else {
-      console.error(`TERRA: Token Price Not Found - ${address}`);
+      console.error(`TERRA: Token Price Not Found - ${address}${symbol ?? ''}`);
       return 0;
     }
   } catch {
@@ -161,24 +160,22 @@ const fetchInitialTokenPrices = async () => {
 
         // Other Native Tokens:
         let nativeTokens = (await terra.bank.total())[0];
-        let ignoreTokens = ['uluna', 'uusd', 'unok'];
+        let ignoreTokens = ['uluna', 'uusd', 'unok', 'uidr'];
         let peggedAssets = nativeTokens.filter(asset => asset.denom.charAt(0) === 'u' && !ignoreTokens.includes(asset.denom.toLowerCase()));
-        await Promise.all(
-          peggedAssets.map(asset => {
-            asset.amount = (10 ** 6);
-            return new Promise(async (resolve, reject) => {
-              try {
-                let ulunaRate = parseInt(await terra.market.swapRate(asset, 'uluna'));
-                let usdRate = (ulunaRate * terraPrice) / (10 ** 6);
-                terraTokenPrices.set(defaultAddress + asset.denom.slice(1), usdRate);
-                resolve();
-              } catch {
-                console.error(`TERRA: Native Token Price Not Found - ${asset.denom}`);
-                resolve();
-              }
-            });
-          })
-        )
+        await Promise.all(peggedAssets.map(asset => {
+          asset.amount = (10 ** 6);
+          return new Promise(async (resolve, reject) => {
+            try {
+              let ulunaRate = parseInt(await terra.market.swapRate(asset, 'uluna'));
+              let usdRate = (ulunaRate * terraPrice) / (10 ** 6);
+              terraTokenPrices.set(defaultAddress + asset.denom.slice(1), usdRate);
+              resolve();
+            } catch {
+              console.error(`TERRA: Native Token Price Not Found - ${asset.denom}`);
+              resolve();
+            }
+          });
+        }));
 
         // Other Tokens:
         let tokenList = '';
