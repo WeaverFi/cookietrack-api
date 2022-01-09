@@ -58,6 +58,11 @@ exports.addNativeToken = async (chain, balance, owner, symbol) => {
     logo: ''
   }
 
+  // Correcting UST Symbol:
+  if(newToken.symbol === 'USD') {
+    newToken.symbol = 'UST';
+  }
+
   // Getting Missing Token Info:
   newToken.logo = exports.getTokenLogo(newToken.symbol);
   newToken.price = await exports.getTokenPrice(newToken.address, symbol);
@@ -81,6 +86,11 @@ exports.addToken = async (chain, location, address, symbol, decimals, balance, o
     balance: balance / (10 ** decimals),
     price: 0,
     logo: ''
+  }
+
+  // Correcting UST Symbol:
+  if(newToken.symbol === 'USD') {
+    newToken.symbol = 'UST';
   }
 
   // Getting Missing Token Info:
@@ -137,26 +147,22 @@ exports.getTokenPrice = async (address, symbol) => {
 const fetchInitialTokenPrices = async () => {
   if(!tokenPricesPromise) {
     tokenPricesPromise = (async () => {
-      let tokenList = '';
-      terra_tokens.forEach(token => {
-        tokenList += token.address + ',';
-      });
-      let apiQuery = 'https://api.coingecko.com/api/v3/simple/token_price/terra?contract_addresses=' + tokenList.slice(0, -1) + '&vs_currencies=usd';
-      let terraQuery = 'https://api.coingecko.com/api/v3/simple/price?ids=terra-luna&vs_currencies=usd';
-      let ustQuery = 'https://api.coingecko.com/api/v3/simple/price?ids=terrausd&vs_currencies=usd';
       try {
 
         // LUNA:
+        let terraQuery = 'https://api.coingecko.com/api/v3/simple/price?ids=terra-luna&vs_currencies=usd';
         let terraPrice = (await axios.get(terraQuery)).data['terra-luna'].usd;
         terraTokenPrices.set(defaultAddress + 'luna', terraPrice);
 
         // UST:
+        let ustQuery = 'https://api.coingecko.com/api/v3/simple/price?ids=terrausd&vs_currencies=usd';
         let ustPrice = (await axios.get(ustQuery)).data['terrausd'].usd;
         terraTokenPrices.set(defaultAddress + 'usd', ustPrice);
 
         // Other Native Tokens:
         let nativeTokens = (await terra.bank.total())[0];
-        let peggedAssets = nativeTokens.filter(asset => asset.denom.charAt(0) === 'u' && asset.denom.toLowerCase() !== 'uluna' && asset.denom.toLowerCase() !== 'uusd');
+        let ignoreTokens = ['uluna', 'uusd', 'unok'];
+        let peggedAssets = nativeTokens.filter(asset => asset.denom.charAt(0) === 'u' && !ignoreTokens.includes(asset.denom.toLowerCase()));
         await Promise.all(
           peggedAssets.map(asset => {
             asset.amount = (10 ** 6);
@@ -167,14 +173,19 @@ const fetchInitialTokenPrices = async () => {
                 terraTokenPrices.set(defaultAddress + asset.denom.slice(1), usdRate);
                 resolve();
               } catch {
-                resolve();
                 console.error(`TERRA: Native Token Price Not Found - ${asset.denom}`);
+                resolve();
               }
             });
           })
         )
 
         // Other Tokens:
+        let tokenList = '';
+        terra_tokens.forEach(token => {
+          tokenList += token.address + ',';
+        });
+        let apiQuery = 'https://api.coingecko.com/api/v3/simple/token_price/terra?contract_addresses=' + tokenList.slice(0, -1) + '&vs_currencies=usd';
         let result = await axios.get(apiQuery);
         let tokens = Object.keys(result.data);
         tokens.forEach(token => {
