@@ -1,0 +1,62 @@
+{
+  "eth": {
+    "id": 1,
+    "token": "ETH",
+    "cgID": "ethereum",
+    "nativeID": "ethereum",
+    "usdc": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+    "usdcDecimals": 6,
+    "inch": true,
+    "paraswap": true
+  },
+  "bsc": {
+    "id": 56,
+    "token": "BNB",
+    "cgID": "binance-smart-chain",
+    "nativeID": "binancecoin",
+    "usdc": "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d",
+    "usdcDecimals": 18,
+    "inch": true,
+    "paraswap": true
+  },
+  "poly": {
+    "id": 137,
+    "token": "MATIC",
+    "cgID": "polygon-pos",
+    "nativeID": "matic-network",
+    "usdc": "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
+    "usdcDecimals": 6,
+    "inch": true,
+    "paraswap": true
+  },
+  "ftm": {
+    "id": 250,
+    "token": "FTM",
+    "cgID": "fantom",
+    "nativeID": "fantom",
+    "usdc": "0x04068da6c83afcfa0e13ba15a6696662335d5b75",
+    "usdcDecimals": 6,
+    "inch": false,
+    "paraswap": false
+  },
+  "avax": {
+    "id": 43114,
+    "token": "AVAX",
+    "cgID": "avalanche",
+    "nativeID": "avalanche-2",
+    "usdc": "0xa7d7079b0fead91f3e65f86e8915cb59c1a4c664",
+    "usdcDecimals": 6,
+    "inch": false,
+    "paraswap": true
+  },
+  "one": {
+    "id": 1666600000,
+    "token": "ONE",
+    "cgID": "harmony-shard-0",
+    "nativeID": "harmony",
+    "usdc": "0x985458e523db3d53125813ed68c274899e9dfab4",
+    "usdcDecimals": 6,
+    "inch": false,
+    "paraswap": false
+  }
+}

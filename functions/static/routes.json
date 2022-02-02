@@ -6,7 +6,6 @@
   "axial",
   "beefy",
   "benqi",
-  "cookiegame",
   "cream",
   "curve",
   "cycle",
@@ -57,7 +56,6 @@
  "fantom": [
   "autofarm",
   "beefy",
-  "bouje",
   "cream",
   "curve",
   "fees",
@@ -65,8 +63,7 @@
   "spookyswap",
   "taxes",
   "txs",
-  "wallet",
-  "xmaspast"
+  "wallet"
  ],
  "harmony": [
   "autofarm",
