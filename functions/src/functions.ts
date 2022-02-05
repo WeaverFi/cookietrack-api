@@ -151,12 +151,12 @@ export const addLPToken = async (chain: Chain, location: string, address: Addres
   // Finding LP Token Info:
   let lpTokenReserves = await query(chain, address, lpABI, 'getReserves', []);
   let lpTokenSupply = await query(chain, address, lpABI, 'totalSupply', []) / (10 ** decimals);
-  let supply0 = lpTokenReserves[0] / (10 ** decimals);
-  let supply1 = lpTokenReserves[1] / (10 ** decimals);
   let address0 = await query(chain, address, lpABI, 'token0', []);
   let address1 = await query(chain, address, lpABI, 'token1', []);
   let decimals0 = parseInt(await query(chain, address0, minABI, 'decimals', []));
   let decimals1 = parseInt(await query(chain, address1, minABI, 'decimals', []));
+  let supply0 = lpTokenReserves[0] / (10 ** decimals0);
+  let supply1 = lpTokenReserves[1] / (10 ** decimals1);
   let symbol0 = await query(chain, address0, minABI, 'symbol', []);
   let symbol1 = await query(chain, address1, minABI, 'symbol', []);
 
