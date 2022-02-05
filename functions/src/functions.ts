@@ -164,7 +164,7 @@ export const addLPToken = async (chain: Chain, location: string, address: Addres
   let token0: PricedToken = {
     symbol: symbol0,
     address: address0,
-    balance: (supply0 * (balance / lpTokenSupply)) / (10 ** decimals0),
+    balance: (supply0 * (balance / lpTokenSupply)),
     price: await getTokenPrice(chain, address0, decimals0),
     logo: getTokenLogo(chain, symbol0)
   }
@@ -173,7 +173,7 @@ export const addLPToken = async (chain: Chain, location: string, address: Addres
   let token1: PricedToken = {
     symbol: symbol1,
     address: address1,
-    balance: (supply1 * (balance / lpTokenSupply)) / (10 ** decimals1),
+    balance: (supply1 * (balance / lpTokenSupply)),
     price: await getTokenPrice(chain, address1, decimals1),
     logo: getTokenLogo(chain, symbol1)
   }
