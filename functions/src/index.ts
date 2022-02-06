@@ -5,8 +5,12 @@ const express = require('express');
 const cors = require('cors');
 const swagger = require('swagger-ui-express');
 
-// Importing Express Types:
+// Importing Chain List:
+import { ChainEndpoint } from 'cookietrack-types';
+
+// Importing Types:
 import type { Request, Response, Application } from 'express';
+import type { Chain } from 'cookietrack-types';
 
 // Fetching Firebase Logger Compatibility Patch:
 require("firebase-functions/lib/logger/compat");
@@ -47,180 +51,28 @@ app.get('/routes', (req: Request, res: Response) => {
 
 /* ========================================================================================================================================================================= */
 
-// Ethereum Endpoints:
-app.get('/ethereum/*', async (req: Request, res: Response) => {
-  try {
-    let query = req.originalUrl.split('/');
-    let chain = query[1];
-    let input = query[2].split('?')[0];
-    if(input.match(filter)) {
-      console.error(`Invalid Query (/${chain}/${input})`);
+// Chain Endpoints:
+(Object.keys(ChainEndpoint) as Chain[]).forEach(chain => {
+  app.get(`/${ChainEndpoint[chain]}/*`, async (req: Request, res: Response) => {
+    try {
+      let query = req.originalUrl.split('/');
+      let chain = query[1];
+      let input = query[2].split('?')[0];
+      if(input.match(filter)) {
+        console.error(`Invalid Query (/${chain}/${input})`);
+        res.send(errorResponse);
+      } else if(!routes[chain].includes(input)) {
+        console.error(`Unavailable Route (/${chain}/${input})`);
+        res.send(errorResponse);
+      } else {
+        console.info(`Loading: ${req.originalUrl}`);
+        res.end(await require(`../dist/routes/${chain}/${input}.js`).get(req));
+      }
+    } catch(err: any) {
+      console.error(err);
       res.send(errorResponse);
-    } else if(!routes[chain].includes(input)) {
-      console.error(`Unavailable Route (/${chain}/${input})`);
-      res.send(errorResponse);
-    } else {
-      console.info(`Loading: ${req.originalUrl}`);
-      res.end(await require(`../dist/routes/${chain}/${input}.js`).get(req));
     }
-  } catch(err: any) {
-    console.error(err);
-    res.send(errorResponse);
-  }
-});
-
-// BSC Endpoints:
-app.get('/bsc/*', async (req: Request, res: Response) => {
-  try {
-    let query = req.originalUrl.split('/');
-    let chain = query[1];
-    let input = query[2].split('?')[0];
-    if(input.match(filter)) {
-      console.error(`Invalid Query (/${chain}/${input})`);
-      res.send(errorResponse);
-    } else if(!routes[chain].includes(input)) {
-      console.error(`Unavailable Route (/${chain}/${input})`);
-      res.send(errorResponse);
-    } else {
-      console.info(`Loading: ${req.originalUrl}`);
-      res.end(await require(`../dist/routes/${chain}/${input}.js`).get(req));
-    }
-  } catch(err: any) {
-    console.error(err);
-    res.send(errorResponse);
-  }
-});
-
-// Polygon Endpoints:
-app.get('/polygon/*', async (req: Request, res: Response) => {
-  try {
-    let query = req.originalUrl.split('/');
-    let chain = query[1];
-    let input = query[2].split('?')[0];
-    if(input.match(filter)) {
-      console.error(`Invalid Query (/${chain}/${input})`);
-      res.send(errorResponse);
-    } else if(!routes[chain].includes(input)) {
-      console.error(`Unavailable Route (/${chain}/${input})`);
-      res.send(errorResponse);
-    } else {
-      console.info(`Loading: ${req.originalUrl}`);
-      res.end(await require(`../dist/routes/${chain}/${input}.js`).get(req));
-    }
-  } catch(err: any) {
-    console.error(err);
-    res.send(errorResponse);
-  }
-});
-
-// Fantom Endpoints:
-app.get('/fantom/*', async (req: Request, res: Response) => {
-  try {
-    let query = req.originalUrl.split('/');
-    let chain = query[1];
-    let input = query[2].split('?')[0];
-    if(input.match(filter)) {
-      console.error(`Invalid Query (/${chain}/${input})`);
-      res.send(errorResponse);
-    } else if(!routes[chain].includes(input)) {
-      console.error(`Unavailable Route (/${chain}/${input})`);
-      res.send(errorResponse);
-    } else {
-      console.info(`Loading: ${req.originalUrl}`);
-      res.end(await require(`../dist/routes/${chain}/${input}.js`).get(req));
-    }
-  } catch(err: any) {
-    console.error(err);
-    res.send(errorResponse);
-  }
-});
-
-// Avalanche Endpoints:
-app.get('/avalanche/*', async (req: Request, res: Response) => {
-  try {
-    let query = req.originalUrl.split('/');
-    let chain = query[1];
-    let input = query[2].split('?')[0];
-    if(input.match(filter)) {
-      console.error(`Invalid Query (/${chain}/${input})`);
-      res.send(errorResponse);
-    } else if(!routes[chain].includes(input)) {
-      console.error(`Unavailable Route (/${chain}/${input})`);
-      res.send(errorResponse);
-    } else {
-      console.info(`Loading: ${req.originalUrl}`);
-      res.end(await require(`../dist/routes/${chain}/${input}.js`).get(req));
-    }
-  } catch(err: any) {
-    console.error(err);
-    res.send(errorResponse);
-  }
-});
-
-// Harmony Endpoints:
-app.get('/harmony/*', async (req: Request, res: Response) => {
-  try {
-    let query = req.originalUrl.split('/');
-    let chain = query[1];
-    let input = query[2].split('?')[0];
-    if(input.match(filter)) {
-      console.error(`Invalid Query (/${chain}/${input})`);
-      res.send(errorResponse);
-    } else if(!routes[chain].includes(input)) {
-      console.error(`Unavailable Route (/${chain}/${input})`);
-      res.send(errorResponse);
-    } else {
-      console.info(`Loading: ${req.originalUrl}`);
-      res.end(await require(`../dist/routes/${chain}/${input}.js`).get(req));
-    }
-  } catch(err: any) {
-    console.error(err);
-    res.send(errorResponse);
-  }
-});
-
-// Solana Endpoints:
-app.get('/solana/*', async (req: Request, res: Response) => {
-  try {
-    let query = req.originalUrl.split('/');
-    let chain = query[1];
-    let input = query[2].split('?')[0];
-    if(input.match(filter)) {
-      console.error(`Invalid Query (/${chain}/${input})`);
-      res.send(errorResponse);
-    } else if(!routes[chain].includes(input)) {
-      console.error(`Unavailable Route (/${chain}/${input})`);
-      res.send(errorResponse);
-    } else {
-      console.info(`Loading: ${req.originalUrl}`);
-      res.end(await require(`../dist/routes/${chain}/${input}.js`).get(req));
-    }
-  } catch(err: any) {
-    console.error(err);
-    res.send(errorResponse);
-  }
-});
-
-// Terra Endpoints:
-app.get('/terra/*', async (req: Request, res: Response) => {
-  try {
-    let query = req.originalUrl.split('/');
-    let chain = query[1];
-    let input = query[2].split('?')[0];
-    if(input.match(filter)) {
-      console.error(`Invalid Query (/${chain}/${input})`);
-      res.send(errorResponse);
-    } else if(!routes[chain].includes(input)) {
-      console.error(`Unavailable Route (/${chain}/${input})`);
-      res.send(errorResponse);
-    } else {
-      console.info(`Loading: ${req.originalUrl}`);
-      res.end(await require(`../dist/routes/${chain}/${input}.js`).get(req));
-    }
-  } catch(err: any) {
-    console.error(err);
-    res.send(errorResponse);
-  }
+  });
 });
 
 /* ========================================================================================================================================================================= */
