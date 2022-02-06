@@ -1,16 +1,12 @@
 
 // Imports:
-import axios from 'axios';
-import { initResponse, getTXs } from '../../functions';
+import { initResponse, getTXs, getTokenPriceHistories } from '../../functions';
 import type { Request } from 'express';
-import type { Chain, ChainID, Address, TaxTransferTX, TaxApprovalTX } from 'cookietrack-types';
-const keys: Record<string, string> = require('../../../static/keys.json');
+import type { Chain, Address, TaxTransferTX, TaxApprovalTX } from 'cookietrack-types';
 
 // Initializations:
 const chain: Chain = 'bsc';
-const id: ChainID = 56;
 const nativeToken: Address = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
-const nativeTokenOnETH: Address = '0xb8c77482e45f1f44de1745f52c74426c631bdd52';
 
 /* ========================================================================================================================================================================= */
 
@@ -39,14 +35,12 @@ exports.get = async (req: Request): Promise<string> => {
 /* ========================================================================================================================================================================= */
 
 // Function to get TXs for tax reporting:
-const getTaxTXs = async (wallet: Address): Promise<(TaxTransferTX | TaxApprovalTX)[]> => {
+const getTaxTXs = async (wallet: Address) => {
 
   // Initializing Data:
   let taxTXs: (TaxTransferTX | TaxApprovalTX)[] = [];
-  let tokens = new Set();
-  let dates = { start: 9999999999, formattedStart: '', end: 0, formattedEnd: '' }
-  let tokenString = '';
-  let tokenPrices: Record<Address, any[]> = {};
+  let tokens: Set<Address> = new Set();
+  let dates = { start: 9999999999, end: 0 }
 
   // Fetching TXs:
   let txs = await getTXs(chain, wallet);
@@ -65,33 +59,8 @@ const getTaxTXs = async (wallet: Address): Promise<(TaxTransferTX | TaxApprovalT
   })());
   await Promise.all(promises);
 
-  // Adding Native Token:
-  if(!tokens.has(nativeToken)) {
-    tokens.add(nativeToken);
-  }
-
-  // Formatting Data:
-  let tokenArray = Array.from(tokens);
-  tokenArray.forEach(token => {
-    tokenString += token + ',';
-  });
-  tokenString = tokenString.slice(0, -1);
-  dates.formattedStart = formatDate(dates.start);
-  dates.formattedEnd = formatDate(dates.end);
-
-  // Fetching Historical Token Prices:
-  let response = (await axios.get(`https://api.covalenthq.com/v1/pricing/historical_by_addresses_v2/${id}/USD/${tokenString}/?quote-currency=USD&format=JSON&from=${dates.formattedStart}&to=${dates.formattedEnd}&page-size=9999&prices-at-asc=true&key=${keys.ckey}`)).data;
-  if(!response.error) {
-    response.data.forEach((token: any) => {
-      if(token.contract_address === nativeTokenOnETH) {
-        token.contract_address = nativeToken;
-      }
-      tokenPrices[token.contract_address] = [];
-      token.prices.forEach((entry: any) => {
-        tokenPrices[token.contract_address].push({ time: (new Date(entry.date).getTime() / 1000), price: entry.price });
-      });
-    });
-  }
+  // Fetching Token Price Histories:
+  let tokenPrices = await getTokenPriceHistories(chain, tokens, dates);
 
   // Adding TX Token Prices:
   txs.forEach((tx: any) => {
@@ -118,20 +87,4 @@ const getTaxTXs = async (wallet: Address): Promise<(TaxTransferTX | TaxApprovalT
   });
 
   return taxTXs;
-}
-
-// Function to format a date:
-const formatDate = (rawDate: number): string => {
-  let date = new Date((rawDate * 1000));
-  return `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-${pad(date.getUTCDate())}`;
-}
-
-// Function to pad number if necessary:
-const pad = (num: number): string => {
-  let str = num.toString();
-  if(str.length < 2) {
-    return '0' + str;
-  } else {
-    return str;
-  }
 }

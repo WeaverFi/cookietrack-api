@@ -58,7 +58,7 @@ export const query = async (chain: Chain, address: Address, abi: ABI[], method: 
 /* ========================================================================================================================================================================= */
 
 // Function to initialize generic API route response:
-export const initResponse = (req: Request): APIResponse => {
+export const initResponse = (req: Request) => {
   let wallet = req.query.address as Address;
   let response: APIResponse = {
     status: 'ok',
@@ -570,7 +570,7 @@ export const getTXs = async (chain: Chain, address: Address, last50?: boolean): 
 /* ========================================================================================================================================================================= */
 
 // Function to get the simple/quick transaction history of a wallet address:
-export const getSimpleTXs = async (chain: Chain, address: Address): Promise<SimpleTX[]> => {
+export const getSimpleTXs = async (chain: Chain, address: Address) => {
 
   // Initializations:
   let txs: SimpleTX[] = [];
@@ -615,7 +615,7 @@ export const getSimpleTXs = async (chain: Chain, address: Address): Promise<Simp
 /* ========================================================================================================================================================================= */
 
 // Function to check if a token is blacklisted:
-export const isBlacklisted = (chain: Chain, address: Address): boolean => {
+export const isBlacklisted = (chain: Chain, address: Address) => {
 
   // Checking Blacklists:
   if(chain === 'eth') {
@@ -645,6 +645,82 @@ export const isBlacklisted = (chain: Chain, address: Address): boolean => {
   }
 
   return false;
+}
+
+/* ========================================================================================================================================================================= */
+
+// Function to get many tokens' historical prices:
+export const getTokenPriceHistories = async (chain: Chain, tokens: Set<Address>, dates: { start: number, end: number }) => {
+
+  // Initializations:
+  let tokenPrices: Record<Address, { time: number, price: number }[]> = {};
+  let tokenString = '';
+
+  // Adding Native Token:
+  if(!tokens.has(defaultAddress)) {
+    tokens.add(defaultAddress);
+  }
+
+  // Formatting Token String:
+  let tokenArray = Array.from(tokens);
+  tokenArray.forEach(token => {
+    if(chain === 'ftm' && token === defaultAddress) {
+      tokenString += '0x4e15361fd6b4bb609fa63c81a2be19d873717870,';
+    } else if(chain === 'poly' && token === defaultAddress) {
+      tokenString += '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270,';
+    } else {
+      tokenString += token + ',';
+    }
+  });
+  tokenString = tokenString.slice(0, -1);
+
+  // Fetching Token Prices:
+  let response = (await axios.get(`https://api.covalenthq.com/v1/pricing/historical_by_addresses_v2/${chains[chain].id}/USD/${tokenString}/?quote-currency=USD&format=JSON&from=${formatDate(dates.start)}&to=${formatDate(dates.end)}&page-size=9999&prices-at-asc=true&key=${keys.ckey}`)).data;
+  if(!response.error) {
+    response.data.forEach((token: any) => {
+      if(chain === 'bsc') {
+        if(token.contract_address === '0xb8c77482e45f1f44de1745f52c74426c631bdd52') {
+          token.contract_address = defaultAddress;
+        }
+      } else if(chain === 'ftm') {
+        if(token.contract_address === '0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83') {
+          tokenPrices[defaultAddress] = [];
+          token.prices.forEach((entry: any) => {
+            tokenPrices[defaultAddress].push({ time: (new Date(entry.date).getTime() / 1000), price: entry.price });
+          });
+        }
+      } else if(chain == 'poly') {
+        if(token.contract_address === '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270') {
+          tokenPrices[defaultAddress] = [];
+          token.prices.forEach((entry: any) => {
+            tokenPrices[defaultAddress].push({ time: (new Date(entry.date).getTime() / 1000), price: entry.price });
+          });
+        }
+      }
+      tokenPrices[token.contract_address] = [];
+      token.prices.forEach((entry: any) => {
+        tokenPrices[token.contract_address].push({ time: (new Date(entry.date).getTime() / 1000), price: entry.price });
+      });
+    });
+  }
+
+  return tokenPrices;
+}
+
+// Function to format a date for Covalent Query:
+const formatDate = (rawDate: number): string => {
+  let date = new Date((rawDate * 1000));
+  return `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-${pad(date.getUTCDate())}`;
+}
+
+// Function to pad number if necessary for Covalent Query:
+const pad = (num: number): string => {
+  let str = num.toString();
+  if(str.length < 2) {
+    return '0' + str;
+  } else {
+    return str;
+  }
 }
 
 /* ========================================================================================================================================================================= */
