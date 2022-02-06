@@ -20,7 +20,7 @@ const app: Application = express();
 app.use(cors());
 
 // Initializing Text Reponses:
-const repository: string = 'https://github.com/CookieTrack-io/cookietrack-api';
+const repository: string = 'https://github.com/Ncookiez/cookietrack-api';
 const rootResponse: string = `<title>CookieTrack API</title><p>Click <a href="${repository}">here</a> to see the API's repository, or <a href="/docs">here</a> to see its OpenAPI documentation.</p>`;
 const errorResponse: string = `<p>Invalid route.</p>`;
 
@@ -233,7 +233,7 @@ app.all('*', async (req: Request, res: Response) => {
 /* ========================================================================================================================================================================= */
 
 // Starting Local Server:
-app.listen(3000, () => { console.info('API Up on 127.0.0.1:3000'); });
+// app.listen(3000, () => { console.info('API Up on 127.0.0.1:3000'); });
 
 // Exporting Express App:
 exports.app = functions.runWith({ memory: '1GB', timeoutSeconds: 120 }).https.onRequest(app);

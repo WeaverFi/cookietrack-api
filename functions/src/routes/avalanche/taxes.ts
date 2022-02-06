@@ -1,6 +1,6 @@
 
 // Imports:
-const axios = require('axios');
+import axios from 'axios';
 import { initResponse, getTXs } from '../../functions';
 import type { Request } from 'express';
 import type { Chain, ChainID, Address, TaxTransferTX, TaxApprovalTX } from 'cookietrack-types';

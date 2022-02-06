@@ -1,7 +1,7 @@
 
 // Required Packages:
 const web3 = require('@solana/web3.js');
-const axios = require('axios');
+import axios from 'axios';
 
 // Importing Types:
 import type { Request } from 'express';

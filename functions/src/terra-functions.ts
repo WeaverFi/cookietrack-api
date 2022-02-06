@@ -2,7 +2,7 @@
 // Required Packages:
 const { AccPubKey } = require('@terra-money/terra.js');
 const Terra = require('@terra-money/terra.js');
-const axios = require('axios');
+import axios from 'axios';
 
 // Importing Types:
 import type { Request } from 'express';

@@ -1,7 +1,7 @@
 
 // Required Packages:
 const { ethers } = require('ethers');
-const axios = require('axios');
+import axios from 'axios';
 
 // Importing Types:
 import type { Request } from 'express';

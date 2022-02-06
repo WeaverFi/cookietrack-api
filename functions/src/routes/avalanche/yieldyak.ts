@@ -1,6 +1,6 @@
 
 // Imports:
-const axios = require('axios');
+import axios from 'axios';
 import { minABI, yieldyak } from '../../ABIs';
 import { initResponse, query, addToken, addLPToken, addAxialToken } from '../../functions';
 import type { Request } from 'express';

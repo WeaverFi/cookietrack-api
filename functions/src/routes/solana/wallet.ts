@@ -1,7 +1,7 @@
 
 // Imports:
 const web3 = require('@solana/web3.js');
-const axios = require('axios');
+import axios from 'axios';
 import { sol_data } from '../../tokens';
 import { initResponse, isAddress, query, addNativeToken, addToken } from '../../sol-functions';
 import type { Request } from 'express';
