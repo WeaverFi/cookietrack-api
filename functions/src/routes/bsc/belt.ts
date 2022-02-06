@@ -38,7 +38,7 @@ exports.get = async (req: Request): Promise<string> => {
 /* ========================================================================================================================================================================= */
 
 // Function to get pool balances:
-const getPoolBalances = async (wallet: Address): Promise<(Token | LPToken)[]> => {
+const getPoolBalances = async (wallet: Address) => {
   let balances: (Token | LPToken)[] = [];
   let beltRewards = 0;
   let poolLength = parseInt(await query(chain, masterBelt, belt.masterBeltABI, 'poolLength', []));

@@ -5,7 +5,7 @@ import axios from 'axios';
 import { sol_data } from '../../tokens';
 import { initResponse, isAddress, query, addNativeToken, addToken } from '../../sol-functions';
 import type { Request } from 'express';
-import type { SolAddress, Token, NativeToken } from 'cookietrack-types';
+import type { SolAddress, Token } from 'cookietrack-types';
 const keys: Record<string, string> = require('../../../static/keys.json');
 
 /* ========================================================================================================================================================================= */
@@ -44,7 +44,7 @@ exports.get = async (req: Request): Promise<string> => {
 /* ========================================================================================================================================================================= */
 
 // Function to get native wallet balance:
-const getSOL = async (wallet: SolAddress, type: 0 | 1): Promise<(Token | NativeToken)[]> => {
+const getSOL = async (wallet: SolAddress, type: 0 | 1) => {
   let balance = await query('getBalance', [new web3.PublicKey(wallet)]);
   if(balance > 0) {
 
@@ -64,7 +64,7 @@ const getSOL = async (wallet: SolAddress, type: 0 | 1): Promise<(Token | NativeT
 }
 
 // Function to get token balances:
-const getTokenBalances = async (wallet: SolAddress): Promise<Token[]> => {
+const getTokenBalances = async (wallet: SolAddress) => {
   let tokens: Token[] = [];
   let apiQuery = 'https://api.solanabeach.io/v1/account/' + wallet + '/tokens';
   let apiTokens;

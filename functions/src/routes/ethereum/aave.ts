@@ -4,7 +4,7 @@ import axios from 'axios';
 import { minABI, aave } from '../../ABIs';
 import { initResponse, query, addToken, addAaveBLPToken, addDebtToken } from '../../functions';
 import type { Request } from 'express';
-import type { Chain, Address, Token, LPToken, DebtToken } from 'cookietrack-types';
+import type { Chain, Address, Token, DebtToken } from 'cookietrack-types';
 
 // Initializations:
 const chain: Chain = 'eth';
@@ -46,7 +46,7 @@ exports.get = async (req: Request): Promise<string> => {
 /* ========================================================================================================================================================================= */
 
 // Function to get staked AAVE balance:
-const getStakedAAVE = async (wallet: Address): Promise<Token[]> => {
+const getStakedAAVE = async (wallet: Address) => {
   let balance = parseInt(await query(chain, aaveStaking, minABI, 'balanceOf', [wallet]));
   if(balance > 0) {
     let newToken = await addToken(chain, project, aaveToken, balance, wallet);
@@ -57,7 +57,7 @@ const getStakedAAVE = async (wallet: Address): Promise<Token[]> => {
 }
 
 // Function to get staked LP balance:
-const getStakedLP = async (wallet: Address): Promise<LPToken[]> => {
+const getStakedLP = async (wallet: Address) => {
   let balance = parseInt(await query(chain, lpStaking, minABI, 'balanceOf', [wallet]));
   if(balance > 0) {
     let tokenAddress = await query(chain, lpStaking, aave.stakingABI, 'STAKED_TOKEN', []);
@@ -69,7 +69,7 @@ const getStakedLP = async (wallet: Address): Promise<LPToken[]> => {
 }
 
 // Function to get lending market balances:
-const getMarketBalances = async (wallet: Address, markets: any): Promise<Token[]> => {
+const getMarketBalances = async (wallet: Address, markets: any) => {
   let balances: Token[] = [];
   let promises = markets.map((market: any) => (async () => {
     let balance = parseInt(await query(chain, market.aTokenAddress, minABI, 'balanceOf', [wallet]));
@@ -83,7 +83,7 @@ const getMarketBalances = async (wallet: Address, markets: any): Promise<Token[]
 }
 
 // Function to get lending market debt:
-const getMarketDebt = async (wallet: Address, markets: any): Promise<DebtToken[]> => {
+const getMarketDebt = async (wallet: Address, markets: any) => {
   let debt: DebtToken[] = [];
   let promises = markets.map((market: any) => (async () => {
     let stableDebt = parseInt(await query(chain, market.stableDebtTokenAddress, minABI, 'balanceOf', [wallet]));
@@ -99,7 +99,7 @@ const getMarketDebt = async (wallet: Address, markets: any): Promise<DebtToken[]
 }
 
 // Function to get unclaimed incentives:
-const getIncentives = async (wallet: Address): Promise<Token[]> => {
+const getIncentives = async (wallet: Address) => {
   let rewards = parseInt(await query(chain, incentives, aave.incentivesABI, 'getUserUnclaimedRewards', [wallet]));
   if(rewards > 0) {
     let newToken = await addToken(chain, project, aaveToken, rewards, wallet);

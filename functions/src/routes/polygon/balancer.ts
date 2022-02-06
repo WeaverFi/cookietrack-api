@@ -106,7 +106,7 @@ exports.get = async (req: Request): Promise<string> => {
 /* ========================================================================================================================================================================= */
 
 // Function to get all pool balances:
-const getPoolBalances = async (wallet: Address): Promise<(Token | LPToken)[]> => {
+const getPoolBalances = async (wallet: Address) => {
   let balances: (Token | LPToken)[] = [];
   let promises = poolIDs.map(id => (async () => {
     let address = (await query(chain, vault, balancer.vaultABI, 'getPool', [id]))[0];

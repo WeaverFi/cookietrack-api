@@ -22,7 +22,7 @@ const sol = new web3.Connection(web3.clusterApiUrl('mainnet-beta'), 'confirmed')
 /* ========================================================================================================================================================================= */
 
 // Function to make blockchain queries:
-export const query = async (method: string, args: any[]): Promise<any> => {
+export const query = async (method: string, args: any[]) => {
   try {
     let result = await sol[method](...args);
     return result;
@@ -34,7 +34,7 @@ export const query = async (method: string, args: any[]): Promise<any> => {
 /* ========================================================================================================================================================================= */
 
 // Function to check if an address is a valid Solana wallet address:
-export const isAddress = async (address: string): Promise<[boolean, 0 | 1]> => {
+export const isAddress = async (address: string) => {
   let data: [boolean, 0 | 1] = [false, 0];
   try {
     let wallet = new web3.PublicKey(address);
@@ -59,7 +59,7 @@ export const isAddress = async (address: string): Promise<[boolean, 0 | 1]> => {
 /* ========================================================================================================================================================================= */
 
 // Function to initialize generic API route response:
-export const initResponse = (req: Request): APIResponse => {
+export const initResponse = (req: Request) => {
   let wallet = req.query.address as SolAddress;
   let response: APIResponse = {
     status: 'ok',
@@ -125,7 +125,7 @@ export const getTokenLogo = (symbol: string): URL => {
 /* ========================================================================================================================================================================= */
 
 // Function to get a token's current price:
-export const getTokenPrice = async (address: SolAddress): Promise<number> => {
+export const getTokenPrice = async (address: SolAddress) => {
   try {
 
     // Getting Price Data (Runs Once):

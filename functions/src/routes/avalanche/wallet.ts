@@ -5,7 +5,7 @@ import { minABI } from '../../ABIs';
 import { avax_data } from '../../tokens';
 import { initResponse, query, addNativeToken, addToken } from '../../functions';
 import type { Request } from 'express';
-import type { Chain, Address, Token, NativeToken } from 'cookietrack-types';
+import type { Chain, Address, Token } from 'cookietrack-types';
 const rpcs: Record<Chain, URL[]> = require('../../../static/rpcs.json');
 
 // Initializations:
@@ -39,7 +39,7 @@ exports.get = async (req: Request): Promise<string> => {
 /* ========================================================================================================================================================================= */
 
 // Function to get native wallet balance:
-const getAVAX = async (wallet: Address): Promise<NativeToken[]> => {
+const getAVAX = async (wallet: Address) => {
   try {
     let avax = new ethers.providers.JsonRpcProvider(rpcs[chain][0]);
     let balance = parseInt(await avax.getBalance(wallet));
@@ -62,7 +62,7 @@ const getAVAX = async (wallet: Address): Promise<NativeToken[]> => {
 }
 
 // Function to get token balances:
-const getTokenBalances = async (wallet: Address): Promise<Token[]> => {
+const getTokenBalances = async (wallet: Address) => {
   let tokens: Token[] = [];
   let promises = avax_data.tokens.map(token => (async () => {
     let balance = parseInt(await query(chain, token.address, minABI, 'balanceOf', [wallet]));

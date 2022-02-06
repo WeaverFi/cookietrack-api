@@ -43,7 +43,7 @@ exports.get = async (req: Request): Promise<string> => {
 /* ========================================================================================================================================================================= */
 
 // Function to get asset balances:
-const getAssetBalances = async (wallet: Address): Promise<Token[]> => {
+const getAssetBalances = async (wallet: Address) => {
   let balances: Token[] = [];
 
   // imUSD:
@@ -75,7 +75,7 @@ const getAssetBalances = async (wallet: Address): Promise<Token[]> => {
 }
 
 // Function to get pool balances:
-const getPoolBalances = async (wallet: Address): Promise<Token[]> => {
+const getPoolBalances = async (wallet: Address) => {
   let balances: Token[] = [];
   let promises = pools.map(lpToken => (async () => {
     let balance = parseInt(await query(chain, lpToken, minABI, 'balanceOf', [wallet]));

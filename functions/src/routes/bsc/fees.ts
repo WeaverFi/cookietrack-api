@@ -34,7 +34,7 @@ exports.get = async (req: Request): Promise<string> => {
 /* ========================================================================================================================================================================= */
 
 // Function to get transaction fees' info:
-const getFees = async (wallet: Address): Promise<{ amount: number, txs: number, price: number }[]> => {
+const getFees = async (wallet: Address) => {
 
   // Initializing Fees Object:
   let fees = {

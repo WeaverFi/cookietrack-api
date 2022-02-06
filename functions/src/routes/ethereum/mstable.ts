@@ -64,7 +64,7 @@ exports.get = async (req: Request): Promise<string> => {
 /* ========================================================================================================================================================================= */
 
 // Function to get asset balances:
-const getAssetBalances = async (wallet: Address): Promise<Token[]> => {
+const getAssetBalances = async (wallet: Address) => {
   let balances: Token[] = [];
 
   // imUSD:
@@ -121,7 +121,7 @@ const getAssetBalances = async (wallet: Address): Promise<Token[]> => {
 }
 
 // Function to get pool balances:
-const getPoolBalances = async (wallet: Address): Promise<Token[]> => {
+const getPoolBalances = async (wallet: Address) => {
   let balances: Token[] = [];
   let promises = pools.map(lpToken => (async () => {
     let balance = parseInt(await query(chain, lpToken, minABI, 'balanceOf', [wallet]));
@@ -135,7 +135,7 @@ const getPoolBalances = async (wallet: Address): Promise<Token[]> => {
 }
 
 // Function to get vault balances:
-const getVaultBalances = async (wallet: Address): Promise<Token[]> => {
+const getVaultBalances = async (wallet: Address) => {
   let balances: Token[] = [];
   let mtaRewards = 0;
   let promises = vaults.map(vault => (async () => {
@@ -159,7 +159,7 @@ const getVaultBalances = async (wallet: Address): Promise<Token[]> => {
 }
 
 // Function to get staked balances:
-const getStaked = async (wallet: Address): Promise<(Token | LPToken)[]> => {
+const getStaked = async (wallet: Address) => {
   let balances: (Token | LPToken)[] = [];
   let mtaSum = 0;
 

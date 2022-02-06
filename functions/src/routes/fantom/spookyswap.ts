@@ -40,7 +40,7 @@ exports.get = async (req: Request): Promise<string> => {
 /* ========================================================================================================================================================================= */
 
 // Function to get all pool balances:
-const getPoolBalances = async (wallet: Address): Promise<(Token | LPToken)[]> => {
+const getPoolBalances = async (wallet: Address) => {
   let balances: (Token | LPToken)[] = [];
   let poolCount = parseInt(await query(chain, masterChef, spookyswap.masterChefABI, 'poolLength', []));
   let poolList = [...Array(poolCount).keys()];
@@ -62,7 +62,7 @@ const getPoolBalances = async (wallet: Address): Promise<(Token | LPToken)[]> =>
 }
 
 // Function to get staked BOO:
-const getStakedBOO = async (wallet: Address): Promise<Token[]> => {
+const getStakedBOO = async (wallet: Address) => {
   let balance = parseInt(await query(chain, xboo, spookyswap.xbooABI, 'BOOBalance', [wallet]));
   if(balance > 0) {
     let newToken = await addToken(chain, project, boo, balance, wallet);

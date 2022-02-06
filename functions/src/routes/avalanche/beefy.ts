@@ -44,7 +44,7 @@ exports.get = async (req: Request): Promise<string> => {
 /* ========================================================================================================================================================================= */
 
 // Function to get vault balances:
-const getVaultBalances = async (wallet: Address, vaults: any): Promise<(Token | LPToken)[]> => {
+const getVaultBalances = async (wallet: Address, vaults: any) => {
   let balances: (Token | LPToken)[] = [];
   let promises = vaults.map((vault: any) => (async () => {
     let balance = parseInt(await query(chain, vault.earnedTokenAddress, minABI, 'balanceOf', [wallet]));
@@ -84,7 +84,7 @@ const getVaultBalances = async (wallet: Address, vaults: any): Promise<(Token | 
 }
 
 // Function to get staked BIFI balance:
-const getStakedBIFI = async (wallet: Address): Promise<Token[]> => {
+const getStakedBIFI = async (wallet: Address) => {
   let balances: Token[] = [];
   let balance = parseInt(await query(chain, staking, minABI, 'balanceOf', [wallet]));
   if(balance > 0) {

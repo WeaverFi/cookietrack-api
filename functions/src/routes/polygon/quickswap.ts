@@ -48,7 +48,7 @@ exports.get = async (req: Request): Promise<string> => {
 /* ========================================================================================================================================================================= */
 
 // Function to get all farm balances:
-const getFarmBalances = async (wallet: Address, farms: Address[], ratio: number): Promise<(Token | LPToken)[]> => {
+const getFarmBalances = async (wallet: Address, farms: Address[], ratio: number) => {
   let balances: (Token | LPToken)[] = [];
   let promises = farms.map(farm => (async () => {
     let balance = parseInt(await query(chain, farm, minABI, 'balanceOf', [wallet]));
@@ -70,7 +70,7 @@ const getFarmBalances = async (wallet: Address, farms: Address[], ratio: number)
 }
 
 // Function to get all dual farm balances:
-const getDualFarmBalances = async (wallet: Address, dualFarms: Address[], ratio: number): Promise<(Token | LPToken)[]> => {
+const getDualFarmBalances = async (wallet: Address, dualFarms: Address[], ratio: number) => {
   let balances: (Token | LPToken)[] = [];
   let promises = dualFarms.map(farm => (async () => {
     let balance = parseInt(await query(chain, farm, minABI, 'balanceOf', [wallet]));
@@ -99,7 +99,7 @@ const getDualFarmBalances = async (wallet: Address, dualFarms: Address[], ratio:
 }
 
 // Function to get staked QUICK balance:
-const getStakedQUICK = async (wallet: Address, ratio: number): Promise<Token[]> => {
+const getStakedQUICK = async (wallet: Address, ratio: number) => {
   let balance = parseInt(await query(chain, dquick, minABI, 'balanceOf', [wallet]));
   if(balance > 0) {
     let newToken = await addToken(chain, project, quick, balance * ratio, wallet);
@@ -110,7 +110,7 @@ const getStakedQUICK = async (wallet: Address, ratio: number): Promise<Token[]> 
 }
 
 // Function to get farms:
-const getFarms = async (): Promise<Address[]> => {
+const getFarms = async () => {
   let farms: Address[] = [];
   let farmIDs = [...Array(minFarmCount + 1).keys()];
   let promises = farmIDs.map(id => (async () => {
@@ -134,7 +134,7 @@ const getFarms = async (): Promise<Address[]> => {
 }
 
 // Function to get dual reward farms:
-const getDualFarms = async (): Promise<Address[]> => {
+const getDualFarms = async () => {
   let dualFarms: Address[] = [];
   let farmIDs = [...Array(minDualFarmCount + 1).keys()];
   let promises = farmIDs.map(id => (async () => {
@@ -158,7 +158,7 @@ const getDualFarms = async (): Promise<Address[]> => {
 }
 
 // Function to get dQUICK ratio:
-const getRatio = async (): Promise<number> => {
+const getRatio = async () => {
   let ratio = parseInt(await query(chain, dquick, quickswap.stakingABI, 'dQUICKForQUICK', [100000000])) / (10 ** 8);
   return ratio;
 }

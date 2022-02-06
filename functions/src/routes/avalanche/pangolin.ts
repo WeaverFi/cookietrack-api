@@ -38,7 +38,7 @@ exports.get = async (req: Request): Promise<string> => {
 /* ========================================================================================================================================================================= */
 
 // Function to get farm balances:
-const getFarmBalances = async (wallet: Address): Promise<(Token | LPToken)[]> => {
+const getFarmBalances = async (wallet: Address) => {
   let balances: (Token | LPToken)[] = [];
   let pngRewards = 0;
   let poolCount = parseInt(await query(chain, controller, pangolin.controllerABI, 'poolLength', []));

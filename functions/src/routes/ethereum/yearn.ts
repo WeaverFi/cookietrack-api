@@ -49,7 +49,7 @@ exports.get = async (req: Request): Promise<string> => {
 /* ========================================================================================================================================================================= */
 
 // Function to get all vault balances:
-const getVaultBalances = async (wallet: Address): Promise<(Token | LPToken)[]> => {
+const getVaultBalances = async (wallet: Address) => {
   let balances: (Token | LPToken)[] = [];
   let tokenCount = parseInt(await query(chain, deployer, yearn.deployerABI, 'numTokens', []));
   let vaults = [...Array(tokenCount).keys()];
@@ -82,7 +82,7 @@ const getVaultBalances = async (wallet: Address): Promise<(Token | LPToken)[]> =
 }
 
 // Function to get all yToken Balances:
-const getTokenBalances = async (wallet: Address): Promise<Token[]> => {
+const getTokenBalances = async (wallet: Address) => {
   let balances: Token[] = [];
   let promises = yTokenList.map(token => (async () => {
     let balance = parseInt(await query(chain, token, minABI, 'balanceOf', [wallet]));

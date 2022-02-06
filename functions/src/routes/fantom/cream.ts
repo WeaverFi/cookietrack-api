@@ -37,7 +37,7 @@ exports.get = async (req: Request): Promise<string> => {
 /* ========================================================================================================================================================================= */
 
 // Function to get all market balances and debt:
-const getMarketBalances = async (wallet: Address): Promise<(Token | DebtToken)[]> => {
+const getMarketBalances = async (wallet: Address) => {
   let balances: (Token | DebtToken)[] = [];
   let markets: any[] = await query(chain, controller, cream.controllerABI, 'getAllMarkets', []);
   let promises = markets.map(market => (async () => {

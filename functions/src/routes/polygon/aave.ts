@@ -42,7 +42,7 @@ exports.get = async (req: Request): Promise<string> => {
 /* ========================================================================================================================================================================= */
 
 // Function to get lending market balances:
-const getMarketBalances = async (wallet: Address, markets: any[]): Promise<Token[]> => {
+const getMarketBalances = async (wallet: Address, markets: any[]) => {
   let balances: Token[] = [];
   let promises = markets.map(market => (async () => {
     let balance = parseInt(await query(chain, market.aTokenAddress, minABI, 'balanceOf', [wallet]));
@@ -56,7 +56,7 @@ const getMarketBalances = async (wallet: Address, markets: any[]): Promise<Token
 }
 
 // Function to get lending market debt:
-const getMarketDebt = async (wallet: Address, markets: any[]): Promise<DebtToken[]> => {
+const getMarketDebt = async (wallet: Address, markets: any[]) => {
   let debt: DebtToken[] = [];
   let promises = markets.map(market => (async () => {
     let stableDebt = parseInt(await query(chain, market.stableDebtTokenAddress, minABI, 'balanceOf', [wallet]));
@@ -72,7 +72,7 @@ const getMarketDebt = async (wallet: Address, markets: any[]): Promise<DebtToken
 }
 
 // Function to get unclaimed incentives:
-const getIncentives = async (wallet: Address): Promise<Token[]> => {
+const getIncentives = async (wallet: Address) => {
   let rewards = parseInt(await query(chain, incentives, aave.incentivesABI, 'getUserUnclaimedRewards', [wallet]));
   if(rewards > 0) {
     let newToken = await addToken(chain, project, wmatic, rewards, wallet);

@@ -40,7 +40,7 @@ exports.get = async (req: Request): Promise<string> => {
 /* ========================================================================================================================================================================= */
 
 // Function to get farm balances:
-const getFarmBalances = async (wallet: Address): Promise<(Token | LPToken)[]> => {
+const getFarmBalances = async (wallet: Address) => {
   let balances: (Token | LPToken)[] = [];
   let cakeRewards = 0;
   let poolLength = parseInt(await query(chain, registry, pancakeswap.registryABI, 'poolLength', []));

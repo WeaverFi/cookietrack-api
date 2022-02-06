@@ -28,7 +28,7 @@ const ignoreErrors: { chain: Chain, address: Address }[] = [
 /* ========================================================================================================================================================================= */
 
 // Function to make blockchain queries:
-export const query = async (chain: Chain, address: Address, abi: ABI[], method: string, args: any[]): Promise<any> => {
+export const query = async (chain: Chain, address: Address, abi: ABI[], method: string, args: any[]) => {
   let result;
   let errors = 0;
   while(!result && errors < 3) {
@@ -371,7 +371,7 @@ export const getTokenPrice = async (chain: Chain, address: Address, decimals: nu
 /* ========================================================================================================================================================================= */
 
 // Function to get the transaction history of a wallet address:
-export const getTXs = async (chain: Chain, address: Address, last50?: boolean): Promise<(TransferTX | ApprovalTX)[]> => {
+export const getTXs = async (chain: Chain, address: Address, last50?: boolean) => {
 
   // Initializations:
   let txs: (TransferTX | ApprovalTX)[] = [];

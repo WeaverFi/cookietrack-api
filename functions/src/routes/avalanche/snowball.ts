@@ -40,7 +40,7 @@ exports.get = async (req: Request): Promise<string> => {
 /* ========================================================================================================================================================================= */
 
 // Function to get staked SNOB balance:
-const getStakedSNOB = async (wallet: Address): Promise<Token[]> => {
+const getStakedSNOB = async (wallet: Address) => {
   let locked = await query(chain, xsnob, snowball.stakingABI, 'locked', [wallet]);
   let balance = parseInt(locked.amount);
   if(balance > 0) {
@@ -52,7 +52,7 @@ const getStakedSNOB = async (wallet: Address): Promise<Token[]> => {
 }
 
 // Function to get farm balances:
-const getFarmBalances = async (wallet: Address): Promise<(Token | LPToken)[]> => {
+const getFarmBalances = async (wallet: Address) => {
   let balances: (Token | LPToken)[] = [];
   let farms = await query(chain, registry, snowball.registryABI, 'tokens', []);
   let snobRewards = 0;

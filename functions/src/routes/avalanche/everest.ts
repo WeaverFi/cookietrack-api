@@ -46,7 +46,7 @@ exports.get = async (req: Request): Promise<string> => {
 /* ========================================================================================================================================================================= */
 
 // Function to get farm balances:
-const getFarmBalances = async (wallet: Address): Promise<(Token | LPToken)[]> => {
+const getFarmBalances = async (wallet: Address) => {
   let balances: (Token | LPToken)[] = [];
   let evrtRewards = 0;
   let promises = farms.map(farm => (async () => {
@@ -82,7 +82,7 @@ const getFarmBalances = async (wallet: Address): Promise<(Token | LPToken)[]> =>
 }
 
 // Function to get staked EVRT balance:
-const getStakedEVRT = async (wallet: Address): Promise<Token[]> => {
+const getStakedEVRT = async (wallet: Address) => {
   let balance = parseInt(await query(chain, pevrt, minABI, 'balanceOf', [wallet]));
   if(balance > 0) {
     let exchangeRate = parseInt(await query(chain, pevrt, everest.stakingABI, 'currentExchangeRate', [])) / (10 ** 18);

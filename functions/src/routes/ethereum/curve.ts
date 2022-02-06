@@ -37,7 +37,7 @@ exports.get = async (req: Request): Promise<string> => {
 /* ========================================================================================================================================================================= */
 
 // Function to get pool balances:
-const getPoolBalances = async (wallet: Address): Promise<(Token | LPToken)[]> => {
+const getPoolBalances = async (wallet: Address) => {
   let balances: (Token | LPToken)[] = [];
   let poolCount = parseInt(await query(chain, registry, curve.registryABI, 'pool_count', []));
   let pools = [...Array(poolCount).keys()];

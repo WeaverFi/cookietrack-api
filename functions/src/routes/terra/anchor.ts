@@ -2,7 +2,7 @@
 // Imports:
 import { initResponse, query, addNativeToken } from '../../terra-functions';
 import type { Request } from 'express';
-import type { TerraAddress, NativeToken } from 'cookietrack-types';
+import type { TerraAddress } from 'cookietrack-types';
 
 // Initializations:
 const project = 'anchor';
@@ -36,7 +36,7 @@ exports.get = async (req: Request): Promise<string> => {
 /* ========================================================================================================================================================================= */
 
 // Function to get Earn aUST balance:
-const getEarnBalance = async (wallet: TerraAddress): Promise<NativeToken[]> => {
+const getEarnBalance = async (wallet: TerraAddress) => {
   let balance = parseInt((await query(aust, {balance: {address: wallet}})).balance);
   if(balance > 0) {
     let exchangeRate = (await query(market, {state: {}})).prev_exchange_rate;

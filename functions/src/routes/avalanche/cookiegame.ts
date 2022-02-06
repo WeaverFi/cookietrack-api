@@ -3,7 +3,7 @@
 import { minABI, cookiegame } from '../../ABIs';
 import { initResponse, query, addCookieToken } from '../../functions';
 import type { Request } from 'express';
-import type { Chain, Address, Token } from 'cookietrack-types';
+import type { Chain, Address } from 'cookietrack-types';
 
 // Initializations:
 const chain: Chain = 'avax';
@@ -41,7 +41,7 @@ exports.get = async (req: Request): Promise<string> => {
 /* ========================================================================================================================================================================= */
 
 // Function to get COOKIE tokens in wallet:
-const getCOOKIE = async (wallet: Address): Promise<Token[]> => {
+const getCOOKIE = async (wallet: Address) => {
   let balance = parseInt(await query(chain, cookie, minABI, 'balanceOf', [wallet]));
   if(balance > 0) {
     let newToken = await addCookieToken(chain, project, cookie, balance, wallet);
@@ -52,7 +52,7 @@ const getCOOKIE = async (wallet: Address): Promise<Token[]> => {
 }
 
 // Function to get COOKIE tokens in bakery:
-const getBakeryBalance = async (wallet: Address): Promise<Token[]> => {
+const getBakeryBalance = async (wallet: Address) => {
   let cookieBalance = 0;
   let tokenIDs: number[] = [];
   let userInfo: any[] = await query(chain, bakery, cookiegame.bakeryABI, 'batchedStakesOfOwner', [wallet, 0, 9999]);
@@ -72,7 +72,7 @@ const getBakeryBalance = async (wallet: Address): Promise<Token[]> => {
 }
 
 // Function to get COOKIE tokens in pantry:
-const getPantryBalance = async (wallet: Address): Promise<Token[]> => {
+const getPantryBalance = async (wallet: Address) => {
   let balance = parseInt(await query(chain, pantry, minABI, 'balanceOf', [wallet]));
   if(balance > 0) {
     let supply = await query(chain, pantry, minABI, 'totalSupply', []);

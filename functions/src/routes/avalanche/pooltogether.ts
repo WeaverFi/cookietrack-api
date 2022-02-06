@@ -3,7 +3,7 @@
 import { minABI } from '../../ABIs';
 import { initResponse, query, addToken } from '../../functions';
 import type { Request } from 'express';
-import type { Chain, Address, Token } from 'cookietrack-types';
+import type { Chain, Address } from 'cookietrack-types';
 
 // Initializations:
 const chain: Chain = 'avax';
@@ -38,7 +38,7 @@ exports.get = async (req: Request): Promise<string> => {
 /* ========================================================================================================================================================================= */
 
 // Function to get V4 pool balance:
-const getPoolBalanceV4 = async (wallet: Address): Promise<Token[]> => {
+const getPoolBalanceV4 = async (wallet: Address) => {
   let balance = parseInt(await query(chain, poolV4, minABI, 'balanceOf', [wallet]));
   if(balance > 0) {
     let newToken = await addToken(chain, project, usdc, balance, wallet);

@@ -25,7 +25,7 @@ const terra = new Terra.LCDClient({ URL: "https://lcd.terra.dev", chainID: "colu
 /* ========================================================================================================================================================================= */
 
 // Function to make blockchain queries:
-export const query = async (address: TerraAddress, query: any): Promise<any> => {
+export const query = async (address: TerraAddress, query: any) => {
   try {
     let result = await terra.wasm.contractQuery(address, query);
     return result;
@@ -37,7 +37,7 @@ export const query = async (address: TerraAddress, query: any): Promise<any> => 
 /* ========================================================================================================================================================================= */
 
 // Function to initialize generic API route response:
-export const initResponse = (req: Request): APIResponse => {
+export const initResponse = (req: Request) => {
   let wallet = req.query.address as TerraAddress;
   let response: APIResponse = {
     status: 'ok',
@@ -59,7 +59,7 @@ export const initResponse = (req: Request): APIResponse => {
 /* ========================================================================================================================================================================= */
 
 // Function to check if an address is a valid Terra wallet address:
-export const isAddress = (address: string): boolean => {
+export const isAddress = (address: string) => {
   try {
     AccPubKey.fromAccAddress(address);
     return true;

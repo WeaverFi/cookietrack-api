@@ -49,7 +49,7 @@ exports.get = async (req: Request): Promise<string> => {
 /* ========================================================================================================================================================================= */
 
 // Function to get lending market balances:
-const getMarketBalances = async (wallet: Address): Promise<(Token | DebtToken)[]> => {
+const getMarketBalances = async (wallet: Address) => {
   let balances: (Token | DebtToken)[] = [];
   let promises = tokens.map(token => (async () => {
     let addresses = await query(chain, registry, aave.registryABI, 'getReserveTokensAddresses', [token]);
@@ -75,7 +75,7 @@ const getMarketBalances = async (wallet: Address): Promise<(Token | DebtToken)[]
 }
 
 // Function to get unclaimed incentives:
-const getIncentives = async (wallet: Address): Promise<Token[]> => {
+const getIncentives = async (wallet: Address) => {
   let rewards = parseInt(await query(chain, incentives, aave.incentivesABI, 'getUserUnclaimedRewards', [wallet]));
   if(rewards > 0) {
     let newToken = await addToken(chain, project, wavax, rewards, wallet);

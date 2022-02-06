@@ -37,7 +37,7 @@ exports.get = async (req: Request): Promise<string> => {
 /* ========================================================================================================================================================================= */
 
 // Function to get native wallet balance:
-const getNativeBalances = async (wallet: TerraAddress): Promise<NativeToken[]> => {
+const getNativeBalances = async (wallet: TerraAddress) => {
   let balances: NativeToken[] = [];
   let ignoreTokens = ['unok', 'uidr'];
   let bankBalances = (await terra.bank.balance(wallet))[0].filter((token: any) => token.denom.charAt(0) === 'u' && !ignoreTokens.includes(token.denom.toLowerCase()));
@@ -50,7 +50,7 @@ const getNativeBalances = async (wallet: TerraAddress): Promise<NativeToken[]> =
 }
 
 // Function to get token balances:
-const getTokenBalances = async (wallet: TerraAddress): Promise<Token[]> => {
+const getTokenBalances = async (wallet: TerraAddress) => {
   let tokens: Token[] = [];
   let promises = terra_data.tokens.map((token: { address: TerraAddress, symbol: string }) => (async () => {
     let balance = parseInt((await query(token.address, {balance: {address: wallet}})).balance);

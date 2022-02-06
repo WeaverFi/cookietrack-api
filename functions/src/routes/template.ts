@@ -3,7 +3,7 @@
 import { minABI } from '../ABIs'; // <TODO> Edit to include all the ABIs you need. Also change path to '../../ABIs'.
 import { initResponse, query, addToken } from '../functions'; // <TODO> Edit to include all functions you need. Also change path to '../../functions'.
 import type { Request } from 'express';
-import type { Chain, Address, Token } from 'cookietrack-types';
+import type { Chain, Address } from 'cookietrack-types';
 
 // Initializations:
 const chain: Chain = 'eth'; // <TODO> Edit to be the chain the route is dependent on.
@@ -38,7 +38,7 @@ exports.get = async (req: Request): Promise<string> => {
 /* ========================================================================================================================================================================= */
 
 // Example function:
-const getSomething = async (wallet: Address): Promise<Token[]> => {
+const getSomething = async (wallet: Address) => {
   let balance = parseInt(await query(chain, aaveToken, minABI, 'balanceOf', [wallet]));
   if(balance > 0) {
     let newToken = await addToken(chain, project, aaveToken, balance, wallet);

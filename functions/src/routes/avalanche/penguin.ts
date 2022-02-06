@@ -42,7 +42,7 @@ exports.get = async (req: Request): Promise<string> => {
 /* ========================================================================================================================================================================= */
 
 // Function to get Igloo balances:
-const getIglooBalances = async (wallet: Address): Promise<(Token | LPToken)[]> => {
+const getIglooBalances = async (wallet: Address) => {
   let balances: (Token | LPToken)[] = [];
   let iglooCount = parseInt(await query(chain, iglooMaster, penguin.masterABI, 'poolLength', []));
   let igloos = [...Array(iglooCount).keys()];
@@ -75,7 +75,7 @@ const getIglooBalances = async (wallet: Address): Promise<(Token | LPToken)[]> =
 }
 
 // Function to get staked PEFI balance:
-const getStakedPEFI = async (wallet: Address): Promise<Token[]> => {
+const getStakedPEFI = async (wallet: Address) => {
   let balance = parseInt(await query(chain, nest, minABI, 'balanceOf', [wallet]));
   if(balance > 0) {
     let exchangeRate = parseInt(await query(chain, nest, penguin.nestABI, 'currentExchangeRate', [])) / (10 ** 18);
@@ -87,7 +87,7 @@ const getStakedPEFI = async (wallet: Address): Promise<Token[]> => {
 }
 
 // Function to get Club Penguin balance:
-const getClubPenguinBalance = async (wallet: Address): Promise<Token[]> => {
+const getClubPenguinBalance = async (wallet: Address) => {
   let balance = parseInt(await query(chain, clubPenguin, minABI, 'balanceOf', [wallet]));
   if(balance > 0) {
     let exchangeRate = parseInt(await query(chain, nest, penguin.nestABI, 'currentExchangeRate', [])) / (10 ** 18);

@@ -43,7 +43,7 @@ exports.get = async (req: Request): Promise<string> => {
 /* ========================================================================================================================================================================= */
 
 // Function to get staked JOE balance:
-const getStakedJOE = async (wallet: Address): Promise<Token[]> => {
+const getStakedJOE = async (wallet: Address) => {
   let balance = parseInt(await query(chain, xjoe, minABI, 'balanceOf', [wallet]));
   if(balance > 0) {
     let newToken = await addTraderJoeToken(chain, project, xjoe, balance, wallet);
@@ -54,7 +54,7 @@ const getStakedJOE = async (wallet: Address): Promise<Token[]> => {
 }
 
 // Function to get farm balances:
-const getFarmBalances = async (wallet: Address): Promise<(Token | LPToken)[]> => {
+const getFarmBalances = async (wallet: Address) => {
   let balances: (Token | LPToken)[] = [];
   let farmCountV2 = parseInt(await query(chain, masterChefV2, traderjoe.masterChefABI, 'poolLength', []));
   let farmCountV3 = parseInt(await query(chain, masterChefV3, traderjoe.masterChefABI, 'poolLength', []));
@@ -121,7 +121,7 @@ const getFarmBalances = async (wallet: Address): Promise<(Token | LPToken)[]> =>
 }
 
 // Function to get market balance:
-const getMarketBalances = async (wallet: Address): Promise<(Token | DebtToken)[]> => {
+const getMarketBalances = async (wallet: Address) => {
   let balances: (Token | DebtToken)[] = [];
   let markets = await query(chain, bankController, traderjoe.bankControllerABI, 'getAllMarkets', []);
   let promises = markets.map((market: any) => (async () => {

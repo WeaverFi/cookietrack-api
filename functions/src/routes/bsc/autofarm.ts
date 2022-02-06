@@ -40,7 +40,7 @@ exports.get = async (req: Request): Promise<string> => {
 /* ========================================================================================================================================================================= */
 
 // Function to get all vault balances:
-const getVaultBalances = async (wallet: Address): Promise<(Token | LPToken)[]> => {
+const getVaultBalances = async (wallet: Address) => {
   let balances: (Token | LPToken)[] = [];
   let autoRewards = 0;
   let poolLength = parseInt(await query(chain, registry, autofarm.registryABI, 'poolLength', []));

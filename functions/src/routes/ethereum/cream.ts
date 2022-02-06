@@ -46,7 +46,7 @@ exports.get = async (req: Request): Promise<string> => {
 /* ========================================================================================================================================================================= */
 
 // Function to get all market balances and debt:
-const getMarketBalances = async (wallet: Address): Promise<(Token | LPToken | DebtToken)[]> => {
+const getMarketBalances = async (wallet: Address) => {
   let balances: (Token | LPToken | DebtToken)[] = [];
   let markets0 = await query(chain, controller0, cream.controllerABI, 'getAllMarkets', []);
   let markets1 = await query(chain, controller1, cream.controllerABI, 'getAllMarkets', []);
@@ -96,7 +96,7 @@ const getMarketBalances = async (wallet: Address): Promise<(Token | LPToken | De
 }
 
 // Function to get staked CREAM balances:
-const getStakedCREAM = async (wallet: Address): Promise<Token[]> => {
+const getStakedCREAM = async (wallet: Address) => {
   let balances: Token[] = [];
   let promises = staking.map(address => (async () => {
     let balance = parseInt(await query(chain, address, minABI, 'balanceOf', [wallet]));

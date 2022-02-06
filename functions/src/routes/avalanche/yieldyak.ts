@@ -44,7 +44,7 @@ exports.get = async (req: Request): Promise<string> => {
 /* ========================================================================================================================================================================= */
 
 // Function to get farm balances:
-const getFarmBalances = async (wallet: Address, farms: any): Promise<(Token | LPToken)[]> => {
+const getFarmBalances = async (wallet: Address, farms: any) => {
   let balances: (Token | LPToken)[] = [];
   let promises = farms.map((farm: any) => (async () => {
     let balance = parseInt(await query(chain, farm, minABI, 'balanceOf', [wallet]));
@@ -86,7 +86,7 @@ const getFarmBalances = async (wallet: Address, farms: any): Promise<(Token | LP
 }
 
 // Function to get staked balances:
-const getStakedBalances = async (wallet: Address): Promise<(Token | LPToken)[]> => {
+const getStakedBalances = async (wallet: Address) => {
   let balances: (Token | LPToken)[] = [];
   let poolCount = parseInt(await query(chain, staking, yieldyak.stakingABI, 'poolLength', []));
   let pools = [...Array(poolCount).keys()];
