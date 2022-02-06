@@ -46,7 +46,7 @@
     "nativeID": "avalanche-2",
     "usdc": "0xa7d7079b0fead91f3e65f86e8915cb59c1a4c664",
     "usdcDecimals": 6,
-    "inch": false,
+    "inch": true,
     "paraswap": true
   },
   "one": {

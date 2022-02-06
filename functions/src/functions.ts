@@ -278,7 +278,7 @@ export const getTokenPrice = async (chain: Chain, address: Address, decimals: nu
     if(address.toLowerCase() === chains[chain].usdc.toLowerCase()) {
       return 1;
     } else {
-      apiQuery = `https://api.1inch.exchange/v3.0/${chains[chain].id}/quote?fromTokenAddress=${address}&toTokenAddress=${chains[chain].usdc}&amount=${10 ** decimals}`;
+      apiQuery = `https://api.1inch.exchange/v4.0/${chains[chain].id}/quote?fromTokenAddress=${address}&toTokenAddress=${chains[chain].usdc}&amount=${10 ** decimals}`;
       try {
         let response = (await axios.get(apiQuery)).data;
         if(response.protocols.length < 4) {
