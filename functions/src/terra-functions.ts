@@ -84,11 +84,12 @@ export const addNativeToken = async (location: string, rawBalance: number, owner
   // Correcting Token Symbol:
   if(symbol != 'luna') {
     if(nativeTokenSymbols.includes(symbol)) {
-      symbol = symbol.slice(0, -1).toUpperCase() + 'T';
+      symbol = symbol.slice(0, -1) + 't';
     } else {
       console.error(`TERRA: Native Token Symbol Not Found - ${symbol}`);
     }
   }
+  symbol = symbol.toUpperCase();
 
   // Finding Token Logo:
   let logo = getTokenLogo(symbol);
