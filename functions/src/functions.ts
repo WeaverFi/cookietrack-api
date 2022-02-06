@@ -675,33 +675,43 @@ export const getTokenPriceHistories = async (chain: Chain, tokens: Set<Address>,
   tokenString = tokenString.slice(0, -1);
 
   // Fetching Token Prices:
-  let response = (await axios.get(`https://api.covalenthq.com/v1/pricing/historical_by_addresses_v2/${chains[chain].id}/USD/${tokenString}/?quote-currency=USD&format=JSON&from=${formatDate(dates.start)}&to=${formatDate(dates.end)}&page-size=9999&prices-at-asc=true&key=${keys.ckey}`)).data;
-  if(!response.error) {
-    response.data.forEach((token: any) => {
-      if(chain === 'bsc') {
-        if(token.contract_address === '0xb8c77482e45f1f44de1745f52c74426c631bdd52') {
-          token.contract_address = defaultAddress;
-        }
-      } else if(chain === 'ftm') {
-        if(token.contract_address === '0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83') {
-          tokenPrices[defaultAddress] = [];
+  let response;
+  let errors = 0;
+  while(!response && errors < 3) {
+    try {
+      response = (await axios.get(`https://api.covalenthq.com/v1/pricing/historical_by_addresses_v2/${chains[chain].id}/USD/${tokenString}/?quote-currency=USD&format=JSON&from=${formatDate(dates.start)}&to=${formatDate(dates.end)}&page-size=9999&prices-at-asc=true&key=${keys.ckey}`)).data;
+      if(!response.error) {
+        response.data.forEach((token: any) => {
+          if(chain === 'bsc') {
+            if(token.contract_address === '0xb8c77482e45f1f44de1745f52c74426c631bdd52') {
+              token.contract_address = defaultAddress;
+            }
+          } else if(chain === 'ftm') {
+            if(token.contract_address === '0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83') {
+              tokenPrices[defaultAddress] = [];
+              token.prices.forEach((entry: any) => {
+                tokenPrices[defaultAddress].push({ time: (new Date(entry.date).getTime() / 1000), price: entry.price });
+              });
+            }
+          } else if(chain == 'poly') {
+            if(token.contract_address === '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270') {
+              tokenPrices[defaultAddress] = [];
+              token.prices.forEach((entry: any) => {
+                tokenPrices[defaultAddress].push({ time: (new Date(entry.date).getTime() / 1000), price: entry.price });
+              });
+            }
+          }
+          tokenPrices[token.contract_address] = [];
           token.prices.forEach((entry: any) => {
-            tokenPrices[defaultAddress].push({ time: (new Date(entry.date).getTime() / 1000), price: entry.price });
+            tokenPrices[token.contract_address].push({ time: (new Date(entry.date).getTime() / 1000), price: entry.price });
           });
-        }
-      } else if(chain == 'poly') {
-        if(token.contract_address === '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270') {
-          tokenPrices[defaultAddress] = [];
-          token.prices.forEach((entry: any) => {
-            tokenPrices[defaultAddress].push({ time: (new Date(entry.date).getTime() / 1000), price: entry.price });
-          });
-        }
+        });
       }
-      tokenPrices[token.contract_address] = [];
-      token.prices.forEach((entry: any) => {
-        tokenPrices[token.contract_address].push({ time: (new Date(entry.date).getTime() / 1000), price: entry.price });
-      });
-    });
+    } catch(err: any) {
+      if(++errors > 2) {
+        console.error(`Covalent API Error: ${err.response.status}`);
+      }
+    }
   }
 
   return tokenPrices;
