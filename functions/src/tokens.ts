@@ -992,7 +992,12 @@ export const avax_data: ChainTokenData = {
     { symbol: 'USDC-AM3D', logo: 'https://assets.coingecko.com/coins/images/20502/small/E5nD9pPv_400x400.jpg?1637139692' },
     { symbol: 'USDC', logo: 'https://snowtrace.io/token/images/usdc_32.png' },
     { symbol: 'USDT', logo: 'https://snowtrace.io/token/images/tether_32.png' },
-    { symbol: 'COOKIE-BAKER', logo: 'https://cookie.game/android-chrome-512x512.png' }
+    { symbol: 'COOKIE', logo: 'https://cookie.game/android-chrome-512x512.png' },
+    { symbol: 'sCOOKIE', logo: 'https://cookie.game/android-chrome-512x512.png' },
+    { symbol: 'FORTUNE', logo: 'https://cookie.game/android-chrome-512x512.png' },
+    { symbol: 'BAKER', logo: 'https://cookie.game/android-chrome-512x512.png' },
+    { symbol: 'COOKIE-BAKER', logo: 'https://cookie.game/android-chrome-512x512.png' },
+    { symbol: 'PTavUSDCe', logo: 'https://snowtrace.io/token/images/usdc_32.png' }
   ],
   blacklist: [
     '0xd17584633bc8d190e5a14502976dad9640456d6d'
