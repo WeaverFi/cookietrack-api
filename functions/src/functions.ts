@@ -13,7 +13,7 @@ const rpcs: Record<Chain, URL[]> = require('../static/rpcs.json');
 const keys: Record<string, string> = require('../static/keys.json');
 
 // Importing Variables:
-import { minABI, lpABI, aave, balancer, snowball, traderjoe, belt, alpaca, curve, bzx, iron, axial, mstable } from './ABIs';
+import { minABI, lpABI, aave, balancer, snowball, traderjoe, belt, alpaca, curve, bzx, iron, axial, mstable, cookiegame } from './ABIs';
 import { eth_data, bsc_data, poly_data, ftm_data, avax_data, one_data } from './tokens';
 
 // Initializations:
@@ -1400,6 +1400,26 @@ export const addStableToken = async (chain: Chain, location: string, address: Ad
 
   // Finding Token Symbol:
   logo = price > 1000 ? getTokenLogo(chain, 'mBTC') : getTokenLogo(chain, 'mUSD');
+
+  return { type, chain, location, owner, symbol, address, balance, price, logo };
+}
+
+/* ========================================================================================================================================================================= */
+
+// Function to get Cookie token info:
+export const addCookieToken = async (chain: Chain, location: string, address: Address, rawBalance: number, owner: Address): Promise<Token> => {
+
+  // Initializing Token Values:
+  let type: TokenType = 'token';
+  let symbol = await query(chain, address, minABI, 'symbol', []);
+  let decimals = parseInt(await query(chain, address, minABI, 'decimals', []));
+  let balance = rawBalance / (10 ** decimals);
+  let logo = getTokenLogo(chain, symbol);
+
+  // Finding Token Price:
+  let fortunePrice = await getTokenPrice(chain, '0xd8187f630A93A1d841dbBC99cd5fe06587A984DE', 9);
+  let exchangeRate = parseInt(await query(chain, '0x9eE8817Fe46f4620708a9FA1119972bC4c131641', cookiegame.exchangeABI, 'price', []));
+  let price = fortunePrice / exchangeRate;
 
   return { type, chain, location, owner, symbol, address, balance, price, logo };
 }

@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "description": "This API is the back-end of CookieTrack. Find out more on [GitHub](https://github.com/Ncookiez/cookietrack-api), or join our [Discord Server](https://discord.com/invite/DzADcq7y75).",
-    "version": "2.0.4",
+    "version": "2.0.5",
     "title": "CookieTrack API",
     "license": {
       "name": "MIT License",

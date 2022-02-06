@@ -622,8 +622,12 @@ export const xmaspast: Record<string, ABI[]> = {
 // Cookie Game ABIs:
 export const cookiegame: Record<string, ABI[]> = {
   bakeryABI: [
-    { constant: true, inputs: [{ name: "_owner", type: "address" }, { name: "_offset", type: "uint256" }, { name: "_maxSize", type: "uint256" }], name: "batchedStakesOfOwner", outputs: [{ type: "tuple[]", components: [{ name: "", type: "uint256" }, { name: "", type: "uint256" }, { name: "", type: "uint256" }] }], type: "function" }
-  ]
+    { constant: true, inputs: [{ name: "_owner", type: "address" }, { name: "_offset", type: "uint256" }, { name: "_maxSize", type: "uint256" }], name: "batchedStakesOfOwner", outputs: [{ type: "tuple[]", components: [{ name: "", type: "uint256" }, { name: "", type: "uint256" }, { name: "", type: "uint256" }] }], type: "function" },
+    { constant: true, inputs: [{ name: "_tokenIds", type: "uint256[]" }], name: "getCookiesAccruedForMany", outputs: [{ name: "", type: "uint256[]" }], type: "function" }
+  ],
+  exchangeABI: [
+    { constant: true, inputs: [], name: "price", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ],
 }
 
 // Moonpot ABIs:

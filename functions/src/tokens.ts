@@ -886,7 +886,8 @@ export const avax_data: ChainTokenData = {
     { address: '0x321e7092a180bb43555132ec53aaa65a5bf84251', symbol: 'gOHM' },
     { address: '0x783c08b5f26e3daf8c4681f3bf49844e425b6393', symbol: 'AUSD' },
     { address: '0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e', symbol: 'USDC' },
-    { address: '0x9702230a8ea53601f5cd2dc00fdbc13d4df4a8c7', symbol: 'USDT' }
+    { address: '0x9702230a8ea53601f5cd2dc00fdbc13d4df4a8c7', symbol: 'USDT' },
+    { address: '0xd8187f630A93A1d841dbBC99cd5fe06587A984DE', symbol: 'FORTUNE' }
   ],
   logos: [
     { symbol: 'AVAX', logo: 'https://bscscan.com/token/images/avax_32.png' },
