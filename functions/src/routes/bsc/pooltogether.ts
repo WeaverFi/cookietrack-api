@@ -47,7 +47,7 @@ const getPoolBalances = async (wallet: Address) => {
     let balance = parseInt(await query(chain, ticket, minABI, 'balanceOf', [wallet]));
     if(balance > 0) {
       let token = await query(chain, pool, pooltogether.poolABI, 'token', []);
-      let newToken = await addToken(chain, project, token, balance, wallet);
+      let newToken = await addToken(chain, project, 'staked', token, balance, wallet);
       balances.push(newToken);
     }
   })());

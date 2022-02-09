@@ -67,10 +67,10 @@ const getMarketBalances = async (wallet: Address) => {
       }
       let underlyingBalance = (balance / (10 ** decimals)) * (exchangeRate / (10 ** (decimals + 2)));
       if(symbol.includes('UNI-') || symbol.includes('SLP')) {
-        let newToken = await addLPToken(chain, project, tokenAddress, underlyingBalance, wallet);
+        let newToken = await addLPToken(chain, project, 'lent', tokenAddress, underlyingBalance, wallet);
         balances.push(newToken);
       } else if(!symbol.includes('Curve')) {
-        let newToken = await addToken(chain, project, tokenAddress, underlyingBalance, wallet);
+        let newToken = await addToken(chain, project, 'lent', tokenAddress, underlyingBalance, wallet);
         balances.push(newToken);
       }
     }
@@ -101,12 +101,12 @@ const getStakedCREAM = async (wallet: Address) => {
   let promises = staking.map(address => (async () => {
     let balance = parseInt(await query(chain, address, minABI, 'balanceOf', [wallet]));
     if(balance > 0) {
-      let newToken = await addToken(chain, project, creamToken, balance, wallet);
+      let newToken = await addToken(chain, project, 'staked', creamToken, balance, wallet);
       balances.push(newToken);
     }
     let earned = parseInt(await query(chain, address, cream.stakingABI, 'earned', [wallet]));
     if(earned > 0) {
-      let newToken = await addToken(chain, project, creamToken, earned, wallet);
+      let newToken = await addToken(chain, project, 'unclaimed', creamToken, earned, wallet);
       balances.push(newToken);
     }
   })());

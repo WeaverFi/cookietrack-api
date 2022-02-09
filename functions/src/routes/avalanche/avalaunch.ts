@@ -50,7 +50,7 @@ const getStakedXAVA = async (wallet: Address) => {
     if(pendingXAVA > 0) {
       xavaBalance += pendingXAVA;
     }
-    let newToken = await addToken(chain, project, xava, xavaBalance, wallet);
+    let newToken = await addToken(chain, project, 'staked', xava, xavaBalance, wallet);
     return [newToken];
   } else {
     return [];
@@ -62,11 +62,11 @@ const getStakedLP = async (wallet: Address) => {
   let balances: (Token | LPToken)[] = [];
   let balance = parseInt(await query(chain, lpStaking, avalaunch.stakingABI, 'deposited', [0, wallet]));
   if(balance > 0) {
-    let newToken = await addLPToken(chain, project, lpToken, balance, wallet);
+    let newToken = await addLPToken(chain, project, 'staked', lpToken, balance, wallet);
     balances.push(newToken);
     let pendingXAVA = parseInt(await query(chain, lpStaking, avalaunch.stakingABI, 'pending', [0, wallet]));
     if(pendingXAVA > 0) {
-      let newToken = await addToken(chain, project, xava, pendingXAVA, wallet);
+      let newToken = await addToken(chain, project, 'unclaimed', xava, pendingXAVA, wallet);
       balances.push(newToken);
     }
   }

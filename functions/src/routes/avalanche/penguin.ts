@@ -51,7 +51,7 @@ const getIglooBalances = async (wallet: Address) => {
     let balance = parseInt((await query(chain, iglooMaster, penguin.masterABI, 'userInfo', [iglooID, wallet])).amount);
     if(balance > 0) {
       let token = (await query(chain, iglooMaster, penguin.masterABI, 'poolInfo', [iglooID])).poolToken;
-      let newToken = await addLPToken(chain, project, token, balance, wallet);
+      let newToken = await addLPToken(chain, project, 'staked', token, balance, wallet);
       balances.push(newToken);
       let pendingPEFI = parseInt(await query(chain, iglooMaster, penguin.masterABI, 'totalPendingPEFI', [iglooID, wallet]));
       if(pendingPEFI > 0) {
@@ -60,7 +60,7 @@ const getIglooBalances = async (wallet: Address) => {
       let pendingBonus = await query(chain, iglooMaster, penguin.masterABI, 'pendingTokens', [iglooID, wallet]);
       if(pendingBonus[0].length > 2) {
         if(parseInt(pendingBonus[1][2]) > 0) {
-          let newToken = await addToken(chain, project, pendingBonus[0][2], parseInt(pendingBonus[1][2]), wallet);
+          let newToken = await addToken(chain, project, 'unclaimed', pendingBonus[0][2], parseInt(pendingBonus[1][2]), wallet);
           balances.push(newToken);
         }
       }
@@ -68,7 +68,7 @@ const getIglooBalances = async (wallet: Address) => {
   })());
   await Promise.all(promises);
   if(pefiRewards > 0) {
-    let newToken = await addToken(chain, project, pefi, pefiRewards, wallet);
+    let newToken = await addToken(chain, project, 'unclaimed', pefi, pefiRewards, wallet);
     balances.push(newToken);
   }
   return balances;
@@ -79,7 +79,7 @@ const getStakedPEFI = async (wallet: Address) => {
   let balance = parseInt(await query(chain, nest, minABI, 'balanceOf', [wallet]));
   if(balance > 0) {
     let exchangeRate = parseInt(await query(chain, nest, penguin.nestABI, 'currentExchangeRate', [])) / (10 ** 18);
-    let newToken = await addToken(chain, project, pefi, balance * exchangeRate, wallet);
+    let newToken = await addToken(chain, project, 'staked', pefi, balance * exchangeRate, wallet);
     return [newToken];
   } else {
     return [];
@@ -91,7 +91,7 @@ const getClubPenguinBalance = async (wallet: Address) => {
   let balance = parseInt(await query(chain, clubPenguin, minABI, 'balanceOf', [wallet]));
   if(balance > 0) {
     let exchangeRate = parseInt(await query(chain, nest, penguin.nestABI, 'currentExchangeRate', [])) / (10 ** 18);
-    let newToken = await addToken(chain, project, pefi, balance * exchangeRate, wallet);
+    let newToken = await addToken(chain, project, 'staked', pefi, balance * exchangeRate, wallet);
     return [newToken];
   } else {
     return [];

@@ -55,7 +55,7 @@ const getTroveBalance = async (wallet: Address) => {
     }
     let collateral = parseInt(userInfo.coll);
     if(collateral > 0) {
-      let newToken = await addToken(chain, project, avax, collateral, wallet);
+      let newToken = await addToken(chain, project, 'staked', avax, collateral, wallet);
       balances.push(newToken);
     }
   }
@@ -68,16 +68,16 @@ const getStabilityPoolBalance = async (wallet: Address) => {
   let userInfo = await query(chain, stabilityPool, teddy.stabilityPoolABI, 'deposits', [wallet]);
   let balance = parseInt(userInfo.initialValue);
   if(balance > 0) {
-    let newToken = await addToken(chain, project, tsd, balance, wallet);
+    let newToken = await addToken(chain, project, 'staked', tsd, balance, wallet);
     balances.push(newToken);
     let avaxRewards = await query(chain, stabilityPool, teddy.stabilityPoolABI, 'getDepositorETHGain', [wallet]);
     if(avaxRewards > 0) {
-      let newToken = await addToken(chain, project, avax, avaxRewards, wallet);
+      let newToken = await addToken(chain, project, 'unclaimed', avax, avaxRewards, wallet);
       balances.push(newToken);
     }
     let teddyRewards = await query(chain, stabilityPool, teddy.stabilityPoolABI, 'getDepositorLQTYGain', [wallet]);
     if(teddyRewards > 0) {
-      let newToken = await addToken(chain, project, teddyToken, teddyRewards, wallet);
+      let newToken = await addToken(chain, project, 'unclaimed', teddyToken, teddyRewards, wallet);
       balances.push(newToken);
     }
   }
@@ -89,16 +89,16 @@ const getStakedTEDDY = async (wallet: Address) => {
   let balances: Token[] = [];
   let balance = await query(chain, staking, teddy.stakingABI, 'stakes', [wallet]);
   if(balance > 0) {
-    let newToken = await addToken(chain, project, teddyToken, balance, wallet);
+    let newToken = await addToken(chain, project, 'staked', teddyToken, balance, wallet);
     balances.push(newToken);
     let avaxRewards = await query(chain, staking, teddy.stakingABI, 'getPendingETHGain', [wallet]);
     if(avaxRewards > 0) {
-      let newToken = await addToken(chain, project, avax, avaxRewards, wallet);
+      let newToken = await addToken(chain, project, 'unclaimed', avax, avaxRewards, wallet);
       balances.push(newToken);
     }
     let tsdRewards = await query(chain, staking, teddy.stakingABI, 'getPendingLUSDGain', [wallet]);
     if(tsdRewards > 0) {
-      let newToken = await addToken(chain, project, tsd, tsdRewards, wallet);
+      let newToken = await addToken(chain, project, 'unclaimed', tsd, tsdRewards, wallet);
       balances.push(newToken);
     }
   }

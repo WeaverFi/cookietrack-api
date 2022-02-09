@@ -49,7 +49,7 @@ exports.get = async (req: Request): Promise<string> => {
 const getStakedAAVE = async (wallet: Address) => {
   let balance = parseInt(await query(chain, aaveStaking, minABI, 'balanceOf', [wallet]));
   if(balance > 0) {
-    let newToken = await addToken(chain, project, aaveToken, balance, wallet);
+    let newToken = await addToken(chain, project, 'staked', aaveToken, balance, wallet);
     return [newToken];
   } else {
     return [];
@@ -61,7 +61,7 @@ const getStakedLP = async (wallet: Address) => {
   let balance = parseInt(await query(chain, lpStaking, minABI, 'balanceOf', [wallet]));
   if(balance > 0) {
     let tokenAddress = await query(chain, lpStaking, aave.stakingABI, 'STAKED_TOKEN', []);
-    let newToken = await addAaveBLPToken(chain, project, tokenAddress, balance, wallet);
+    let newToken = await addAaveBLPToken(chain, project, 'staked', tokenAddress, balance, wallet);
     return [newToken];
   } else {
     return [];
@@ -74,7 +74,7 @@ const getMarketBalances = async (wallet: Address, markets: any) => {
   let promises = markets.map((market: any) => (async () => {
     let balance = parseInt(await query(chain, market.aTokenAddress, minABI, 'balanceOf', [wallet]));
     if(balance > 0) {
-      let newToken = await addToken(chain, project, market.address, balance, wallet);
+      let newToken = await addToken(chain, project, 'lent', market.address, balance, wallet);
       balances.push(newToken);
     }
   })());
@@ -102,7 +102,7 @@ const getMarketDebt = async (wallet: Address, markets: any) => {
 const getIncentives = async (wallet: Address) => {
   let rewards = parseInt(await query(chain, incentives, aave.incentivesABI, 'getUserUnclaimedRewards', [wallet]));
   if(rewards > 0) {
-    let newToken = await addToken(chain, project, aaveToken, rewards, wallet);
+    let newToken = await addToken(chain, project, 'unclaimed', aaveToken, rewards, wallet);
     return [newToken];
   } else {
     return [];

@@ -5,7 +5,7 @@ import axios from 'axios';
 
 // Importing Types:
 import type { Request } from 'express';
-import type { APIResponse, Chain, SolAddress, Address, URL, Token, NativeToken, TokenType } from 'cookietrack-types';
+import type { APIResponse, Chain, SolAddress, Address, URL, Token, NativeToken, TokenType, TokenStatus } from 'cookietrack-types';
 
 // Importing Variables:
 import { sol_data } from './tokens';
@@ -81,19 +81,20 @@ export const addNativeToken = async (rawBalance: number, owner: SolAddress): Pro
   // Initializing Token Values:
   let type: TokenType = 'nativeToken';
   let location = 'wallet';
+  let status: TokenStatus = 'none';
   let address = defaultAddress;
   let balance = rawBalance / (10 ** 9);
   let price = await getTokenPrice(defaultAddress);
   let symbol = 'SOL';
   let logo = getTokenLogo(symbol);
 
-  return { type, chain, location, owner, symbol, address, balance, price, logo };
+  return { type, chain, location, status, owner, symbol, address, balance, price, logo };
 }
 
 /* ========================================================================================================================================================================= */
 
 // Function to get token info:
-export const addToken = async (location: string, address: SolAddress, symbol: string, decimals: number, rawBalance: number, owner: SolAddress): Promise<Token> => {
+export const addToken = async (location: string, status: TokenStatus, address: SolAddress, symbol: string, decimals: number, rawBalance: number, owner: SolAddress): Promise<Token> => {
 
   // Initializing Token Values:
   let type: TokenType = 'token';
@@ -101,7 +102,7 @@ export const addToken = async (location: string, address: SolAddress, symbol: st
   let price = await getTokenPrice(address);
   let logo = getTokenLogo(symbol);
 
-  return { type, chain, location, owner, symbol, address, balance, price, logo };
+  return { type, chain, location, status, owner, symbol, address, balance, price, logo };
 }
 
 /* ========================================================================================================================================================================= */

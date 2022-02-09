@@ -51,7 +51,7 @@ const getVaultBalances = async (wallet: Address) => {
     if(vaultID === 0) {
       let balance = parseInt(await query(chain, autoVault, autofarm.registryABI, 'stakedWantTokens', [0, wallet]));
       if(balance > 300000000000) {
-        let newToken = await addToken(chain, project, auto, balance, wallet);
+        let newToken = await addToken(chain, project, 'staked', auto, balance, wallet);
         balances.push(newToken);
       }
     
@@ -64,27 +64,27 @@ const getVaultBalances = async (wallet: Address) => {
 
         // Regular LP Vaults:
         if(symbol.endsWith('LP')) {
-          let newToken = await addLPToken(chain, project, token, balance, wallet);
+          let newToken = await addLPToken(chain, project, 'staked', token, balance, wallet);
           balances.push(newToken);
 
         // 4Belt Vault:
         } else if(symbol === '4Belt') {
-          let newToken = await add4BeltToken(chain, project, token, balance, wallet);
+          let newToken = await add4BeltToken(chain, project, 'staked', token, balance, wallet);
           balances.push(newToken);
 
         // Belt Vaults:
         } else if(symbol.startsWith('belt')) {
-          let newToken = await addBeltToken(chain, project, token, balance, wallet);
+          let newToken = await addBeltToken(chain, project, 'staked', token, balance, wallet);
           balances.push(newToken);
 
         // Alpaca Vaults:
         } else if(symbol.startsWith('ib')) {
-          let newToken = await addAlpacaToken(chain, project, token, balance, wallet);
+          let newToken = await addAlpacaToken(chain, project, 'staked', token, balance, wallet);
           balances.push(newToken);
 
         // Single-Asset Vaults:
         } else {
-          let newToken = await addToken(chain, project, token, balance, wallet);
+          let newToken = await addToken(chain, project, 'staked', token, balance, wallet);
           balances.push(newToken);
         }
 
@@ -98,7 +98,7 @@ const getVaultBalances = async (wallet: Address) => {
   })());
   await Promise.all(promises);
   if(autoRewards > 0) {
-    let newToken = await addToken(chain, project, auto, autoRewards, wallet);
+    let newToken = await addToken(chain, project, 'unclaimed', auto, autoRewards, wallet);
     balances.push(newToken);
   }
   return balances;

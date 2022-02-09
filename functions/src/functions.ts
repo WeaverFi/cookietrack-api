@@ -5,7 +5,7 @@ import axios from 'axios';
 
 // Importing Types:
 import type { Request } from 'express';
-import type { APIResponse, Chain, ChainData, Address, Hash, ABI, URL, Token, NativeToken, LPToken, PricedToken, DebtToken, TokenType, TransferTX, ApprovalTX, SimpleTX } from 'cookietrack-types';
+import type { APIResponse, Chain, ChainData, Address, Hash, ABI, URL, Token, NativeToken, LPToken, PricedToken, DebtToken, XToken, TokenType, TokenStatus, TransferTX, ApprovalTX, SimpleTX } from 'cookietrack-types';
 
 // Fetching Required JSON Files:
 const chains: Record<Chain, ChainData> = require('../static/chains.json');
@@ -85,6 +85,7 @@ export const addNativeToken = async (chain: Chain, rawBalance: number, owner: Ad
   // Initializing Token Values:
   let type: TokenType = 'nativeToken';
   let location = 'wallet';
+  let status: TokenStatus = 'none';
   let address = defaultAddress;
   let balance = rawBalance / (10 ** 18);
   let price = await getTokenPrice(chain, defaultAddress, 18);
@@ -102,13 +103,13 @@ export const addNativeToken = async (chain: Chain, rawBalance: number, owner: Ad
   // Finding Token Logo:
   let logo = getTokenLogo(chain, symbol);
 
-  return { type, chain, location, owner, symbol, address, balance, price, logo };
+  return { type, chain, location, status, owner, symbol, address, balance, price, logo };
 }
 
 /* ========================================================================================================================================================================= */
 
 // Function to get token info:
-export const addToken = async (chain: Chain, location: string, address: Address, rawBalance: number, owner: Address): Promise<Token> => {
+export const addToken = async (chain: Chain, location: string, status: TokenStatus, address: Address, rawBalance: number, owner: Address): Promise<Token> => {
 
   // Initializing Token Values:
   let type: TokenType = 'token';
@@ -134,13 +135,13 @@ export const addToken = async (chain: Chain, location: string, address: Address,
   let balance = rawBalance / (10 ** decimals);
   let price = await getTokenPrice(chain, address, decimals);
 
-  return { type, chain, location, owner, symbol, address, balance, price, logo };
+  return { type, chain, location, status, owner, symbol, address, balance, price, logo };
 }
 
 /* ========================================================================================================================================================================= */
 
 // Function to get LP token info:
-export const addLPToken = async (chain: Chain, location: string, address: Address, rawBalance: number, owner: Address): Promise<LPToken> => {
+export const addLPToken = async (chain: Chain, location: string, status: TokenStatus, address: Address, rawBalance: number, owner: Address): Promise<LPToken> => {
 
   // Initializing Token Values:
   let type: TokenType = 'lpToken';
@@ -178,7 +179,7 @@ export const addLPToken = async (chain: Chain, location: string, address: Addres
     logo: getTokenLogo(chain, symbol1)
   }
 
-  return { type, chain, location, owner, symbol, address, balance, token0, token1 };
+  return { type, chain, location, status, owner, symbol, address, balance, token0, token1 };
 }
 
 /* ========================================================================================================================================================================= */
@@ -188,6 +189,7 @@ export const addDebtToken = async (chain: Chain, location: string, address: Addr
 
   // Initializing Token Values:
   let type: TokenType = 'debt';
+  let status: TokenStatus = 'borrowed';
   let symbol = '';
   let decimals = 18;
 
@@ -210,7 +212,37 @@ export const addDebtToken = async (chain: Chain, location: string, address: Addr
   let balance = rawBalance / (10 ** decimals);
   let price = await getTokenPrice(chain, address, decimals);
 
-  return { type, chain, location, owner, symbol, address, balance, price, logo };
+  return { type, chain, location, status, owner, symbol, address, balance, price, logo };
+}
+
+/* ========================================================================================================================================================================= */
+
+// Function to get derivative/composite token info:
+export const addXToken = async (chain: Chain, location: string, status: TokenStatus, address: Address, rawBalance: number, owner: Address, underlyingAddress: Address, underlyingRawBalance: number): Promise<XToken> => {
+
+  // Initializing Token Values:
+  let type: TokenType = 'xToken';
+  let symbol = await query(chain, address, minABI, 'symbol', []);
+  let decimals = parseInt(await query(chain, address, minABI, 'decimals', []));
+  let balance = rawBalance / (10 ** decimals);
+
+  // Finding Token Logo:
+  let logo = getTokenLogo(chain, symbol);
+
+  // Finding Underlying Token Info:
+  let underlyingSymbol = await query(chain, underlyingAddress, minABI, 'symbol', []);
+  let underlyingDecimals = parseInt(await query(chain, underlyingAddress, minABI, 'decimals', []));
+
+  // Underlying Token:
+  let underlyingToken: PricedToken = {
+    symbol: underlyingSymbol,
+    address: underlyingAddress,
+    balance: underlyingRawBalance / (10 ** underlyingDecimals),
+    price: await getTokenPrice(chain, underlyingAddress, underlyingDecimals),
+    logo: getTokenLogo(chain, underlyingSymbol)
+  }
+
+  return { type, chain, location, status, owner, symbol, address, balance, logo, underlyingToken };
 }
 
 /* ========================================================================================================================================================================= */
@@ -736,7 +768,7 @@ const pad = (num: number): string => {
 /* ========================================================================================================================================================================= */
 
 // Function to get S4D token info:
-export const addS4DToken = async (chain: Chain, location: string, address: Address, rawBalance: number, owner: Address): Promise<Token> => {
+export const addS4DToken = async (chain: Chain, location: string, status: TokenStatus, address: Address, rawBalance: number, owner: Address): Promise<Token> => {
 
   // Initializing Token Values:
   let type: TokenType = 'token';
@@ -749,13 +781,13 @@ export const addS4DToken = async (chain: Chain, location: string, address: Addre
   let controller = await query(chain, address, snowball.s4dABI, 'owner', []);
   let price = parseInt(await query(chain, controller, snowball.s4dControllerABI, 'getVirtualPrice', [])) / (10 ** decimals);
 
-  return { type, chain, location, owner, symbol, address, balance, price, logo };
+  return { type, chain, location, status, owner, symbol, address, balance, price, logo };
 }
 
 /* ========================================================================================================================================================================= */
 
 // Function to get Trader Joe token info (xJOE):
-export const addTraderJoeToken = async (chain: Chain, location: string, address: Address, rawBalance: number, owner: Address): Promise<Token> => {
+export const addTraderJoeToken = async (chain: Chain, location: string, status: TokenStatus, address: Address, rawBalance: number, owner: Address): Promise<Token> => {
 
   // Initializing Token Values:
   let type: TokenType = 'token';
@@ -771,13 +803,13 @@ export const addTraderJoeToken = async (chain: Chain, location: string, address:
   let multiplier = joeStaked / xjoeSupply;
   let price = multiplier * (await getTokenPrice(chain, underlyingToken, decimals));
 
-  return { type, chain, location, owner, symbol, address, balance, price, logo };
+  return { type, chain, location, status, owner, symbol, address, balance, price, logo };
 }
 
 /* ========================================================================================================================================================================= */
 
 // Function to get Aave BLP token info:
-export const addAaveBLPToken = async (chain: Chain, location: string, address: Address, rawBalance: number, owner: Address): Promise<LPToken> => {
+export const addAaveBLPToken = async (chain: Chain, location: string, status: TokenStatus, address: Address, rawBalance: number, owner: Address): Promise<LPToken> => {
 
   // Initializing Token Values:
   let type: TokenType = 'lpToken';
@@ -816,13 +848,13 @@ export const addAaveBLPToken = async (chain: Chain, location: string, address: A
     logo: getTokenLogo(chain, symbol1)
   }
 
-  return { type, chain, location, owner, symbol, address, balance, token0, token1 };
+  return { type, chain, location, status, owner, symbol, address, balance, token0, token1 };
 }
 
 /* ========================================================================================================================================================================= */
 
 // Function to get 4Belt token info:
-export const add4BeltToken = async (chain: Chain, location: string, address: Address, rawBalance: number, owner: Address): Promise<Token> => {
+export const add4BeltToken = async (chain: Chain, location: string, status: TokenStatus, address: Address, rawBalance: number, owner: Address): Promise<Token> => {
 
   // Initializing Token Values:
   let type: TokenType = 'token';
@@ -832,13 +864,13 @@ export const add4BeltToken = async (chain: Chain, location: string, address: Add
   let logo = getTokenLogo(chain, symbol);
   let price = 1;
 
-  return { type, chain, location, owner, symbol, address, balance, price, logo };
+  return { type, chain, location, status, owner, symbol, address, balance, price, logo };
 }
 
 /* ========================================================================================================================================================================= */
 
 // Function to get Belt token info:
-export const addBeltToken = async (chain: Chain, location: string, address: Address, rawBalance: number, owner: Address): Promise<Token> => {
+export const addBeltToken = async (chain: Chain, location: string, status: TokenStatus, address: Address, rawBalance: number, owner: Address): Promise<Token> => {
 
   // Initializing Token Values:
   let type: TokenType = 'token';
@@ -852,13 +884,13 @@ export const addBeltToken = async (chain: Chain, location: string, address: Addr
   let underlyingToken = await query(chain, address, belt.tokenABI, 'token', []);
   let price = multiplier * (await getTokenPrice(chain, underlyingToken, decimals));
 
-  return { type, chain, location, owner, symbol, address, balance, price, logo };
+  return { type, chain, location, status, owner, symbol, address, balance, price, logo };
 }
 
 /* ========================================================================================================================================================================= */
 
 // Function to get Alpaca token info:
-export const addAlpacaToken = async (chain: Chain, location: string, address: Address, rawBalance: number, owner: Address): Promise<Token> => {
+export const addAlpacaToken = async (chain: Chain, location: string, status: TokenStatus, address: Address, rawBalance: number, owner: Address): Promise<Token> => {
 
   // Initializing Token Values:
   let type: TokenType = 'token';
@@ -874,13 +906,13 @@ export const addAlpacaToken = async (chain: Chain, location: string, address: Ad
   let underlyingToken = await query(chain, address, alpaca.tokenABI, 'token', []);
   let price = multiplier * (await getTokenPrice(chain, underlyingToken, decimals));
 
-  return { type, chain, location, owner, symbol, address, balance, price, logo };
+  return { type, chain, location, status, owner, symbol, address, balance, price, logo };
 }
 
 /* ========================================================================================================================================================================= */
 
 // Function to get Curve token info:
-export const addCurveToken = async (chain: Chain, location: string, address: Address, rawBalance: number, owner: Address): Promise<Token | LPToken> => {
+export const addCurveToken = async (chain: Chain, location: string, status: TokenStatus, address: Address, rawBalance: number, owner: Address): Promise<Token | LPToken> => {
   
   // Ethereum Token:
   if(chain === 'eth') {
@@ -926,7 +958,7 @@ export const addCurveToken = async (chain: Chain, location: string, address: Add
       price /= lpTokenSupply;
       price *= multiplier;
 
-      return { type, chain, location, owner, symbol, address, balance, price, logo };
+      return { type, chain, location, status, owner, symbol, address, balance, price, logo };
 
     // Standard LP Tokens:
     } else if(tokens.length === 2) {
@@ -972,7 +1004,7 @@ export const addCurveToken = async (chain: Chain, location: string, address: Add
         logo: getTokenLogo(chain, symbol1)
       }
 
-      return { type, chain, location, owner, symbol, address, balance, token0, token1 };
+      return { type, chain, location, status, owner, symbol, address, balance, token0, token1 };
     }
 
   // Polygon Token:
@@ -1011,7 +1043,7 @@ export const addCurveToken = async (chain: Chain, location: string, address: Add
       let price2 = await getTokenPrice(chain, token2, decimals2);
       let price = multiplier * (((supply0 * price0) + (supply1 * price1) + (supply2 * price2)) / lpTokenSupply);
 
-      return { type, chain, location, owner, symbol, address, balance, price, logo };
+      return { type, chain, location, status, owner, symbol, address, balance, price, logo };
 
     // am3CRV (Aave):
     } else if(address.toLowerCase() === '0xE7a24EF0C5e95Ffb0f6684b813A78F2a3AD7D171'.toLowerCase()) {
@@ -1024,7 +1056,7 @@ export const addCurveToken = async (chain: Chain, location: string, address: Add
       let minter = await query(chain, address, curve.polyTokenABI, 'minter', []);
       let price = parseInt(await query(chain, minter, curve.minterABI, 'get_virtual_price', [])) / (10 ** decimals);
 
-      return { type, chain, location, owner, symbol, address, balance, price, logo };
+      return { type, chain, location, status, owner, symbol, address, balance, price, logo };
 
     // btcCRV (Ren):
     } else if(address.toLowerCase() === '0xf8a57c1d3b9629b77b6726a042ca48990A84Fb49'.toLowerCase()) {
@@ -1062,7 +1094,7 @@ export const addCurveToken = async (chain: Chain, location: string, address: Add
         logo: getTokenLogo(chain, symbol1)
       }
 
-      return { type, chain, location, owner, symbol, address, balance, token0, token1 };
+      return { type, chain, location, status, owner, symbol, address, balance, token0, token1 };
 
     // crvEURTUSD (EURtUSD):
     } else if(address.toLowerCase() === '0x600743B1d8A96438bD46836fD34977a00293f6Aa'.toLowerCase()) {
@@ -1086,7 +1118,7 @@ export const addCurveToken = async (chain: Chain, location: string, address: Add
       let price1 = parseInt(await query(chain, token1, curve.minterABI, 'get_virtual_price', [])) / (10 ** decimals1);
       let price = multiplier * (((supply0 * price0) + (supply1 * price1)) / lpTokenSupply);
 
-      return { type, chain, location, owner, symbol, address, balance, price, logo };
+      return { type, chain, location, status, owner, symbol, address, balance, price, logo };
     }
 
   // Fantom Token:
@@ -1132,7 +1164,7 @@ export const addCurveToken = async (chain: Chain, location: string, address: Add
         logo: getTokenLogo(chain, symbol1)
       }
 
-      return { type, chain, location, owner, symbol, address, balance, token0, token1 };
+      return { type, chain, location, status, owner, symbol, address, balance, token0, token1 };
 
     // fUSDT+DAI+USDC (fUSDT):
     } else if(address.toLowerCase() === '0x92D5ebF3593a92888C25C0AbEF126583d4b5312E'.toLowerCase()) {
@@ -1145,7 +1177,7 @@ export const addCurveToken = async (chain: Chain, location: string, address: Add
       // Finding Token Price:
       let price = parseInt(await query(chain, address, curve.ftmTokenABI, 'get_virtual_price', [])) / (10 ** decimals);
 
-      return { type, chain, location, owner, symbol, address, balance, price, logo };
+      return { type, chain, location, status, owner, symbol, address, balance, price, logo };
 
     // btcCRV (Ren):
     } else if(address.toLowerCase() === '0x5B5CFE992AdAC0C9D48E05854B2d91C73a003858'.toLowerCase()) {
@@ -1183,7 +1215,7 @@ export const addCurveToken = async (chain: Chain, location: string, address: Add
         logo: getTokenLogo(chain, symbol1)
       }
 
-      return { type, chain, location, owner, symbol, address, balance, token0, token1 };
+      return { type, chain, location, status, owner, symbol, address, balance, token0, token1 };
 
     // crv3crypto (Tricrypto):
     } else if(address.toLowerCase() === '0x58e57cA18B7A47112b877E31929798Cd3D703b0f'.toLowerCase()) {
@@ -1210,7 +1242,7 @@ export const addCurveToken = async (chain: Chain, location: string, address: Add
       let price2 = await getTokenPrice(chain, token2, decimals2);
       let price = multiplier * (((supply0 * price0) + (supply1 * price1) + (supply2 * price2)) / lpTokenSupply);
 
-      return { type, chain, location, owner, symbol, address, balance, price, logo };
+      return { type, chain, location, status, owner, symbol, address, balance, price, logo };
 
     // g3CRV (Geist):
     } else if(address.toLowerCase() === '0xD02a30d33153877BC20e5721ee53DeDEE0422B2F'.toLowerCase()) {
@@ -1223,7 +1255,7 @@ export const addCurveToken = async (chain: Chain, location: string, address: Add
       let minter = await query(chain, address, curve.ftmTokenABI, 'minter', []);
       let price = parseInt(await query(chain, minter, curve.minterABI, 'get_virtual_price', [])) / (10 ** decimals);
 
-      return { type, chain, location, owner, symbol, address, balance, price, logo };
+      return { type, chain, location, status, owner, symbol, address, balance, price, logo };
     }
 
   // Avalanche Token:
@@ -1262,7 +1294,7 @@ export const addCurveToken = async (chain: Chain, location: string, address: Add
       let price2 = await getTokenPrice(chain, token2, decimals2);
       let price = multiplier * (((supply0 * price0) + (supply1 * price1) + (supply2 * price2)) / lpTokenSupply);
 
-      return { type, chain, location, owner, symbol, address, balance, price, logo };
+      return { type, chain, location, status, owner, symbol, address, balance, price, logo };
 
     // am3CRV (Aave):
     } else if(address.toLowerCase() === '0x1337BedC9D22ecbe766dF105c9623922A27963EC'.toLowerCase()) {
@@ -1275,7 +1307,7 @@ export const addCurveToken = async (chain: Chain, location: string, address: Add
       let minter = await query(chain, address, curve.avaxTokenABI, 'minter', []);
       let price = parseInt(await query(chain, minter, curve.minterABI, 'get_virtual_price', [])) / (10 ** decimals);
 
-      return { type, chain, location, owner, symbol, address, balance, price, logo };
+      return { type, chain, location, status, owner, symbol, address, balance, price, logo };
 
     // btcCRV (Ren):
     } else if(address.toLowerCase() === '0xC2b1DF84112619D190193E48148000e3990Bf627'.toLowerCase()) {
@@ -1313,7 +1345,7 @@ export const addCurveToken = async (chain: Chain, location: string, address: Add
         logo: getTokenLogo(chain, symbol1)
       }
 
-      return { type, chain, location, owner, symbol, address, balance, token0, token1 };
+      return { type, chain, location, status, owner, symbol, address, balance, token0, token1 };
     }
   }
 
@@ -1322,6 +1354,7 @@ export const addCurveToken = async (chain: Chain, location: string, address: Add
     type: 'token',
     chain: chain,
     location: location,
+    status: 'none',
     owner: owner,
     symbol: '???',
     address: address,
@@ -1334,7 +1367,7 @@ export const addCurveToken = async (chain: Chain, location: string, address: Add
 /* ========================================================================================================================================================================= */
 
 // Function to get BZX token info:
-export const addBZXToken = async (chain: Chain, location: string, address: Address, rawBalance: number, owner: Address): Promise<Token> => {
+export const addBZXToken = async (chain: Chain, location: string, status: TokenStatus, address: Address, rawBalance: number, owner: Address): Promise<Token> => {
 
   // Initializing Token Values:
   let type: TokenType = 'token';
@@ -1348,13 +1381,13 @@ export const addBZXToken = async (chain: Chain, location: string, address: Addre
   let underlyingToken = await query(chain, address, bzx.tokenABI, 'loanTokenAddress', []);
   let price = multiplier * (await getTokenPrice(chain, underlyingToken, decimals));
 
-  return { type, chain, location, owner, symbol, address, balance, price, logo };
+  return { type, chain, location, status, owner, symbol, address, balance, price, logo };
 }
 
 /* ========================================================================================================================================================================= */
 
 // Function to get Balancer LP token info:
-export const addBalancerToken = async (chain: Chain, location: string, address: Address, rawBalance: number, owner: Address, id: string): Promise<Token | LPToken> => {
+export const addBalancerToken = async (chain: Chain, location: string, status: TokenStatus, address: Address, rawBalance: number, owner: Address, id: string): Promise<Token | LPToken> => {
 
   // Generic Token Values:
   let vault: Address = '0xBA12222222228d8Ba445958a75a0704d566BF2C8';
@@ -1380,7 +1413,7 @@ export const addBalancerToken = async (chain: Chain, location: string, address: 
     }
     let price = priceSum / (lpTokenSupply / (10 ** decimals));
 
-    return { type, chain, location, owner, symbol, address, balance, price, logo };
+    return { type, chain, location, status, owner, symbol, address, balance, price, logo };
 
   // Standard LP Tokens:
   } else if(poolInfo.tokens.length === 2) {
@@ -1414,7 +1447,7 @@ export const addBalancerToken = async (chain: Chain, location: string, address: 
       logo: getTokenLogo(chain, symbol1)
     }
 
-    return { type, chain, location, owner, symbol, address, balance, token0, token1 };
+    return { type, chain, location, status, owner, symbol, address, balance, token0, token1 };
   }
 
   // No Token Identified:
@@ -1422,6 +1455,7 @@ export const addBalancerToken = async (chain: Chain, location: string, address: 
     type: 'token',
     chain: chain,
     location: location,
+    status: 'none',
     owner: owner,
     symbol: '???',
     address: address,
@@ -1434,7 +1468,7 @@ export const addBalancerToken = async (chain: Chain, location: string, address: 
 /* ========================================================================================================================================================================= */
 
 // Function to get Iron token info:
-export const addIronToken = async (chain: Chain, location: string, address: Address, rawBalance: number, owner: Address): Promise<Token> => {
+export const addIronToken = async (chain: Chain, location: string, status: TokenStatus, address: Address, rawBalance: number, owner: Address): Promise<Token> => {
 
   // Initializing Token Values:
   let type: TokenType = 'token';
@@ -1447,13 +1481,13 @@ export const addIronToken = async (chain: Chain, location: string, address: Addr
   let swapAddress = await query(chain, address, iron.tokenABI, 'swap', []);
   let price = parseInt(await query(chain, swapAddress, iron.swapABI, 'getVirtualPrice', [])) / (10 ** decimals);
 
-  return { type, chain, location, owner, symbol, address, balance, price, logo };
+  return { type, chain, location, status, owner, symbol, address, balance, price, logo };
 }
 
 /* ========================================================================================================================================================================= */
 
 // Function to get Axial token info:
-export const addAxialToken = async (chain: Chain, location: string, address: Address, rawBalance: number, owner: Address): Promise<Token> => {
+export const addAxialToken = async (chain: Chain, location: string, status: TokenStatus, address: Address, rawBalance: number, owner: Address): Promise<Token> => {
 
   // Initializing Token Values:
   let type: TokenType = 'token';
@@ -1466,13 +1500,13 @@ export const addAxialToken = async (chain: Chain, location: string, address: Add
   let swapAddress = await query(chain, address, axial.tokenABI, 'owner', []);
   let price = parseInt(await query(chain, swapAddress, axial.swapABI, 'getVirtualPrice', [])) / (10 ** decimals);
 
-  return { type, chain, location, owner, symbol, address, balance, price, logo };
+  return { type, chain, location, status, owner, symbol, address, balance, price, logo };
 }
 
 /* ========================================================================================================================================================================= */
 
 // Function to get mStable token info:
-export const addStableToken = async (chain: Chain, location: string, address: Address, rawBalance: number, owner: Address): Promise<Token> => {
+export const addStableToken = async (chain: Chain, location: string, status: TokenStatus, address: Address, rawBalance: number, owner: Address): Promise<Token> => {
 
   // Initializing Token Values:
   let type: TokenType = 'token';
@@ -1487,13 +1521,13 @@ export const addStableToken = async (chain: Chain, location: string, address: Ad
   // Finding Token Symbol:
   logo = price > 1000 ? getTokenLogo(chain, 'mBTC') : getTokenLogo(chain, 'mUSD');
 
-  return { type, chain, location, owner, symbol, address, balance, price, logo };
+  return { type, chain, location, status, owner, symbol, address, balance, price, logo };
 }
 
 /* ========================================================================================================================================================================= */
 
 // Function to get Cookie token info:
-export const addCookieToken = async (chain: Chain, location: string, address: Address, rawBalance: number, owner: Address): Promise<Token> => {
+export const addCookieToken = async (chain: Chain, location: string, status: TokenStatus, address: Address, rawBalance: number, owner: Address): Promise<Token> => {
 
   // Initializing Token Values:
   let type: TokenType = 'token';
@@ -1507,5 +1541,5 @@ export const addCookieToken = async (chain: Chain, location: string, address: Ad
   let exchangeRate = parseInt(await query(chain, '0x9eE8817Fe46f4620708a9FA1119972bC4c131641', cookiegame.exchangeABI, 'price', []));
   let price = fortunePrice / exchangeRate;
 
-  return { type, chain, location, owner, symbol, address, balance, price, logo };
+  return { type, chain, location, status, owner, symbol, address, balance, price, logo };
 }

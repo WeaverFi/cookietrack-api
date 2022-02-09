@@ -72,12 +72,12 @@ const getPoolBalances = async (wallet: Address) => {
 
       // LP Pool:
       if(token.toLowerCase() === '0x85Cb0baB616Fe88a89A35080516a8928F38B518b'.toLowerCase()) {
-        let newToken = await addLPToken(chain, project, token, balance, wallet);
+        let newToken = await addLPToken(chain, project, 'staked', token, balance, wallet);
         balances.push(newToken);
 
       // All Other Pools:
       } else {
-        let newToken = await addToken(chain, project, token, balance, wallet);
+        let newToken = await addToken(chain, project, 'staked', token, balance, wallet);
         balances.push(newToken);
       }
 
@@ -89,7 +89,7 @@ const getPoolBalances = async (wallet: Address) => {
           if(token.toLowerCase() === '0x27D22A7648e955E510a40bDb058333E9190d12D4'.toLowerCase()) {
             token = poolToken;
           }
-          let newToken = await addToken(chain, project, token, balance, wallet);
+          let newToken = await addToken(chain, project, 'unclaimed', token, balance, wallet);
           balances.push(newToken);
         }
       })());
@@ -108,7 +108,7 @@ const getPodBalances = async (wallet: Address) => {
     let balance = parseInt(await query(chain, pod, pooltogether.podABI, 'balanceOfUnderlying', [wallet]));
     if(balance > 0) {
       let token = await query(chain, pod, pooltogether.podABI, 'token', []);
-      let newToken = await addToken(chain, project, token, balance, wallet);
+      let newToken = await addToken(chain, project, 'staked', token, balance, wallet);
       balances.push(newToken);
     }
   })());
@@ -120,7 +120,7 @@ const getPodBalances = async (wallet: Address) => {
 const getPoolBalanceV4 = async (wallet: Address) => {
   let balance = parseInt(await query(chain, poolV4, minABI, 'balanceOf', [wallet]));
   if(balance > 0) {
-    let newToken = await addToken(chain, project, usdc, balance, wallet);
+    let newToken = await addToken(chain, project, 'staked', usdc, balance, wallet);
     return [newToken];
   } else {
     return [];

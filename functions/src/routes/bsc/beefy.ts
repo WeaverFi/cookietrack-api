@@ -56,25 +56,25 @@ const getVaultBalances = async (wallet: Address, vaults: any) => {
       // Unique Vaults (3+ Assets):
       if(vault.assets.length > 2) {
         if(vault.id === 'belt-4belt') {
-          let newToken = await add4BeltToken(chain, project, vault.tokenAddress, underlyingBalance, wallet);
+          let newToken = await add4BeltToken(chain, project, 'staked', vault.tokenAddress, underlyingBalance, wallet);
           balances.push(newToken);
         }
 
       // LP Token Vaults:
       } else if(vault.assets.length === 2 && vault.id != 'omnifarm-usdo-busd-ot' && vault.id != 'ellipsis-renbtc') {
-        let newToken = await addLPToken(chain, project, vault.tokenAddress, underlyingBalance, wallet);
+        let newToken = await addLPToken(chain, project, 'staked', vault.tokenAddress, underlyingBalance, wallet);
         balances.push(newToken);
 
       // Single-Asset Vaults:
       } else if(vault.assets.length === 1) {
         if(vault.platform === 'Belt') {
-          let newToken = await addBeltToken(chain, project, vault.tokenAddress, underlyingBalance, wallet);
+          let newToken = await addBeltToken(chain, project, 'staked', vault.tokenAddress, underlyingBalance, wallet);
           balances.push(newToken);
         } else if(vault.platform === 'Alpaca') {
-          let newToken = await addAlpacaToken(chain, project, vault.tokenAddress, underlyingBalance, wallet);
+          let newToken = await addAlpacaToken(chain, project, 'staked', vault.tokenAddress, underlyingBalance, wallet);
           balances.push(newToken);
         } else {
-          let newToken = await addToken(chain, project, vault.tokenAddress, underlyingBalance, wallet);
+          let newToken = await addToken(chain, project, 'staked', vault.tokenAddress, underlyingBalance, wallet);
           balances.push(newToken);
         }
       }
@@ -89,12 +89,12 @@ const getStakedBIFI = async (wallet: Address) => {
   let balances: Token[] = [];
   let balance = parseInt(await query(chain, staking, minABI, 'balanceOf', [wallet]));
   if(balance > 0) {
-    let newToken = await addToken(chain, project, bifi, balance, wallet);
+    let newToken = await addToken(chain, project, 'staked', bifi, balance, wallet);
     balances.push(newToken);
   }
   let pendingRewards = parseInt(await query(chain, staking, beefy.stakingABI, 'earned', [wallet]));
   if(pendingRewards > 0) {
-    let newToken = await addToken(chain, project, wbnb, pendingRewards, wallet);
+    let newToken = await addToken(chain, project, 'unclaimed', wbnb, pendingRewards, wallet);
     balances.push(newToken);
   }
   return balances;

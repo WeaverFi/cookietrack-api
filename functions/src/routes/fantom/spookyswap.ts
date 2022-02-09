@@ -48,11 +48,11 @@ const getPoolBalances = async (wallet: Address) => {
     let balance = parseInt((await query(chain, masterChef, spookyswap.masterChefABI, 'userInfo', [poolID, wallet])).amount);
     if(balance > 0) {
       let token = (await query(chain, masterChef, spookyswap.masterChefABI, 'poolInfo', [poolID])).lpToken;
-      let newToken = await addLPToken(chain, project, token, balance, wallet);
+      let newToken = await addLPToken(chain, project, 'staked', token, balance, wallet);
       balances.push(newToken);
       let rewards = parseInt(await query(chain, masterChef, spookyswap.masterChefABI, 'pendingBOO', [poolID, wallet]));
       if(rewards > 0) {
-        let newToken = await addToken(chain, project, boo, rewards, wallet);
+        let newToken = await addToken(chain, project, 'unclaimed', boo, rewards, wallet);
         balances.push(newToken);
       }
     }
@@ -65,7 +65,7 @@ const getPoolBalances = async (wallet: Address) => {
 const getStakedBOO = async (wallet: Address) => {
   let balance = parseInt(await query(chain, xboo, spookyswap.xbooABI, 'BOOBalance', [wallet]));
   if(balance > 0) {
-    let newToken = await addToken(chain, project, boo, balance, wallet);
+    let newToken = await addToken(chain, project, 'staked', boo, balance, wallet);
     return [newToken];
   } else {
     return [];

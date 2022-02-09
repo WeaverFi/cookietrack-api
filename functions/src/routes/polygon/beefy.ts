@@ -55,24 +55,24 @@ const getVaultBalances = async (wallet: Address, vaults: any[]) => {
 
       // Curve Vaults:
       if(vault.platform === 'Curve') {
-        let newToken = await addCurveToken(chain, project, vault.tokenAddress, underlyingBalance, wallet);
+        let newToken = await addCurveToken(chain, project, 'staked', vault.tokenAddress, underlyingBalance, wallet);
         balances.push(newToken);
 
       // Unique Vaults (3+ Assets):
       } else if(vault.assets.length > 2) {
         if(vault.paltform === 'IronFinance') {
-          let newToken = await addIronToken(chain, project, vault.tokenAddress, underlyingBalance, wallet);
+          let newToken = await addIronToken(chain, project, 'staked', vault.tokenAddress, underlyingBalance, wallet);
           balances.push(newToken);
         }
 
       // LP Token Vaults:
       } else if(vault.assets.length === 2 && vault.platform != 'Kyber') {
-        let newToken = await addLPToken(chain, project, vault.tokenAddress, underlyingBalance, wallet);
+        let newToken = await addLPToken(chain, project, 'staked', vault.tokenAddress, underlyingBalance, wallet);
         balances.push(newToken);
 
       // Single-Asset Vaults:
       } else if(vault.assets.length === 1) {
-        let newToken = await addToken(chain, project, vault.tokenAddress, underlyingBalance, wallet);
+        let newToken = await addToken(chain, project, 'staked', vault.tokenAddress, underlyingBalance, wallet);
         balances.push(newToken);
       }
     }
@@ -86,12 +86,12 @@ const getStakedBIFI = async (wallet: Address) => {
   let balances: Token[] = [];
   let balance = parseInt(await query(chain, staking, minABI, 'balanceOf', [wallet]));
   if(balance > 0) {
-    let newToken = await addToken(chain, project, bifi, balance, wallet);
+    let newToken = await addToken(chain, project, 'staked', bifi, balance, wallet);
     balances.push(newToken);
   }
   let pendingRewards = parseInt(await query(chain, staking, beefy.stakingABI, 'earned', [wallet]));
   if(pendingRewards > 0) {
-    let newToken = await addToken(chain, project, wmatic, pendingRewards, wallet);
+    let newToken = await addToken(chain, project, 'unclaimed', wmatic, pendingRewards, wallet);
     balances.push(newToken);
   }
   return balances;

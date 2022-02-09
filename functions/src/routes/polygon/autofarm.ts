@@ -49,22 +49,22 @@ const getVaultBalances = async (wallet: Address) => {
 
       // Curve Vaults:
       if(vaultID === 66 || vaultID === 97 || vaultID === 98) {
-        let newToken = await addCurveToken(chain, project, token, balance, wallet);
+        let newToken = await addCurveToken(chain, project, 'staked', token, balance, wallet);
         balances.push(newToken);
 
       // BZX I-Token Vaults:
       } else if(vaultID > 58 && vaultID < 66) {
-        let newToken = await addBZXToken(chain, project, token, balance, wallet);
+        let newToken = await addBZXToken(chain, project, 'staked', token, balance, wallet);
         balances.push(newToken);
 
       // LP Token Vaults:
       } else if(symbol.includes('LP') || symbol === 'UNI-V2') {
-        let newToken = await addLPToken(chain, project, token, balance, wallet);
+        let newToken = await addLPToken(chain, project, 'staked', token, balance, wallet);
         balances.push(newToken);
 
       // Single-Asset Vaults:
       } else {
-        let newToken = await addToken(chain, project, token, balance, wallet);
+        let newToken = await addToken(chain, project, 'staked', token, balance, wallet);
         balances.push(newToken);
       }
     }

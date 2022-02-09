@@ -52,12 +52,12 @@ const getFarmBalances = async (wallet: Address) => {
 
       // Single-Asset Cake Farm:
       if(farmID === 0) {
-        let newToken = await addToken(chain, project, token, balance, wallet);
+        let newToken = await addToken(chain, project, 'staked', token, balance, wallet);
         balances.push(newToken);
 
       // All Other Farms:
       } else {
-        let newToken = await addLPToken(chain, project, token, balance, wallet);
+        let newToken = await addLPToken(chain, project, 'staked', token, balance, wallet);
         balances.push(newToken);
       }
 
@@ -70,7 +70,7 @@ const getFarmBalances = async (wallet: Address) => {
   })());
   await Promise.all(promises);
   if(cakeRewards > 0) {
-    let newToken = await addToken(chain, project, cake, cakeRewards, wallet);
+    let newToken = await addToken(chain, project, 'unclaimed', cake, cakeRewards, wallet);
     balances.push(newToken);
   }
   return balances;
@@ -82,7 +82,7 @@ const getAutoCakePoolBalance = async (wallet: Address): Promise<Token[]> => {
   if(balance > 0) {
     let multiplier = parseInt(await query(chain, autoCakePool, pancakeswap.autoCakePoolABI, 'getPricePerFullShare', [])) / (10 ** 18);
     let actualBalance = balance * multiplier;
-    let newToken = await addToken(chain, project, cake, actualBalance, wallet);
+    let newToken = await addToken(chain, project, 'staked', cake, actualBalance, wallet);
     return [newToken];
   } else {
     return [];

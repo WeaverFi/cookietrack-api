@@ -53,7 +53,7 @@ const getMarketBalances = async (wallet: Address) => {
     if(balance > 0) {
       let tokenAddress = await query(chain, market, scream.marketABI, 'underlying', []);
       let underlyingBalance = balance * (exchangeRate / (10 ** 18));
-      let newToken = await addToken(chain, project, tokenAddress, underlyingBalance, wallet);
+      let newToken = await addToken(chain, project, 'lent', tokenAddress, underlyingBalance, wallet);
       balances.push(newToken);
     }
 
@@ -74,7 +74,7 @@ const getStakedSCREAM = async (wallet: Address) => {
   let balance = parseInt(await query(chain, xscream, minABI, 'balanceOf', [wallet]));
   if(balance > 0) {
     let exchangeRate = parseInt(await query(chain, xscream, scream.stakingABI, 'getShareValue', [])) / (10 ** 18);
-    let newToken = await addToken(chain, project, screamToken, balance * exchangeRate, wallet);
+    let newToken = await addToken(chain, project, 'unclaimed', screamToken, balance * exchangeRate, wallet);
     return [newToken];
   } else {
     return [];

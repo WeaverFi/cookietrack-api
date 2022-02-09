@@ -41,7 +41,7 @@ exports.get = async (req: Request): Promise<string> => {
 const getSomething = async (wallet: Address) => {
   let balance = parseInt(await query(chain, aaveToken, minABI, 'balanceOf', [wallet]));
   if(balance > 0) {
-    let newToken = await addToken(chain, project, aaveToken, balance, wallet);
+    let newToken = await addToken(chain, project, 'none', aaveToken, balance, wallet);
     return [newToken];
   } else {
     return [];

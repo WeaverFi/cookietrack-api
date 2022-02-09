@@ -56,13 +56,13 @@ const getFarmBalances = async (wallet: Address) => {
       // pEVRT Farm:
       if(farm === farms[0]) {
         let exchangeRate = parseInt(await query(chain, pevrt, everest.stakingABI, 'currentExchangeRate', [])) / (10 ** 18);
-        let newToken = await addToken(chain, project, evrt, balance * exchangeRate, wallet);
+        let newToken = await addToken(chain, project, 'staked', evrt, balance * exchangeRate, wallet);
         balances.push(newToken);
 
       // LP Farms:
       } else {
         let lpToken = await query(chain, farm, everest.farmABI, 'stakingToken', []);
-        let newToken = await addLPToken(chain, project, lpToken, balance, wallet);
+        let newToken = await addLPToken(chain, project, 'staked', lpToken, balance, wallet);
         balances.push(newToken);
       }
       
@@ -75,7 +75,7 @@ const getFarmBalances = async (wallet: Address) => {
   })());
   await Promise.all(promises);
   if(evrtRewards > 0) {
-    let newToken = await addToken(chain, project, evrt, evrtRewards, wallet);
+    let newToken = await addToken(chain, project, 'unclaimed', evrt, evrtRewards, wallet);
     balances.push(newToken);
   }
   return balances;
@@ -86,7 +86,7 @@ const getStakedEVRT = async (wallet: Address) => {
   let balance = parseInt(await query(chain, pevrt, minABI, 'balanceOf', [wallet]));
   if(balance > 0) {
     let exchangeRate = parseInt(await query(chain, pevrt, everest.stakingABI, 'currentExchangeRate', [])) / (10 ** 18);
-    let newToken = await addToken(chain, project, evrt, balance * exchangeRate, wallet);
+    let newToken = await addToken(chain, project, 'staked', evrt, balance * exchangeRate, wallet);
     return [newToken];
   } else {
     return [];

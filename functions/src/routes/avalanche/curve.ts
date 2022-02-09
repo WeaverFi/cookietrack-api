@@ -47,7 +47,7 @@ const getPoolBalances = async (wallet: Address) => {
     let balance = parseInt(await query(chain, gauge, minABI, 'balanceOf', [wallet]));
     if(balance > 0) {
       let token = await query(chain, gauge, curve.gaugeABI, 'lp_token', []);
-      let newToken = await addCurveToken(chain, project, token, balance, wallet);
+      let newToken = await addCurveToken(chain, project, 'staked', token, balance, wallet);
       balances.push(newToken);
 
       // Pending Rewards:
@@ -56,7 +56,7 @@ const getPoolBalances = async (wallet: Address) => {
         if(token != '0x0000000000000000000000000000000000000000') {
           let rewards = parseInt(await query(chain, gauge, curve.gaugeABI, 'claimable_reward', [wallet, token]));
           if(rewards > 0) {
-            let newToken = await addToken(chain, project, token, rewards, wallet);
+            let newToken = await addToken(chain, project, 'unclaimed', token, rewards, wallet);
             balances.push(newToken);
           }
         }

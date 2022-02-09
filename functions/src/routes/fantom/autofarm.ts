@@ -51,17 +51,17 @@ const getVaultBalances = async (wallet: Address) => {
   
         // Curve Vaults:
         if(vaultID === 39 || vaultID === 40 || vaultID === 41 || vaultID === 66 || vaultID === 69) {
-          let newToken = await addCurveToken(chain, project, token, balance, wallet);
+          let newToken = await addCurveToken(chain, project, 'staked', token, balance, wallet);
           balances.push(newToken);
   
         // LP Token Vaults:
         } else if(symbol.includes('LP')) {
-          let newToken = await addLPToken(chain, project, token, balance, wallet);
+          let newToken = await addLPToken(chain, project, 'staked', token, balance, wallet);
           balances.push(newToken);
   
         // Single-Asset Vaults:
         } else {
-          let newToken = await addToken(chain, project, token, balance, wallet);
+          let newToken = await addToken(chain, project, 'staked', token, balance, wallet);
           balances.push(newToken);
         }
       }

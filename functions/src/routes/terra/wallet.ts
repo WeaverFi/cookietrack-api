@@ -42,7 +42,7 @@ const getNativeBalances = async (wallet: TerraAddress) => {
   let ignoreTokens = ['unok', 'uidr'];
   let bankBalances = (await terra.bank.balance(wallet))[0].filter((token: any) => token.denom.charAt(0) === 'u' && !ignoreTokens.includes(token.denom.toLowerCase()));
   let promises = bankBalances.map((token: any) => (async () => {
-    let newToken = await addNativeToken('wallet', token.amount, wallet, token.denom.slice(1));
+    let newToken = await addNativeToken('wallet', 'none', token.amount, wallet, token.denom.slice(1));
     balances.push(newToken);
   })());
   await Promise.all(promises);
@@ -56,7 +56,7 @@ const getTokenBalances = async (wallet: TerraAddress) => {
     let balance = parseInt((await query(token.address, {balance: {address: wallet}})).balance);
     if(balance > 0) {
       let decimals = (await query(token.address, {token_info: {}})).decimals;
-      let newToken = await addToken('wallet', token.address, token.symbol, decimals, balance, wallet);
+      let newToken = await addToken('wallet', 'none', token.address, token.symbol, decimals, balance, wallet);
       tokens.push(newToken);
     }
   })());

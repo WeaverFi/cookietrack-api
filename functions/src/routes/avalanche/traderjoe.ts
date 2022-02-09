@@ -46,7 +46,7 @@ exports.get = async (req: Request): Promise<string> => {
 const getStakedJOE = async (wallet: Address) => {
   let balance = parseInt(await query(chain, xjoe, minABI, 'balanceOf', [wallet]));
   if(balance > 0) {
-    let newToken = await addTraderJoeToken(chain, project, xjoe, balance, wallet);
+    let newToken = await addTraderJoeToken(chain, project, 'staked', xjoe, balance, wallet);
     return [newToken];
   } else {
     return [];
@@ -68,10 +68,10 @@ const getFarmBalances = async (wallet: Address) => {
     if(balance > 0) {
       let token = (await query(chain, masterChefV2, traderjoe.masterChefABI, 'poolInfo', [farmID])).lpToken;
       if(token === xjoe) {
-        let newToken = await addTraderJoeToken(chain, project, xjoe, balance, wallet);
+        let newToken = await addTraderJoeToken(chain, project, 'staked', xjoe, balance, wallet);
         balances.push(newToken);
       } else {
-        let newToken = await addLPToken(chain, project, token, balance, wallet);
+        let newToken = await addLPToken(chain, project, 'staked', token, balance, wallet);
         balances.push(newToken);
       }
       let rewards = await query(chain, masterChefV2, traderjoe.masterChefABI, 'pendingTokens', [farmID, wallet]);
@@ -81,7 +81,7 @@ const getFarmBalances = async (wallet: Address) => {
       }
       let pendingBonus = parseInt(rewards.pendingBonusToken);
       if(pendingBonus > 0) {
-        let newToken = await addToken(chain, project, rewards.bonusTokenAddress, pendingBonus, wallet);
+        let newToken = await addToken(chain, project, 'unclaimed', rewards.bonusTokenAddress, pendingBonus, wallet);
         balances.push(newToken);
       }
     }
@@ -94,10 +94,10 @@ const getFarmBalances = async (wallet: Address) => {
     if(balance > 0) {
       let token = (await query(chain, masterChefV3, traderjoe.masterChefABI, 'poolInfo', [farmID])).lpToken;
       if(token === xjoe) {
-        let newToken = await addTraderJoeToken(chain, project, xjoe, balance, wallet);
+        let newToken = await addTraderJoeToken(chain, project, 'staked', xjoe, balance, wallet);
         balances.push(newToken);
       } else {
-        let newToken = await addLPToken(chain, project, token, balance, wallet);
+        let newToken = await addLPToken(chain, project, 'staked', token, balance, wallet);
         balances.push(newToken);
       }
       let rewards = await query(chain, masterChefV3, traderjoe.masterChefABI, 'pendingTokens', [farmID, wallet]);
@@ -107,14 +107,14 @@ const getFarmBalances = async (wallet: Address) => {
       }
       let pendingBonus = parseInt(rewards.pendingBonusToken);
       if(pendingBonus > 0) {
-        let newToken = await addToken(chain, project, rewards.bonusTokenAddress, pendingBonus, wallet);
+        let newToken = await addToken(chain, project, 'unclaimed', rewards.bonusTokenAddress, pendingBonus, wallet);
         balances.push(newToken);
       }
     }
   })());
   await Promise.all(promisesV3);
   if(joeRewards > 0) {
-    let newToken = await addToken(chain, project, joe, joeRewards, wallet);
+    let newToken = await addToken(chain, project, 'unclaimed', joe, joeRewards, wallet);
     balances.push(newToken);
   }
   return balances;
@@ -132,7 +132,7 @@ const getMarketBalances = async (wallet: Address) => {
     if(balance > 0) {
       let token = await query(chain, market, traderjoe.marketABI, 'underlying', []);
       let underlyingBalance = balance * (exchangeRate / (10 ** 18));
-      let newToken = await addToken(chain, project, token, underlyingBalance, wallet);
+      let newToken = await addToken(chain, project, 'lent', token, underlyingBalance, wallet);
       balances.push(newToken);
     }
     if(debt > 0) {

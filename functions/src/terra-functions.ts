@@ -6,7 +6,7 @@ import axios from 'axios';
 
 // Importing Types:
 import type { Request } from 'express';
-import type { APIResponse, Chain, TerraAddress, Address, URL, Token, NativeToken, TokenType } from 'cookietrack-types';
+import type { APIResponse, Chain, TerraAddress, Address, URL, Token, NativeToken, TokenType, TokenStatus } from 'cookietrack-types';
 
 // Importing Variables:
 import { terra_data } from './tokens';
@@ -71,7 +71,7 @@ export const isAddress = (address: string) => {
 /* ========================================================================================================================================================================= */
 
 // Function to get native token info:
-export const addNativeToken = async (location: string, rawBalance: number, owner: TerraAddress, symbol: string): Promise<NativeToken> => {
+export const addNativeToken = async (location: string, status: TokenStatus, rawBalance: number, owner: TerraAddress, symbol: string): Promise<NativeToken> => {
 
   // Initializing Token Values:
   let type: TokenType = 'nativeToken';
@@ -94,13 +94,13 @@ export const addNativeToken = async (location: string, rawBalance: number, owner
   // Finding Token Logo:
   let logo = getTokenLogo(symbol);
 
-  return { type, chain, location, owner, symbol, address, balance, price, logo };
+  return { type, chain, location, status, owner, symbol, address, balance, price, logo };
 }
 
 /* ========================================================================================================================================================================= */
 
 // Function to get token info:
-export const addToken = async (location: string, address: TerraAddress, symbol: string, decimals: number, rawBalance: number, owner: TerraAddress): Promise<Token> => {
+export const addToken = async (location: string, status: TokenStatus, address: TerraAddress, symbol: string, decimals: number, rawBalance: number, owner: TerraAddress): Promise<Token> => {
 
   // Initializing Token Values:
   let type: TokenType = 'token';
@@ -108,7 +108,7 @@ export const addToken = async (location: string, address: TerraAddress, symbol: 
   let price = await getTokenPrice(address);
   let logo = getTokenLogo(symbol);
 
-  return { type, chain, location, owner, symbol, address, balance, price, logo };
+  return { type, chain, location, status, owner, symbol, address, balance, price, logo };
 }
 
 /* ========================================================================================================================================================================= */

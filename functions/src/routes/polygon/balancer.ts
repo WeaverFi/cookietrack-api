@@ -112,7 +112,7 @@ const getPoolBalances = async (wallet: Address) => {
     let address = (await query(chain, vault, balancer.vaultABI, 'getPool', [id]))[0];
     let balance = parseInt(await query(chain, address, minABI, 'balanceOf', [wallet]));
     if(balance > 0) {
-      let newToken = await addBalancerToken(chain, project, address, balance, wallet, id);
+      let newToken = await addBalancerToken(chain, project, 'staked', address, balance, wallet, id);
       balances.push(newToken);
     }
   })());

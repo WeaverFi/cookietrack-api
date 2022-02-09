@@ -51,17 +51,17 @@ const getVaultBalances = async (wallet: Address) => {
   
         // xJOE Vault:
         if(vaultID === 17) {
-          let newToken = await addTraderJoeToken(chain, project, token, balance, wallet);
+          let newToken = await addTraderJoeToken(chain, project, 'staked', token, balance, wallet);
           balances.push(newToken);
   
         // LP Token Vaults:
         } else if(symbol.includes('LP')) {
-          let newToken = await addLPToken(chain, project, token, balance, wallet);
+          let newToken = await addLPToken(chain, project, 'staked', token, balance, wallet);
           balances.push(newToken);
   
         // Single-Asset Vaults:
         } else {
-          let newToken = await addToken(chain, project, token, balance, wallet);
+          let newToken = await addToken(chain, project, 'staked', token, balance, wallet);
           balances.push(newToken);
         }
       }

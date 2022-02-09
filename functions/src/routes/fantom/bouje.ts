@@ -48,15 +48,15 @@ const getPoolBalances = async (wallet: Address) => {
       let token = (await query(chain, masterChef, bouje.masterChefABI, 'poolInfo', [poolID])).lpToken;
       let symbol = await query(chain, token, minABI, 'symbol', []);
       if(symbol === 'spLP') {
-        let newToken = await addLPToken(chain, project, token, balance, wallet);
+        let newToken = await addLPToken(chain, project, 'staked', token, balance, wallet);
         balances.push(newToken);
       } else {
-        let newToken = await addToken(chain, project, token, balance, wallet);
+        let newToken = await addToken(chain, project, 'staked', token, balance, wallet);
         balances.push(newToken);
       }
       let rewards = parseInt(await query(chain, masterChef, bouje.masterChefABI, 'pendingVive', [poolID, wallet]));
       if(rewards > 0) {
-        let newToken = await addToken(chain, project, vive, rewards, wallet);
+        let newToken = await addToken(chain, project, 'unclaimed', vive, rewards, wallet);
         balances.push(newToken);
       }
     }

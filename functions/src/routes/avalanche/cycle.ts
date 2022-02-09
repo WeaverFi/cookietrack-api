@@ -61,20 +61,20 @@ const getVaultBalances = async (wallet: Address) => {
       // xJOE Vault:
       if(intermediary.toLowerCase() === '0x04E6F23217C13E1dfE54ee80fb96F7ECC90116Fe'.toLowerCase()) {
         let actualBalance = parseInt(await query(chain, intermediary, cycle.intermediaryABI, 'getLPamountForShares', [(balance / 10 ** 10).toFixed(0)]));
-        let newToken = await addTraderJoeToken(chain, project, xjoe, actualBalance * (10 ** 10), wallet);
+        let newToken = await addTraderJoeToken(chain, project, 'staked', xjoe, actualBalance * (10 ** 10), wallet);
         balances.push(newToken);
 
       // PNG Vault:
       } else if(intermediary.toLowerCase() === '0x8AdEaddcB00F4ea34c7EB0B4d48Bff8de0a39244'.toLowerCase()) {
         let actualBalance = parseInt(await query(chain, intermediary, cycle.intermediaryABI, 'getLPamountForShares', [(balance / 10 ** 10).toFixed(0)]));
-        let newToken = await addToken(chain, project, png, actualBalance * (10 ** 10), wallet);
+        let newToken = await addToken(chain, project, 'staked', png, actualBalance * (10 ** 10), wallet);
         balances.push(newToken);
 
       // All Other LP Vaults:
       } else {
         let lpToken = await query(chain, intermediary, cycle.intermediaryABI, 'LPtoken', []);
         let actualBalance = parseInt(await query(chain, intermediary, cycle.intermediaryABI, 'getAccountLP', [wallet]));
-        let newToken = await addLPToken(chain, project, lpToken, actualBalance, wallet);
+        let newToken = await addLPToken(chain, project, 'staked', lpToken, actualBalance, wallet);
         balances.push(newToken);
       }
 
@@ -87,7 +87,7 @@ const getVaultBalances = async (wallet: Address) => {
   })());
   await Promise.all(promises);
   if(cycleRewards > 0) {
-    let newToken = await addToken(chain, project, cycleToken, cycleRewards, wallet);
+    let newToken = await addToken(chain, project, 'unclaimed', cycleToken, cycleRewards, wallet);
     balances.push(newToken);
   }
   return balances;
@@ -101,24 +101,24 @@ const getStakedCYCLE = async (wallet: Address) => {
     if(balance > 0) {
       if(pool === pools[0]) {
         let lpToken = await query(chain, pool, cycle.stakingABI, 'stakingToken', []);
-        let newToken = await addLPToken(chain, project, lpToken, balance, wallet);
+        let newToken = await addLPToken(chain, project, 'staked', lpToken, balance, wallet);
         balances.push(newToken);
         let rewards = parseInt(await query(chain, pool, cycle.stakingABI, 'earned', [wallet]));
         if(rewards > 0) {
-          let newToken = await addToken(chain, project, cycleToken, rewards, wallet);
+          let newToken = await addToken(chain, project, 'unclaimed', cycleToken, rewards, wallet);
           balances.push(newToken);
         }
       } else if(pool === pools[1]) {
-        let newToken = await addToken(chain, project, cycleToken, balance, wallet);
+        let newToken = await addToken(chain, project, 'staked', cycleToken, balance, wallet);
         balances.push(newToken);
         let rewards = parseInt(await query(chain, pool, cycle.stakingABI, 'earned', [wallet]));
         if(rewards > 0) {
-          let newToken = await addToken(chain, project, wavax, rewards, wallet);
+          let newToken = await addToken(chain, project, 'unclaimed', wavax, rewards, wallet);
           balances.push(newToken);
         }
       } else if(pool === pools[2]) {
         let actualBalance = await query(chain, pool, cycle.stakingABI, 'getAccountCYCLE', [wallet]);
-        let newToken = await addToken(chain, project, cycleToken, actualBalance, wallet);
+        let newToken = await addToken(chain, project, 'staked', cycleToken, actualBalance, wallet);
         balances.push(newToken);
       }
     }

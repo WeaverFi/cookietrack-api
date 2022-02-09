@@ -49,7 +49,7 @@ const getFarmBalances = async (wallet: Address) => {
     let balance = parseInt((await query(chain, masterChef, sushiswap.masterChefABI, 'userInfo', [farmID, wallet])).amount);
     if(balance > 0) {
       let lpToken = await query(chain, masterChef, sushiswap.masterChefABI, 'lpToken', [farmID]);
-      let newToken = await addLPToken(chain, project, lpToken, balance, wallet);
+      let newToken = await addLPToken(chain, project, 'staked', lpToken, balance, wallet);
       balances.push(newToken);
 
       // Pending SUSHI Rewards:
@@ -61,7 +61,7 @@ const getFarmBalances = async (wallet: Address) => {
   })());
   await Promise.all(promises);
   if(sushiRewards > 0) {
-    let newToken = await addToken(chain, project, sushi, sushiRewards, wallet);
+    let newToken = await addToken(chain, project, 'unclaimed', sushi, sushiRewards, wallet);
     balances.push(newToken);
   }
   return balances;

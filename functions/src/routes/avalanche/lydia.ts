@@ -59,15 +59,15 @@ const getFarmBalances = async (wallet: Address) => {
     if(balance > 0) {
       let poolInfo = await query(chain, registry, lydia.registryABI, 'poolInfo', [farmID]);
       if(poolInfo.lpToken.toLowerCase() === lyd.toLowerCase()) {
-        let newToken = await addToken(chain, project, poolInfo.lpToken, balance, wallet);
+        let newToken = await addToken(chain, project, 'staked', poolInfo.lpToken, balance, wallet);
         balances.push(newToken);
       } else {
-        let newToken = await addLPToken(chain, project, poolInfo.lpToken, balance, wallet);
+        let newToken = await addLPToken(chain, project, 'staked', poolInfo.lpToken, balance, wallet);
         balances.push(newToken);
       }
       let rewards = await (query(chain, registry, lydia.registryABI, 'pendingLyd', [farmID, wallet]));
       if(rewards > 0) {
-        let newToken = await addToken(chain, project, lyd, rewards, wallet);
+        let newToken = await addToken(chain, project, 'unclaimed', lyd, rewards, wallet);
         balances.push(newToken);
       }
     }
@@ -82,7 +82,7 @@ const getAutoLYDFarmBalance = async (wallet: Address) => {
   if(shares > 0) {
     let exchangeRate = parseInt(await query(chain, autoLydFarm, lydia.lydFarmABI, 'getPricePerFullShare', [])) / (10 ** 18);
     let balance = shares * exchangeRate;
-    let newToken = await addToken(chain, project, lyd, balance, wallet);
+    let newToken = await addToken(chain, project, 'staked', lyd, balance, wallet);
     return [newToken];
   } else {
     return [];
@@ -96,11 +96,11 @@ const getMaximusFarmBalances = async (wallet: Address): Promise<(Token | LPToken
     let balance = parseInt(await query(chain, farm, minABI, 'balanceOf', [wallet]));
     if(balance > 0) {
       let lpToken = await query(chain, farm, lydia.maximusFarmABI, 'stakingToken', []);
-      let newToken = await addLPToken(chain, project, lpToken, balance, wallet);
+      let newToken = await addLPToken(chain, project, 'staked', lpToken, balance, wallet);
       balances.push(newToken);
       let rewards = parseInt(await query(chain, farm, lydia.maximusFarmABI, 'earned', [wallet]));
       if(rewards > 0) {
-        let newToken = await addToken(chain, project, lyd, rewards, wallet);
+        let newToken = await addToken(chain, project, 'unclaimed', lyd, rewards, wallet);
         balances.push(newToken);
       }
     }

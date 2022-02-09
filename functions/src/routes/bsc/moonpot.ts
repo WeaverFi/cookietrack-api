@@ -52,27 +52,27 @@ const getPotBalances = async (wallet: Address, pots: any[]) => {
 
       // 4Belt Pot:
       if(pot.token.includes('4Belt')) {
-        let newToken = await add4BeltToken(chain, project, pot.tokenAddress, balance, wallet);
+        let newToken = await add4BeltToken(chain, project, 'staked', pot.tokenAddress, balance, wallet);
         balances.push(newToken);
 
       // Belt Pots:
       } else if(pot.token.startsWith('belt')) {
-        let newToken = await addBeltToken(chain, project, pot.tokenAddress, balance, wallet);
+        let newToken = await addBeltToken(chain, project, 'staked', pot.tokenAddress, balance, wallet);
         balances.push(newToken);
 
       // Alpaca Pots:
       } else if(pot.token.startsWith('ib')) {
-        let newToken = await addAlpacaToken(chain, project, pot.tokenAddress, balance, wallet);
+        let newToken = await addAlpacaToken(chain, project, 'staked', pot.tokenAddress, balance, wallet);
         balances.push(newToken);
 
       // LP Pots:
       } else if(pot.token.endsWith('LP')) {
-        let newToken = await addLPToken(chain, project, pot.tokenAddress, balance, wallet);
+        let newToken = await addLPToken(chain, project, 'staked', pot.tokenAddress, balance, wallet);
         balances.push(newToken);
 
       // Single-Asset Pots:
       } else {
-        let newToken = await addToken(chain, project, pot.tokenAddress, balance, wallet);
+        let newToken = await addToken(chain, project, 'staked', pot.tokenAddress, balance, wallet);
         balances.push(newToken);
       }
     }

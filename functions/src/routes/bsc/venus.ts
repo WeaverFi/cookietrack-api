@@ -59,7 +59,7 @@ const getMarketBalances = async (wallet: Address) => {
         underlyingToken = await query(chain, market, venus.marketABI, 'underlying', []);
       }
       let underlyingBalance = (balance / (10 ** decimals)) * (exchangeRate / (10 ** (decimals + 2)));
-      let newToken = await addToken(chain, project, underlyingToken, underlyingBalance, wallet);
+      let newToken = await addToken(chain, project, 'lent', underlyingToken, underlyingBalance, wallet);
       balances.push(newToken);
     }
     let debt = parseInt(await query(chain, market, venus.marketABI, 'borrowBalanceStored', [wallet]));
@@ -82,7 +82,7 @@ const getMarketBalances = async (wallet: Address) => {
 const getPendingRewards = async (wallet: Address) => {
   let rewards = parseInt(await query(chain, controller, venus.controllerABI, 'venusAccrued', [wallet]));
   if(rewards > 0) {
-    let newToken = await addToken(chain, project, xvs, rewards, wallet);
+    let newToken = await addToken(chain, project, 'unclaimed', xvs, rewards, wallet);
     return [newToken];
   } else {
     return [];
@@ -94,12 +94,12 @@ const getStakedVAI = async (wallet: Address) => {
   let balances: Token[] = [];
   let balance = parseInt((await query(chain, vault, venus.vaultABI, 'userInfo', [wallet])).amount);
   if(balance > 0) {
-    let newToken = await addToken(chain, project, vai, balance, wallet);
+    let newToken = await addToken(chain, project, 'staked', vai, balance, wallet);
     balances.push(newToken);
   }
   let pendingRewards = parseInt(await query(chain, vault, venus.vaultABI, 'pendingXVS', [wallet]));
   if(pendingRewards > 0) {
-    let newToken = await addToken(chain, project, xvs, pendingRewards, wallet);
+    let newToken = await addToken(chain, project, 'unclaimed', xvs, pendingRewards, wallet);
     balances.push(newToken);
   }
   return balances;
@@ -115,7 +115,7 @@ const getStakedXVS = async (wallet: Address) => {
     if(pendingRewards > 0) {
       xvsBalance += pendingRewards;
     }
-    let newToken = await addToken(chain, project, xvs, xvsBalance, wallet);
+    let newToken = await addToken(chain, project, 'staked', xvs, xvsBalance, wallet);
     return [newToken];
   } else {
     return [];

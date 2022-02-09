@@ -54,19 +54,19 @@ const getFarmBalances = async (wallet: Address, farms: any) => {
       let totalSupply = parseInt(await query(chain, farm, yieldyak.farmABI, 'totalSupply', []));
       let underlyingBalance = balance * (totalDeposits / totalSupply);
       if(token === '0x0000000000000000000000000000000000000000') {
-        let newToken = await addToken(chain, project, wavax, underlyingBalance, wallet);
+        let newToken = await addToken(chain, project, 'staked', wavax, underlyingBalance, wallet);
         balances.push(newToken);
       } else {
         let symbol = await query(chain, token, minABI, 'symbol', []);
 
         // LP Farms:
         if(lpSymbols.includes(symbol)) {
-          let newToken = await addLPToken(chain, project, token, underlyingBalance, wallet);
+          let newToken = await addLPToken(chain, project, 'staked', token, underlyingBalance, wallet);
           balances.push(newToken);
 
         // Axial Farms:
         } else if(lpAxialSymbols.includes(symbol)) {
-          let newToken = await addAxialToken(chain, project, token, underlyingBalance, wallet);
+          let newToken = await addAxialToken(chain, project, 'staked', token, underlyingBalance, wallet);
           balances.push(newToken);
 
         // Curve Farms:
@@ -75,7 +75,7 @@ const getFarmBalances = async (wallet: Address, farms: any) => {
 
         // Single-Asset Farms:
         } else {
-          let newToken = await addToken(chain, project, token, underlyingBalance, wallet);
+          let newToken = await addToken(chain, project, 'staked', token, underlyingBalance, wallet);
           balances.push(newToken);
         }
       }
@@ -97,17 +97,17 @@ const getStakedBalances = async (wallet: Address) => {
       let token = (await query(chain, staking, yieldyak.stakingABI, 'poolInfo', [poolID])).token;
       if(token.toLowerCase() != '0x6DBF865f19cd0AACA9550bdDD3b92f4f4E239468'.toLowerCase()) {
         if(token.toLowerCase() === yak.toLowerCase()) {
-          let newToken = await addToken(chain, project, yak, balance, wallet);
+          let newToken = await addToken(chain, project, 'staked', yak, balance, wallet);
           balances.push(newToken);
         } else {
           let symbol = await query(chain, token, minABI, 'symbol', []);
           if(symbol === 'PGL') {
-            let newToken = await addLPToken(chain, project, token, balance, wallet);
+            let newToken = await addLPToken(chain, project, 'staked', token, balance, wallet);
             balances.push(newToken);
           } else {
             let underlyingToken = await query(chain, token, yieldyak.intermediaryABI, 'depositToken', []);
             let actualBalance = (await query(chain, token, yieldyak.intermediaryABI, 'getDepositTokensForShares', [(balance / (10 ** 10)).toFixed(0)])) * (10 ** 10);
-            let newToken = await addLPToken(chain, project, underlyingToken, actualBalance, wallet);
+            let newToken = await addLPToken(chain, project, 'staked', underlyingToken, actualBalance, wallet);
             balances.push(newToken);
           }
         }
@@ -122,7 +122,7 @@ const getStakedBalances = async (wallet: Address) => {
   })());
   await Promise.all(promises);
   if(wavaxRewards > 0) {
-    let newToken = await addToken(chain, project, wavax, wavaxRewards, wallet);
+    let newToken = await addToken(chain, project, 'unclaimed', wavax, wavaxRewards, wallet);
     balances.push(newToken);
   }
   return balances;

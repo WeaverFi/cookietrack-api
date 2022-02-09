@@ -52,7 +52,7 @@ const getAssetBalances = async (wallet: Address) => {
     let decimals = parseInt(await query(chain, imUSD, minABI, 'decimals', []));
     let exchangeRate = parseInt(await query(chain, imUSD, mstable.assetABI, 'exchangeRate', [])) / (10 ** decimals);
     let token = await query(chain, imUSD, mstable.assetABI, 'underlying', []);
-    let newToken = await addToken(chain, project, token, usdAssetBalance * exchangeRate, wallet);
+    let newToken = await addToken(chain, project, 'staked', token, usdAssetBalance * exchangeRate, wallet);
     balances.push(newToken);
   }
 
@@ -62,11 +62,11 @@ const getAssetBalances = async (wallet: Address) => {
     let decimals = parseInt(await query(chain, imUSD, minABI, 'decimals', []));
     let exchangeRate = parseInt(await query(chain, imUSD, mstable.assetABI, 'exchangeRate', [])) / (10 ** decimals);
     let token = await query(chain, imUSD, mstable.assetABI, 'underlying', []);
-    let newToken = await addToken(chain, project, token, usdVaultBalance * exchangeRate, wallet);
+    let newToken = await addToken(chain, project, 'staked', token, usdVaultBalance * exchangeRate, wallet);
     balances.push(newToken);
     let rewards = parseInt(await query(chain, imUSDVault, mstable.vaultABI, 'earned', [wallet]));
     if(rewards > 0) {
-      let newToken = await addToken(chain, project, mta, rewards, wallet);
+      let newToken = await addToken(chain, project, 'unclaimed', mta, rewards, wallet);
       balances.push(newToken);
     }
   }
@@ -80,7 +80,7 @@ const getPoolBalances = async (wallet: Address) => {
   let promises = pools.map(lpToken => (async () => {
     let balance = parseInt(await query(chain, lpToken, minABI, 'balanceOf', [wallet]));
     if(balance > 0) {
-      let newToken = await addStableToken(chain, project, lpToken, balance, wallet);
+      let newToken = await addStableToken(chain, project, 'staked', lpToken, balance, wallet);
       balances.push(newToken);
     }
   })());

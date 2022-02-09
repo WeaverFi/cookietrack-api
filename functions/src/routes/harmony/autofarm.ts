@@ -45,7 +45,7 @@ const getVaultBalances = async (wallet: Address) => {
     let balance = parseInt(await query(chain, registry, autofarm.oneRegistryABI, 'userInfo', [vaultID, wallet]));
     if(balance > 99) {
       let lpToken = await query(chain, registry, autofarm.oneRegistryABI, 'lpToken', [vaultID]);
-      let newToken = await addLPToken(chain, project, lpToken, balance, wallet);
+      let newToken = await addLPToken(chain, project, 'staked', lpToken, balance, wallet);
       balances.push(newToken);
     }
   })());

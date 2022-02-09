@@ -41,7 +41,7 @@ exports.get = async (req: Request): Promise<string> => {
 const getPoolBalanceV4 = async (wallet: Address) => {
   let balance = parseInt(await query(chain, poolV4, minABI, 'balanceOf', [wallet]));
   if(balance > 0) {
-    let newToken = await addToken(chain, project, usdc, balance, wallet);
+    let newToken = await addToken(chain, project, 'staked', usdc, balance, wallet);
     return [newToken];
   } else {
     return [];

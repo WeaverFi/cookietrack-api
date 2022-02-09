@@ -51,17 +51,17 @@ const getPoolBalances = async (wallet: Address) => {
 
       // LP Tokens:
       if(symbol === 'Cake-LP') {
-        let newToken = await addLPToken(chain, project, token, balance, wallet);
+        let newToken = await addLPToken(chain, project, 'staked', token, balance, wallet);
         balances.push(newToken);
 
       // 4Belt Token:
       } else if(symbol === '4Belt') {
-        let newToken = await add4BeltToken(chain, project, token, balance, wallet);
+        let newToken = await add4BeltToken(chain, project, 'staked', token, balance, wallet);
         balances.push(newToken);
 
       // Belt Tokens:
       } else {
-        let newToken = await addBeltToken(chain, project, token, balance, wallet);
+        let newToken = await addBeltToken(chain, project, 'staked', token, balance, wallet);
         balances.push(newToken);
       }
 
@@ -74,7 +74,7 @@ const getPoolBalances = async (wallet: Address) => {
   })());
   await Promise.all(promises);
   if(beltRewards > 0) {
-    let newToken = await addToken(chain, project, rewardToken, beltRewards, wallet);
+    let newToken = await addToken(chain, project, 'unclaimed', rewardToken, beltRewards, wallet);
     balances.push(newToken);
   }
   return balances;

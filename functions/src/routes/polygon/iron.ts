@@ -54,19 +54,19 @@ const getFarmBalances = async (wallet: Address) => {
 
       // Iron LP Tokens:
       if(farmID === 0 || farmID === 3) {
-        let newToken = await addIronToken(chain, project, lpToken, balance, wallet);
+        let newToken = await addIronToken(chain, project, 'staked', lpToken, balance, wallet);
         balances.push(newToken);
 
       // Other LP Tokens:
       } else {
-        let newToken = await addLPToken(chain, project, lpToken, balance, wallet);
+        let newToken = await addLPToken(chain, project, 'staked', lpToken, balance, wallet);
         balances.push(newToken);
       }
 
       // Pending ICE Rewards:
       let rewards = parseInt(await query(chain, registry, iron.registryABI, 'pendingReward', [farmID, wallet]));
       if(rewards > 0) {
-        let newToken = await addToken(chain, project, ice, rewards, wallet);
+        let newToken = await addToken(chain, project, 'unclaimed', ice, rewards, wallet);
         balances.push(newToken);
       }
     }
@@ -94,7 +94,7 @@ const getMarketBalances = async (wallet: Address) => {
         tokenAddress = await query(chain, market, iron.marketABI, 'underlying', []);
       }
       let underlyingBalance = balance * (exchangeRate / (10 ** 18));
-      let newToken = await addToken(chain, project, tokenAddress, underlyingBalance, wallet);
+      let newToken = await addToken(chain, project, 'lent', tokenAddress, underlyingBalance, wallet);
       balances.push(newToken);
     }
 
@@ -118,7 +118,7 @@ const getMarketBalances = async (wallet: Address) => {
 const getMarketRewards = async (wallet: Address) => {
   let rewards = parseInt(await query(chain, lending, iron.lendingABI, 'rewardAccrued', [wallet]));
   if(rewards > 0) {
-    let newToken = await addToken(chain, project, ice, rewards, wallet);
+    let newToken = await addToken(chain, project, 'unclaimed', ice, rewards, wallet);
     return [newToken];
   } else {
     return [];
@@ -129,7 +129,7 @@ const getMarketRewards = async (wallet: Address) => {
 const getStakedICE = async (wallet: Address) => {
   let balance = parseInt((await query(chain, staking, iron.stakingABI, 'locked', [wallet])).amount);
   if(balance > 0) {
-    let newToken = await addToken(chain, project, ice, balance, wallet);
+    let newToken = await addToken(chain, project, 'staked', ice, balance, wallet);
     return [newToken];
   } else {
     return [];

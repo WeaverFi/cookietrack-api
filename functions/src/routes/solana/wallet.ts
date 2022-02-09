@@ -50,7 +50,7 @@ const getSOL = async (wallet: SolAddress, type: 0 | 1) => {
 
     // Staking Wallet:
     if(type === 1) {
-      let newToken = await addToken('staking_sol', '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', 'SOL', 9, balance, wallet);
+      let newToken = await addToken('staking_sol', 'staked', '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', 'SOL', 9, balance, wallet);
       return [newToken];
 
     // Standard Wallet:
@@ -76,7 +76,7 @@ const getTokenBalances = async (wallet: SolAddress) => {
         if(token.amount > 0) {
           let sol_token = sol_data.tokens.find((i: { address: SolAddress, symbol: string }) => i.address.toLowerCase() === token.mint.address.toLowerCase());
           if(sol_token) {
-            let newToken = await addToken('wallet', sol_token.address, sol_token.symbol, token.decimals, token.amount, wallet);
+            let newToken = await addToken('wallet', 'none', sol_token.address, sol_token.symbol, token.decimals, token.amount, wallet);
             tokens.push(newToken);
           }
         }

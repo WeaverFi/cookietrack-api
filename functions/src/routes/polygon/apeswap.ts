@@ -49,7 +49,7 @@ const getFarmBalances = async (wallet: Address) => {
     let balance = parseInt((await query(chain, masterApe, apeswap.polyMasterApeABI, 'userInfo', [farmID, wallet])).amount);
     if(balance > 0) {
       let lpToken = await query(chain, masterApe, apeswap.polyMasterApeABI, 'lpToken', [farmID]);
-      let newToken = await addLPToken(chain, project, lpToken, balance, wallet);
+      let newToken = await addLPToken(chain, project, 'staked', lpToken, balance, wallet);
       balances.push(newToken);
 
       // Pending BANANA Rewards:
@@ -63,14 +63,14 @@ const getFarmBalances = async (wallet: Address) => {
       let bonusRewards = parseInt(await query(chain, rewarder, apeswap.rewarderABI, 'pendingToken', [farmID, wallet]));
       if(bonusRewards > 0) {
         let token = await query(chain, rewarder, apeswap.rewarderABI, 'rewardToken', []);
-        let newToken = await addToken(chain, project, token, bonusRewards, wallet);
+        let newToken = await addToken(chain, project, 'unclaimed', token, bonusRewards, wallet);
         balances.push(newToken);
       }
     }
   })());
   await Promise.all(promises);
   if(bananaRewards > 0) {
-    let newToken = await addToken(chain, project, banana, bananaRewards, wallet);
+    let newToken = await addToken(chain, project, 'unclaimed', banana, bananaRewards, wallet);
     balances.push(newToken);
   }
   return balances;
@@ -89,12 +89,12 @@ const getVaultBalances = async (wallet: Address) => {
 
       // LP Vaults:
       if(symbol.endsWith('LP')) {
-        let newToken = await addLPToken(chain, project, token, balance, wallet);
+        let newToken = await addLPToken(chain, project, 'staked', token, balance, wallet);
         balances.push(newToken);
 
       // Other Vaults:
       } else {
-        let newToken = await addToken(chain, project, token, balance, wallet);
+        let newToken = await addToken(chain, project, 'staked', token, balance, wallet);
         balances.push(newToken);
       }
     }

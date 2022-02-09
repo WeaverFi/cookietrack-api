@@ -56,10 +56,10 @@ const getMarketBalances = async (wallet: Address) => {
       }
       let underlyingBalance = (balance / (10 ** decimals)) * (exchangeRate / (10 ** (decimals + 2)));
       if(symbol.includes('CAKE-LP')) {
-        let newToken = await addLPToken(chain, project, tokenAddress, underlyingBalance, wallet);
+        let newToken = await addLPToken(chain, project, 'lent', tokenAddress, underlyingBalance, wallet);
         balances.push(newToken);
       } else {
-        let newToken = await addToken(chain, project, tokenAddress, underlyingBalance, wallet);
+        let newToken = await addToken(chain, project, 'lent', tokenAddress, underlyingBalance, wallet);
         balances.push(newToken);
       }
     }

@@ -47,7 +47,7 @@ const getFarmBalances = async (wallet: Address) => {
     let balance = parseInt((await query(chain, controller, pangolin.controllerABI, 'userInfo', [farmID, wallet])).amount);
     if(balance > 0) {
       let lpToken = await query(chain, controller, pangolin.controllerABI, 'lpToken', [farmID]);
-      let newToken = await addLPToken(chain, project, lpToken, balance, wallet);
+      let newToken = await addLPToken(chain, project, 'staked', lpToken, balance, wallet);
       balances.push(newToken);
 
       // Pending PNG Rewards:
@@ -59,7 +59,7 @@ const getFarmBalances = async (wallet: Address) => {
   })());
   await Promise.all(promises);
   if(pngRewards > 0) {
-    let newToken = await addToken(chain, project, png, pngRewards, wallet);
+    let newToken = await addToken(chain, project, 'unclaimed', png, pngRewards, wallet);
     balances.push(newToken);
   }
   return balances;

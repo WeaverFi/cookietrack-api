@@ -55,7 +55,7 @@ const getVaultBalances = async (wallet: Address, vaults: any) => {
 
       // Curve Vaults:
       if(vault.platform === 'Curve') {
-        let newToken = await addCurveToken(chain, project, vault.tokenAddress, underlyingBalance, wallet);
+        let newToken = await addCurveToken(chain, project, 'staked', vault.tokenAddress, underlyingBalance, wallet);
         balances.push(newToken);
 
       // Unique Vaults (3+ Assets):
@@ -64,12 +64,12 @@ const getVaultBalances = async (wallet: Address, vaults: any) => {
 
       // LP Token Vaults:
       } else if(vault.assets.length === 2) {
-        let newToken = await addLPToken(chain, project, vault.tokenAddress, underlyingBalance, wallet);
+        let newToken = await addLPToken(chain, project, 'staked', vault.tokenAddress, underlyingBalance, wallet);
         balances.push(newToken);
 
       // Single-Asset Vaults:
       } else if(vault.assets.length === 1) {
-        let newToken = await addToken(chain, project, vault.tokenAddress, underlyingBalance, wallet);
+        let newToken = await addToken(chain, project, 'staked', vault.tokenAddress, underlyingBalance, wallet);
         balances.push(newToken);
       }
     }
@@ -83,12 +83,12 @@ const getStakedBIFI = async (wallet: Address) => {
   let balances: Token[] = [];
   let balance = parseInt(await query(chain, staking, minABI, 'balanceOf', [wallet]));
   if(balance > 0) {
-    let newToken = await addToken(chain, project, bifi, balance, wallet);
+    let newToken = await addToken(chain, project, 'staked', bifi, balance, wallet);
     balances.push(newToken);
   }
   let pendingRewards = parseInt(await query(chain, staking, beefy.stakingABI, 'earned', [wallet]));
   if(pendingRewards > 0) {
-    let newToken = await addToken(chain, project, wone, pendingRewards, wallet);
+    let newToken = await addToken(chain, project, 'unclaimed', wone, pendingRewards, wallet);
     balances.push(newToken);
   }
   return balances;

@@ -67,7 +67,7 @@ const getTokenBalances = async (wallet: Address) => {
   let promises = avax_data.tokens.map(token => (async () => {
     let balance = parseInt(await query(chain, token.address, minABI, 'balanceOf', [wallet]));
     if(balance > 0) {
-      let newToken = await addToken(chain, 'wallet', token.address, balance, wallet);
+      let newToken = await addToken(chain, 'wallet', 'none', token.address, balance, wallet);
       tokens.push(newToken);
     }
   })());

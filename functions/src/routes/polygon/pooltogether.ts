@@ -69,7 +69,7 @@ const getPoolBalances = async (wallet: Address) => {
       let balance = parseInt(await query(chain, ticket, minABI, 'balanceOf', [wallet]));
       if(balance > 0) {
         let token = await query(chain, pool.address, pooltogether.poolABI, 'token', []);
-        let newToken = await addToken(chain, project, token, balance, wallet);
+        let newToken = await addToken(chain, project, 'staked', token, balance, wallet);
         balances.push(newToken);
       }
     })());
@@ -80,7 +80,7 @@ const getPoolBalances = async (wallet: Address) => {
       let balance = parseInt((await query(chain, faucet, pooltogether.faucetABI, 'userStates', [wallet])).balance);
       if(balance > 0) {
         let token = await query(chain, faucet, pooltogether.faucetABI, 'asset', []);
-        let newToken = await addToken(chain, project, token, balance, wallet);
+        let newToken = await addToken(chain, project, 'unclaimed', token, balance, wallet);
         balances.push(newToken);
       }
     })());
@@ -94,7 +94,7 @@ const getPoolBalances = async (wallet: Address) => {
 const getPoolBalanceV4 = async (wallet: Address) => {
   let balance = parseInt(await query(chain, poolV4, minABI, 'balanceOf', [wallet]));
   if(balance > 0) {
-    let newToken = await addToken(chain, project, usdc, balance, wallet);
+    let newToken = await addToken(chain, project, 'staked', usdc, balance, wallet);
     return [newToken];
   } else {
     return [];

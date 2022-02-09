@@ -44,7 +44,7 @@ const getStakedSNOB = async (wallet: Address) => {
   let locked = await query(chain, xsnob, snowball.stakingABI, 'locked', [wallet]);
   let balance = parseInt(locked.amount);
   if(balance > 0) {
-    let newToken = await addToken(chain, project, snob, balance, wallet);
+    let newToken = await addToken(chain, project, 'staked', snob, balance, wallet);
     return [newToken];
   } else {
     return [];
@@ -65,7 +65,7 @@ const getFarmBalances = async (wallet: Address) => {
 
         // s4D StableVault:
         if(symbol === 's4D') {
-          let newToken = await addS4DToken(chain, project, farm, balance, wallet);
+          let newToken = await addS4DToken(chain, project, 'staked', farm, balance, wallet);
           balances.push(newToken);
 
         // All Other Farms:
@@ -75,22 +75,22 @@ const getFarmBalances = async (wallet: Address) => {
 
           // Pangolin & Trader Joe Liquidity Pools:
           if(symbol.includes('PGL') || symbol.includes('JLP')) {
-            let newToken = await addLPToken(chain, project, token, balance * (exchangeRatio / (10 ** 18)), wallet);
+            let newToken = await addLPToken(chain, project, 'staked', token, balance * (exchangeRatio / (10 ** 18)), wallet);
             balances.push(newToken);
 
           // xJOE Trader Joe Pool:
           } else if(symbol.includes('xJOE')) {
-            let newToken = await addTraderJoeToken(chain, project, token, balance * (exchangeRatio / (10 ** 18)), wallet);
+            let newToken = await addTraderJoeToken(chain, project, 'staked', token, balance * (exchangeRatio / (10 ** 18)), wallet);
             balances.push(newToken);
 
           // Axial Pools:
           } else if(symbol.includes('AS4D') || symbol.includes('AC4D') || symbol.includes('AM3D') || symbol.includes('AA3D')) {
-            let newToken = await addAxialToken(chain, project, token, balance * (exchangeRatio / (10 ** 18)), wallet);
+            let newToken = await addAxialToken(chain, project, 'staked', token, balance * (exchangeRatio / (10 ** 18)), wallet);
             balances.push(newToken);
 
           // All Other Single-Asset Pools:
           } else {
-            let newToken = await addToken(chain, project, token, balance * (exchangeRatio / (10 ** 18)), wallet);
+            let newToken = await addToken(chain, project, 'staked', token, balance * (exchangeRatio / (10 ** 18)), wallet);
             balances.push(newToken);
           }
         }
@@ -105,7 +105,7 @@ const getFarmBalances = async (wallet: Address) => {
   })());
   await Promise.all(promises);
   if(snobRewards > 0) {
-    let newToken = await addToken(chain, project, snob, snobRewards, wallet);
+    let newToken = await addToken(chain, project, 'unclaimed', snob, snobRewards, wallet);
     balances.push(newToken);
   }
   return balances;

@@ -44,7 +44,7 @@ exports.get = async (req: Request): Promise<string> => {
 const getCOOKIE = async (wallet: Address) => {
   let balance = parseInt(await query(chain, cookie, minABI, 'balanceOf', [wallet]));
   if(balance > 0) {
-    let newToken = await addCookieToken(chain, project, cookie, balance, wallet);
+    let newToken = await addCookieToken(chain, project, 'none', cookie, balance, wallet);
     return [newToken];
   } else {
     return [];
@@ -64,7 +64,7 @@ const getBakeryBalance = async (wallet: Address) => {
     cookieBalance += parseInt(balance);
   });
   if(cookieBalance > 0) {
-    let newToken = await addCookieToken(chain, project, cookie, cookieBalance, wallet);
+    let newToken = await addCookieToken(chain, project, 'unclaimed', cookie, cookieBalance, wallet);
     return [newToken];
   } else {
     return [];
@@ -77,7 +77,7 @@ const getPantryBalance = async (wallet: Address) => {
   if(balance > 0) {
     let supply = await query(chain, pantry, minABI, 'totalSupply', []);
     let cookiesStaked = parseInt(await query(chain, cookie, minABI, 'balanceOf', [pantry]));
-    let newToken = await addCookieToken(chain, project, cookie, (balance / supply) * cookiesStaked, wallet);
+    let newToken = await addCookieToken(chain, project, 'staked', cookie, (balance / supply) * cookiesStaked, wallet);
     return [newToken];
   } else {
     return [];

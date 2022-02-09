@@ -47,7 +47,7 @@ const getMarketBalances = async (wallet: Address, markets: any[]) => {
   let promises = markets.map(market => (async () => {
     let balance = parseInt(await query(chain, market.aTokenAddress, minABI, 'balanceOf', [wallet]));
     if(balance > 0) {
-      let newToken = await addToken(chain, project, market.address, balance, wallet);
+      let newToken = await addToken(chain, project, 'lent', market.address, balance, wallet);
       balances.push(newToken);
     }
   })());
@@ -75,7 +75,7 @@ const getMarketDebt = async (wallet: Address, markets: any[]) => {
 const getIncentives = async (wallet: Address) => {
   let rewards = parseInt(await query(chain, incentives, aave.incentivesABI, 'getUserUnclaimedRewards', [wallet]));
   if(rewards > 0) {
-    let newToken = await addToken(chain, project, wmatic, rewards, wallet);
+    let newToken = await addToken(chain, project, 'unclaimed', wmatic, rewards, wallet);
     return [newToken];
   } else {
     return [];

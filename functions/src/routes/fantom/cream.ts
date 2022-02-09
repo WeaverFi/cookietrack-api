@@ -49,7 +49,7 @@ const getMarketBalances = async (wallet: Address) => {
       let decimals = parseInt(await query(chain, market, minABI, 'decimals', []));
       let tokenAddress = await query(chain, market, cream.tokenABI, 'underlying', []);
       let underlyingBalance = (balance / (10 ** decimals)) * (exchangeRate / (10 ** (decimals + 2)));
-      let newToken = await addToken(chain, project, tokenAddress, underlyingBalance, wallet);
+      let newToken = await addToken(chain, project, 'lent', tokenAddress, underlyingBalance, wallet);
       balances.push(newToken);
     }
 

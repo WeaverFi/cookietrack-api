@@ -50,23 +50,23 @@ const getPoolBalances = async (wallet: Address) => {
 
       // Standard LPs:
       if(symbol === 'JLP' || symbol === 'PGL') {
-        let newToken = await addLPToken(chain, project, token, balance, wallet);
+        let newToken = await addLPToken(chain, project, 'staked', token, balance, wallet);
         balances.push(newToken);
 
       // Axial LPs:
       } else {
-        let newToken = await addAxialToken(chain, project, token, balance, wallet);
+        let newToken = await addAxialToken(chain, project, 'staked', token, balance, wallet);
         balances.push(newToken);
       }
 
       // Pending Rewards:
       let rewards = await query(chain, masterChef, axial.masterChefABI, 'pendingTokens', [poolID, wallet]);
       if(rewards.pendingAxial > 0) {
-        let newToken = await addToken(chain, project, axialToken, rewards.pendingAxial, wallet);
+        let newToken = await addToken(chain, project, 'unclaimed', axialToken, rewards.pendingAxial, wallet);
         balances.push(newToken);
       }
       if(rewards.pendingBonusToken > 0) {
-        let newToken = await addToken(chain, project, rewards.bonusTokenAddress, rewards.pendingBonusToken, wallet);
+        let newToken = await addToken(chain, project, 'unclaimed', rewards.bonusTokenAddress, rewards.pendingBonusToken, wallet);
         balances.push(newToken);
       }
     }
