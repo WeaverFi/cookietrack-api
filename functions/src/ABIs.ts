@@ -617,12 +617,26 @@ export const cookiegame: Record<string, ABI[]> = {
   ],
   exchangeABI: [
     { constant: true, inputs: [], name: "price", outputs: [{ name: "", type: "uint256" }], type: "function" }
-  ],
+  ]
 }
 
 // Moonpot ABIs:
 export const moonpot: Record<string, ABI[]> = {
   potABI: [
     { constant: true, inputs: [{ name: "user", type: "address" }], name: "userTotalBalance", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ]
+}
+
+// Alligator ABIs:
+export const alligator: Record<string, ABI[]> = {
+  factoryABI: [
+    { constant: true, inputs: [], name: "allPairsLength", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "<input>", type: "uint256" }], name: "allPairs", outputs: [{ name: "", type: "address" }], type: "function" }
+  ],
+  masterChefABI: [
+    { constant: true, inputs: [], name: "poolLength", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "<input>", type: "uint256" }, { name: "<input>", type: "address" }], name: "userInfo", outputs: [{ name: "amount", type: "uint256" }, { name: "rewardDebt", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "<input>", type: "uint256" }], name: "poolInfo", outputs: [{ name: "lpToken", type: "address" }, { name: "allocPoint", type: "uint256" }, { name: "lastRewardTimestamp", type: "uint256" }, { name: "accGtrPerShare", type: "uint256" }, { name: "rewarder", type: "address" }], type: "function" },
+    { constant: true, inputs: [{ name: "_pid", type: "uint256" }, { name: "_user", type: "address" }], name: "pendingTokens", outputs: [{ name: "pendingGtr", type: "uint256" }], type: "function" }
   ]
 }

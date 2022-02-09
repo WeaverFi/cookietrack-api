@@ -1543,3 +1543,25 @@ export const addCookieToken = async (chain: Chain, location: string, status: Tok
 
   return { type, chain, location, status, owner, symbol, address, balance, price, logo };
 }
+
+/* ========================================================================================================================================================================= */
+
+// Function to get Alligator token info (xGTR):
+export const addAlligatorToken = async (chain: Chain, location: string, status: TokenStatus, address: Address, rawBalance: number, owner: Address): Promise<Token> => {
+
+  // Initializing Token Values:
+  let type: TokenType = 'token';
+  let symbol = await query(chain, address, minABI, 'symbol', []);
+  let decimals = parseInt(await query(chain, address, minABI, 'decimals', []));
+  let balance = rawBalance / (10 ** decimals);
+  let logo = getTokenLogo(chain, symbol);
+
+  // Finding Token Price:
+  let gtr: Address = '0x43c812ba28cb061b1be7514145a15c9e18a27342';
+  let gtrStaked = parseInt(await query(chain, gtr, minABI, 'balanceOf', [address]));
+  let xgtrSupply = parseInt(await query(chain, address, minABI, 'totalSupply', []));
+  let multiplier = gtrStaked / xgtrSupply;
+  let price = multiplier * (await getTokenPrice(chain, gtr, decimals));
+
+  return { type, chain, location, status, owner, symbol, address, balance, price, logo };
+}

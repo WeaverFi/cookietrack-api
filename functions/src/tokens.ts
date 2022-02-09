@@ -889,7 +889,8 @@ export const avax_data: ChainTokenData = {
     { address: '0x783c08b5f26e3daf8c4681f3bf49844e425b6393', symbol: 'AUSD' },
     { address: '0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e', symbol: 'USDC' },
     { address: '0x9702230a8ea53601f5cd2dc00fdbc13d4df4a8c7', symbol: 'USDT' },
-    { address: '0xd8187f630A93A1d841dbBC99cd5fe06587A984DE', symbol: 'FORTUNE' }
+    { address: '0xd8187f630A93A1d841dbBC99cd5fe06587A984DE', symbol: 'FORTUNE' },
+    { address: '0x43c812ba28cb061b1be7514145a15c9e18a27342', symbol: 'GTR' }
   ],
   logos: [
     { symbol: 'AVAX', logo: 'https://bscscan.com/token/images/avax_32.png' },
@@ -998,7 +999,9 @@ export const avax_data: ChainTokenData = {
     { symbol: 'FORTUNE', logo: 'https://cookie.game/android-chrome-512x512.png' },
     { symbol: 'BAKER', logo: 'https://cookie.game/android-chrome-512x512.png' },
     { symbol: 'COOKIE-BAKER', logo: 'https://cookie.game/android-chrome-512x512.png' },
-    { symbol: 'PTavUSDCe', logo: 'https://snowtrace.io/token/images/usdc_32.png' }
+    { symbol: 'PTavUSDCe', logo: 'https://snowtrace.io/token/images/usdc_32.png' },
+    { symbol: 'GTR', logo: 'https://snowtrace.io/token/images/alligatorexchange_32.png' },
+    { symbol: 'xGTR', logo: 'https://snowtrace.io/token/images/alligatorexchange_32.png' }
   ],
   blacklist: [
     '0xd17584633bc8d190e5a14502976dad9640456d6d'
