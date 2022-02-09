@@ -66,7 +66,7 @@ const getVaultBalances = async (wallet: Address, vaults: any[]) => {
         }
 
       // LP Token Vaults:
-      } else if(vault.assets.length === 2 && vault.platform != 'Kyber') {
+      } else if(vault.assets.length === 2 && vault.platform != 'Kyber' && !vault.id.includes('jarvis')) {
         let newToken = await addLPToken(chain, project, 'staked', vault.tokenAddress, underlyingBalance, wallet);
         balances.push(newToken);
 
