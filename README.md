@@ -40,7 +40,7 @@ npm start
 
 All scripts are already setup to build using `tsc` prior to running.
 
-For some endpoints, an API key is required. To add your own for local development, add a `functions/static/keys.json` file with your keys.
+For some endpoints, an API key is required. To add your own for local development, add a `functions/static/keys.json` file with your keys (An example file is provided).
 
 Updating the `routes.json` file for deployment can be done through `npm run update`.
 
