@@ -1,7 +1,7 @@
 
 // Required Packages:
 const { AccPubKey } = require('@terra-money/terra.js');
-const Terra = require('@terra-money/terra.js');
+import { Coin, LCDClient } from '@terra-money/terra.js';
 import axios from 'axios';
 
 // Importing Types:
@@ -20,12 +20,12 @@ let terraTokenPrices: Map<Address | TerraAddress, number> = new Map();
 let tokenPricesPromise: any;
 
 // Setting Up Blockchain Connection:
-const terra = new Terra.LCDClient({ URL: "https://lcd.terra.dev", chainID: "columbus-5" });
+const terra = new LCDClient({ URL: "https://lcd.terra.dev", chainID: "columbus-5" });
 
 /* ========================================================================================================================================================================= */
 
 // Function to make blockchain queries:
-export const query = async (address: TerraAddress, query: any) => {
+export const query = async (address: TerraAddress, query: any): Promise<any> => {
   try {
     let result = await terra.wasm.contractQuery(address, query);
     return result;
@@ -175,17 +175,17 @@ const fetchInitialTokenPrices = async () => {
         // Other Native Tokens:
         let nativeTokens = (await terra.bank.total())[0];
         let ignoreTokens = ['uluna', 'uusd', 'unok', 'uidr'];
-        let peggedAssets = nativeTokens.filter((asset: any) => asset.denom.charAt(0) === 'u' && !ignoreTokens.includes(asset.denom.toLowerCase()));
-        await Promise.all(peggedAssets.map((asset: any) => {
-          asset.amount = (10 ** 6);
+        let peggedAssets = nativeTokens.filter((asset: Coin) => asset.denom.charAt(0) === 'u' && !ignoreTokens.includes(asset.denom.toLowerCase()));
+        await Promise.all(peggedAssets.map((asset: Coin) => {
+          const singleUnitAsset = new Coin(asset.denom, 10 ** 6);
           return new Promise<void>(async (resolve, reject) => {
             try {
-              let ulunaRate = parseInt(await terra.market.swapRate(asset, 'uluna'));
-              let usdRate = (ulunaRate * terraPrice) / (10 ** 6);
-              terraTokenPrices.set(defaultAddress + asset.denom.slice(1) as Address, usdRate);
+              let ulunaRate = (await terra.market.swapRate(singleUnitAsset, 'uluna')).amount.toNumber() / (10 ** 6);
+              let usdRate = ulunaRate * terraPrice;
+              terraTokenPrices.set(defaultAddress + singleUnitAsset.denom.slice(1) as Address, usdRate);
               resolve();
             } catch {
-              console.error(`TERRA: Native Token Price Not Found - ${asset.denom}`);
+              console.error(`TERRA: Native Token Price Not Found - ${singleUnitAsset.denom}`);
               resolve();
             }
           });

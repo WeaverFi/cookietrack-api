@@ -5,7 +5,9 @@
     "noUnusedLocals": true,
     "outDir": "dist",
     "strict": true,
-    "target": "es2017"
+    "target": "es2017",
+    "skipLibCheck": true,
+    "esModuleInterop": true,
   },
   "compileOnSave": true,
   "include": [
