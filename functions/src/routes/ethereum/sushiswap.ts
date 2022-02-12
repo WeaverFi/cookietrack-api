@@ -49,7 +49,7 @@ const getFarmBalances = async (wallet: Address) => {
   let promises = farms.map(farmID => (async () => {
     let balance = parseInt((await query(chain, masterChef, sushiswap.masterChefABI, 'userInfo', [farmID, wallet])).amount);
     if(balance > 0) {
-      let lpToken = (await query(chain, masterChef, sushiswap.masterChefABI, 'poolInfo', [farmID])).lpToken;
+      let lpToken = await query(chain, masterChef, sushiswap.masterChefABI, 'poolInfo', [farmID]);
       let newToken = await addLPToken(chain, project, 'staked', lpToken, balance, wallet);
       balances.push(newToken);
 
