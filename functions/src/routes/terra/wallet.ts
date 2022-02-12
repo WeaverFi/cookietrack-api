@@ -1,13 +1,14 @@
 
 // Imports:
-const Terra = require('@terra-money/terra.js');
+import { Coin, Coins, Delegation, LCDClient } from '@terra-money/terra.js';
+import { Pagination } from '@terra-money/terra.js/dist/client/lcd/APIRequester';
 import { terra_data } from '../../tokens';
 import { initResponse, query, addNativeToken, addToken } from '../../terra-functions';
 import type { Request } from 'express';
 import type { TerraAddress, Token, NativeToken } from 'cookietrack-types';
 
 // Setting Up Blockchain Connection:
-const terra = new Terra.LCDClient({ URL: "https://lcd.terra.dev", chainID: "columbus-5" });
+const terra = new LCDClient({ URL: "https://lcd.terra.dev", chainID: "columbus-5" });
 
 /* ========================================================================================================================================================================= */
 
@@ -38,13 +39,48 @@ exports.get = async (req: Request): Promise<string> => {
 
 // Function to get native wallet balance:
 const getNativeBalances = async (wallet: TerraAddress) => {
+
+  // Initializations:
   let balances: NativeToken[] = [];
   let ignoreTokens = ['unok', 'uidr'];
-  let bankBalances = (await terra.bank.balance(wallet))[0].filter((token: any) => token.denom.charAt(0) === 'u' && !ignoreTokens.includes(token.denom.toLowerCase()));
-  let promises = bankBalances.map((token: any) => (async () => {
-    let newToken = await addNativeToken('wallet', 'none', token.amount, wallet, token.denom.slice(1));
-    balances.push(newToken);
-  })());
+  let bankBalances: Coin[] = [];
+  let stakingDelegations: Delegation[] = [];
+  let firstQuery = true;
+  let pageKey: string | null = null;
+
+  // Bank Balances:
+  while(firstQuery || pageKey) {
+    let results: [Coins, Pagination] = await terra.bank.balance(wallet, (pageKey ? { "pagination.key": pageKey } : undefined));
+    pageKey = results[1].next_key;
+    bankBalances.push(...results[0].filter((token: any) => token.denom.charAt(0) === 'u' && !ignoreTokens.includes(token.denom.toLowerCase())));
+    firstQuery = false;
+  }
+
+  // LUNA Staking Delegations:
+  firstQuery = true;
+  pageKey = null;
+  while (firstQuery || pageKey) {
+    let results: [Delegation[], Pagination] = await terra.staking.delegations(wallet, undefined, (pageKey ? { "pagination.key": pageKey } : undefined));
+    pageKey = results[1].next_key;
+    stakingDelegations.push(...results[0]);
+    firstQuery = false;
+  }
+
+  // Delegation Rewards:
+  let rewards = (await terra.distribution.rewards(wallet)).total.filter(coin => coin.denom.charAt(0) === 'u' && !ignoreTokens.includes(coin.denom.toLowerCase()));
+  
+  // Adding Tokens:
+  let promises = [
+    ...bankBalances.map((token: Coin) => (async () => {
+      balances.push(await addNativeToken('wallet', 'none', token.amount.toNumber(), wallet, token.denom.slice(1)));
+    })()),
+    ...stakingDelegations.map((delegation) => (async () => {
+      balances.push(await addNativeToken('staking_luna', 'staked', delegation.balance.amount.toNumber(), wallet, delegation.balance.denom.slice(1)));
+    })()),
+    ...rewards.map((token: Coin) => (async () => {
+      balances.push(await addNativeToken('staking_luna', 'unclaimed', token.amount.toNumber(), wallet, token.denom.slice(1)));
+    })())
+  ];
   await Promise.all(promises);
   return balances;
 }

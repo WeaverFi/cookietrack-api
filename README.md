@@ -29,7 +29,7 @@ Contribution guidelines can be found [here](CONTRIBUTING.md).
 
 ## Local Development
 
-Uncomment the line after 'Starting Local Server' on `functions/index.ts`.
+Uncomment the line after 'Starting Local Server' near the bottom of `functions/index.ts`.
 
 ```
 cd functions
