@@ -44,4 +44,6 @@ For some endpoints, an API key is required. To add your own for local developmen
 
 Updating the `routes.json` file for deployment can be done through `npm run update`.
 
+The `cookietrack-types` npm package includes common typings for the API.
+
 [logo]: https://github.com/Ncookiez/cookietrack-api/blob/master/favicon.svg "CookieTrack"
