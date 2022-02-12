@@ -177,7 +177,7 @@ const fetchInitialTokenPrices = async () => {
         let ignoreTokens = ['uluna', 'uusd', 'unok', 'uidr'];
         let peggedAssets = nativeTokens.filter((asset: Coin) => asset.denom.charAt(0) === 'u' && !ignoreTokens.includes(asset.denom.toLowerCase()));
         await Promise.all(peggedAssets.map((asset: Coin) => {
-          const singleUnitAsset = new Coin(asset.denom, 10 ** 6);
+          let singleUnitAsset = new Coin(asset.denom, 10 ** 6);
           return new Promise<void>(async (resolve, reject) => {
             try {
               let ulunaRate = (await terra.market.swapRate(singleUnitAsset, 'uluna')).amount.toNumber() / (10 ** 6);
