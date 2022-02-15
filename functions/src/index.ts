@@ -24,7 +24,7 @@ const app: Application = express();
 app.use(cors());
 
 // Initializing Text Reponses:
-const repository: string = 'https://github.com/Ncookiez/cookietrack-api';
+const repository: string = 'https://github.com/CookieTrack-io/cookietrack-api';
 const rootResponse: string = `<title>CookieTrack API</title><p>Click <a href="${repository}">here</a> to see the API's repository, or <a href="/docs">here</a> to see its OpenAPI documentation.</p>`;
 const errorResponse: string = `<p>Invalid route.</p>`;
 

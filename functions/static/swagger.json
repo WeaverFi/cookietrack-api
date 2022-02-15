@@ -1,12 +1,12 @@
 {
   "swagger": "2.0",
   "info": {
-    "description": "This API is the back-end of CookieTrack. Find out more on [GitHub](https://github.com/Ncookiez/cookietrack-api), or join our [Discord Server](https://discord.com/invite/DzADcq7y75).",
-    "version": "2.5.0",
+    "description": "This API is the back-end of CookieTrack. Find out more on [GitHub](https://github.com/CookieTrack-io/cookietrack-api), or join our [Discord Server](https://discord.com/invite/DzADcq7y75).",
+    "version": "2.5.1",
     "title": "CookieTrack API",
     "license": {
       "name": "MIT License",
-      "url": "https://github.com/Ncookiez/cookietrack-api/blob/master/LICENSE.md"
+      "url": "https://github.com/CookieTrack-io/cookietrack-api/blob/master/LICENSE.md"
     }
   },
   "schemes": [
@@ -474,6 +474,6 @@
   },
   "externalDocs": {
     "description": "API Contribution Guidelines",
-    "url": "https://github.com/Ncookiez/cookietrack-api/blob/master/CONTRIBUTING.md"
+    "url": "https://github.com/CookieTrack-io/cookietrack-api/blob/master/CONTRIBUTING.md"
   }
 }

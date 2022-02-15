@@ -3,7 +3,7 @@
 
 The API that powers CookieTrack.
 
-![CodeQL](https://github.com/Ncookiez/cookietrack-api/actions/workflows/codeql-analysis.yml/badge.svg)
+![CodeQL](https://github.com/CookieTrack-io/cookietrack-api/actions/workflows/codeql-analysis.yml/badge.svg)
 ![Version](https://img.shields.io/github/package-json/v/CookieTrack-io/cookietrack-api)
 
 ![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
@@ -46,4 +46,4 @@ Updating the `routes.json` file for deployment can be done through `npm run upda
 
 The `cookietrack-types` npm package includes common typings for the API.
 
-[logo]: https://github.com/Ncookiez/cookietrack-api/blob/master/favicon.svg "CookieTrack"
+[logo]: https://github.com/CookieTrack-io/cookietrack-api/blob/master/favicon.svg "CookieTrack"
