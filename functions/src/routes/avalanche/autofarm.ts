@@ -9,7 +9,7 @@ import type { Chain, Address, Token, LPToken } from 'cookietrack-types';
 const chain: Chain = 'avax';
 const project = 'autofarm';
 const registry: Address = '0x864A0B7F8466247A0e44558D29cDC37D4623F213';
-const ignoreVaults: number[] = [67];
+const ignoreVaults: number[] = [67, 77, 79];
 
 /* ========================================================================================================================================================================= */
 
