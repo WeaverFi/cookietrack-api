@@ -11,6 +11,7 @@ import type { APIResponse, Chain, ChainData, Address, Hash, ABI, URL, Token, Nat
 const chains: Record<Chain, ChainData> = require('../static/chains.json');
 const rpcs: Record<Chain, URL[]> = require('../static/rpcs.json');
 const keys: Record<string, string> = require('../static/keys.json');
+const blacklist: string[] = require('../static/blacklist.json');
 
 // Importing Variables:
 import { minABI, lpABI, aave, balancer, snowball, traderjoe, belt, alpaca, curve, bzx, iron, axial, mstable, cookiegame } from './ABIs';
@@ -66,9 +67,14 @@ export const initResponse = (req: Request) => {
     request: req.originalUrl
   }
   if(wallet != undefined) {
-    if(!ethers.utils.isAddress(wallet)) {
+    if(!blacklist.includes(wallet.toLowerCase())) {
+      if(!ethers.utils.isAddress(wallet)) {
+        response.status = 'error';
+        response.data = [{error: 'Invalid Wallet Address'}];
+      }
+    } else {
       response.status = 'error';
-      response.data = [{error: 'Invalid Wallet Address'}];
+      response.data = [{error: 'Request Spam Detected: Get in touch with us through Discord'}];
     }
   } else {
     response.status = 'error';
