@@ -115,8 +115,8 @@ app.all('*', async (req: Request, res: Response) => {
 /* ========================================================================================================================================================================= */
 
 // Starting Local Server:
-const port = 3000;
-app.listen(port, () => { console.info(`API Up on http://127.0.0.1:${port}`); });
+// const port = 3000;
+// app.listen(port, () => { console.info(`API Up on http://127.0.0.1:${port}`); });
 
 // Exporting Express App:
 exports.app = functions.runWith({ memory: '1GB', timeoutSeconds: 120 }).https.onRequest(app);
