@@ -22,6 +22,9 @@ require("firebase-functions/lib/logger/compat");
 const app: Application = express();
 app.use(cors());
 
+// Initializing Firebase App:
+admin.initializeApp();
+
 // Initializing Rate Limits:
 const rateLimited = true;
 const maxQueries = 200;
@@ -61,7 +64,6 @@ app.get('/routes', (req: Request, res: Response) => {
   app.get(`/${ChainEndpoint[chain]}/*`, async (req: Request, res: Response) => {
     let rateLimitExceeded = false;
     if(rateLimited) {
-      admin.initializeApp();
       let rateLimits = admin.firestore().collection('rateLimits');
       let userID = 'u_' + req.socket.remoteAddress;
       let userDoc = rateLimits.doc(userID);
@@ -113,8 +115,8 @@ app.all('*', async (req: Request, res: Response) => {
 /* ========================================================================================================================================================================= */
 
 // Starting Local Server:
-// const port = 3000;
-// app.listen(port, () => { console.info(`API Up on http://127.0.0.1:${port}`); });
+const port = 3000;
+app.listen(port, () => { console.info(`API Up on http://127.0.0.1:${port}`); });
 
 // Exporting Express App:
 exports.app = functions.runWith({ memory: '1GB', timeoutSeconds: 120 }).https.onRequest(app);
