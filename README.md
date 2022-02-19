@@ -27,23 +27,24 @@ Contribution guidelines can be found [here](CONTRIBUTING.md).
 
 ---
 
-## Local Development
+## Self-Hosting
 
-Uncomment the line after 'Starting Local Server' near the bottom of `functions/index.ts`.
+This repository is already setup for Firebase hosting, but could easily be adapted to be deployed on AWS or any other cloud deployment service.
 
-```
-cd functions
-npm i
-cd..
-npm start
-```
+1. Add your own API keys in `functions/static/keys.json`. An example file is provided.
 
-All scripts are already setup to build using `tsc` prior to running.
+2. Install dependencies by navigating to the `functions` folder and using `npm i`.
 
-For some endpoints, an API key is required. To add your own for local development, add a `functions/static/keys.json` file with your keys (An example file is provided).
+3. Deploying to Firebase can be done through `npm run deploy`. The script is already setup to compile from Typescript, update the `routes.json` file, etc.
 
-Updating the `routes.json` file for deployment can be done through `npm run update`.
+If you wish to test endpoints locally, take the following steps:
 
-The `cookietrack-types` npm package includes common typings for the API.
+- Turn off rate limiting by setting `rateLimited` to `false` in `index.ts`.
+
+- Enable the local server by uncommenting the `Starting Local Server` lines in `index.ts`.
+
+- Run `npm start` to start your local server.
+
+The `cookietrack-types` npm package includes common typings for the API. Check out its repository [here](https://github.com/CookieTrack-io/cookietrack-types).
 
 [logo]: https://github.com/CookieTrack-io/cookietrack-api/blob/master/favicon.svg "CookieTrack"

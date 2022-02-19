@@ -17,11 +17,11 @@ Found a bug? You can either choose to report it in our [Discord server](https://
 
 Want to create a new route for a dapp that is currently not supported? Feel free to submit a pull request with the following:
 
-- Updated index.js file with your route.
-- Any static files such as ABIs or token logos updated for the new dapp.
-- A file in `/routes/` with your new API route, as a .js file.
+- Any relevant new token addresses or logos updated in `/functions/src/tokens.ts`.
+- Any relevant new ABIs updated in `/functions/src/ABIs.ts`.
+- A file in `/functions/src/routes/` for the appropriate chain with your new API route, as a `.ts` file.
 
-There is a route template at `/functions/routes/template.js` to help new contributors.
+There is a route template at `/functions/src/routes/template.ts` to help new contributors.
 
 If your PR isn't reviewed right away, reach out in our [Discord server](https://discord.com/invite/DzADcq7y75)!
 
@@ -29,7 +29,7 @@ If your PR isn't reviewed right away, reach out in our [Discord server](https://
 
 In order to track a new token, first ensure it has a price feed available either through CoinGecko, ParaSwap or 1Inch.
 
-If so, simply add the token's address, symbol and logo to its respective chain file at `/static/tokens/`.
+If so, simply add the token's information to `/functions/src/tokens.ts`.
 
 ## Donations
 
