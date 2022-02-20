@@ -65,7 +65,7 @@ app.get('/routes', (req: Request, res: Response) => {
     let rateLimitExceeded = false;
     if(rateLimited) {
       let rateLimits = admin.firestore().collection('rateLimits');
-      let userID = 'u_' + req.headers['x-forwarded-for'];
+      let userID = 'u_' + (req.headers['x-forwarded-for'] as String).split(',')[0];
       let userDoc = rateLimits.doc(userID);
       let doc = await userDoc.get();
       if(doc.exists) {
