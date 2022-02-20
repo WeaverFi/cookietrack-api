@@ -5,7 +5,7 @@ import axios from 'axios';
 
 // Importing Types:
 import type { Request } from 'express';
-import type { APIResponse, Chain, ChainData, Address, Hash, ABI, URL, Token, NativeToken, LPToken, PricedToken, DebtToken, XToken, TokenType, TokenStatus, TransferTX, ApprovalTX, SimpleTX, TaxTransferTX, TaxApprovalTX } from 'cookietrack-types';
+import type { APIResponse, Chain, ChainData, Address, Hash, ABI, URL, Token, NativeToken, LPToken, PricedToken, DebtToken, XToken, TokenType, TokenStatus, TransferTX, ApprovalTX, SimpleTX, TaxTransferTX, TaxApprovalTX, ChainTokenData } from 'cookietrack-types';
 
 // Fetching Required JSON Files:
 const chains: Record<Chain, ChainData> = require('../static/chains.json');
@@ -249,6 +249,44 @@ export const addXToken = async (chain: Chain, location: string, status: TokenSta
   }
 
   return { type, chain, location, status, owner, symbol, address, balance, logo, underlyingToken };
+}
+
+/* ========================================================================================================================================================================= */
+
+// Function to get tracked tokens:
+export const getTokens = async (chain: Chain) => {
+
+  // Initializing Token Array:
+  let tokens: { symbol: string, address: Address, logo: URL }[] = [];
+
+  // Selecting Token Data:
+  let data: ChainTokenData;
+  if(chain === 'eth') {
+    data = eth_data;
+  } else if(chain === 'bsc') {
+    data = bsc_data;
+  } else if(chain === 'poly') {
+    data = poly_data;
+  } else if(chain === 'ftm') {
+    data = ftm_data;
+  } else if(chain === 'avax') {
+    data = avax_data;
+  } else if(chain === 'one') {
+    data = one_data;
+  } else {
+    return [];
+  }
+
+  // Adding Tokens:
+  data.tokens.forEach(token => {
+    tokens.push({
+      symbol: token.symbol,
+      address: token.address,
+      logo: getTokenLogo(chain, token.symbol)
+    });
+  });
+
+  return tokens;
 }
 
 /* ========================================================================================================================================================================= */

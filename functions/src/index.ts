@@ -44,7 +44,6 @@ const filter: RegExp = /[^a-zA-Z0-9]/;
 
 // Default Endpoint:
 app.get('/', (req: Request, res: Response) => {
-  console.info(`Loading: ${req.originalUrl}`);
   res.send(rootResponse);
 });
 
@@ -53,7 +52,6 @@ app.use('/docs', swagger.serve, swagger.setup(swaggerDocs));
 
 // Routes Endpoint:
 app.get('/routes', (req: Request, res: Response) => {
-  console.info(`Loading: ${req.originalUrl}`);
   res.end(JSON.stringify(routes, null, ' '));
 });
 

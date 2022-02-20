@@ -107,6 +107,26 @@ export const addToken = async (location: string, status: TokenStatus, address: S
 
 /* ========================================================================================================================================================================= */
 
+// Function to get tracked tokens:
+export const getTokens = async () => {
+
+  // Initializing Token Array:
+  let tokens: { symbol: string, address: SolAddress, logo: URL }[] = [];
+
+  // Adding Tokens:
+  sol_data.tokens.forEach(token => {
+    tokens.push({
+      symbol: token.symbol,
+      address: token.address,
+      logo: getTokenLogo(token.symbol)
+    });
+  });
+
+  return tokens;
+}
+
+/* ========================================================================================================================================================================= */
+
 // Function to get a token's logo:
 export const getTokenLogo = (symbol: string): URL => {
 

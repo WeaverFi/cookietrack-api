@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "description": "This API is the back-end of CookieTrack. Find out more on [GitHub](https://github.com/CookieTrack-io/cookietrack-api), or join our [Discord Server](https://discord.com/invite/DzADcq7y75).",
-    "version": "2.6.4",
+    "version": "2.7.0",
     "title": "CookieTrack API",
     "license": {
       "name": "MIT License",
@@ -215,6 +215,34 @@
             "description": "Successful query.",
             "schema": {
               "$ref": "#/definitions/Routes"
+            }
+          }
+        }
+      }
+    },
+    "/{chain}/tokens": {
+      "get": {
+        "tags": [
+          "Info"
+        ],
+        "summary": "Get all tokens tracked on any chain.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "chain",
+            "in": "path",
+            "description": "Blockchain to query. (see /routes endpoint for possible inputs)",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful query.",
+            "schema": {
+              "$ref": "#/definitions/TokenList"
             }
           }
         }
@@ -466,6 +494,23 @@
         "chain": {
           "type": "array",
           "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "TokenList": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "symbol": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "logo": {
             "type": "string"
           }
         }
