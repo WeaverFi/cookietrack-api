@@ -26,7 +26,7 @@ app.use(cors());
 admin.initializeApp();
 
 // Initializing Rate Limits:
-const rateLimited = true;
+const rateLimited = false;
 const maxQueries = 200;
 const rateLimitTimer = 21600000;
 
