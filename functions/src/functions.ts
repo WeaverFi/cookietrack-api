@@ -436,6 +436,7 @@ export const getTXs = async (chain: Chain, address: Address, last50?: boolean) =
                   chain: chain,
                   type: 'transfer',
                   hash: tx.tx_hash,
+                  contract: tx.to_address === address.toLowerCase() ? await isContract(chain, tx.from_address) : await isContract(chain, tx.to_address),
                   time: (new Date(tx.block_signed_at)).getTime() / 1000,
                   direction: tx.to_address === address.toLowerCase() ? 'in' : 'out',
                   from: tx.from_address,
@@ -478,7 +479,7 @@ export const getTXs = async (chain: Chain, address: Address, last50?: boolean) =
               }
     
               // Other TXs:
-              tx.log_events.forEach((event: any) => {
+              let log_promises = tx.log_events.map((event: any) => (async () => {
                 if(event.decoded != null) {
     
                   // Token Transfers:
@@ -495,6 +496,7 @@ export const getTXs = async (chain: Chain, address: Address, last50?: boolean) =
                             chain: chain,
                             type: 'transfer',
                             hash: tx.tx_hash,
+                            contract: await isContract(chain, event.decoded.params[1].value),
                             time: (new Date(tx.block_signed_at)).getTime() / 1000,
                             direction: 'out',
                             from: address,
@@ -518,6 +520,7 @@ export const getTXs = async (chain: Chain, address: Address, last50?: boolean) =
                             chain: chain,
                             type: 'transfer',
                             hash: tx.tx_hash,
+                            contract: await isContract(chain, event.decoded.params[0].value),
                             time: (new Date(tx.block_signed_at)).getTime() / 1000,
                             direction: 'in',
                             from: event.decoded.params[0].value,
@@ -549,6 +552,7 @@ export const getTXs = async (chain: Chain, address: Address, last50?: boolean) =
                             chain: chain,
                             type: 'transfer',
                             hash: tx.tx_hash,
+                            contract: true,
                             time: (new Date(tx.block_signed_at)).getTime() / 1000,
                             direction: 'in',
                             from: tx.to_address,
@@ -570,6 +574,7 @@ export const getTXs = async (chain: Chain, address: Address, last50?: boolean) =
                         chain: chain,
                         type: 'transfer',
                         hash: tx.tx_hash,
+                        contract: true,
                         time: (new Date(tx.block_signed_at)).getTime() / 1000,
                         direction: 'in',
                         from: tx.to_address,
@@ -586,7 +591,8 @@ export const getTXs = async (chain: Chain, address: Address, last50?: boolean) =
                     }
                   }
                 }
-              });
+              })());
+              await Promise.all(log_promises);
             }
           })());
           await Promise.all(promises);
@@ -682,29 +688,46 @@ export const getTaxTXs = async (chain: Chain, wallet: Address) => {
 
   // Adding TX Token Prices:
   txs.forEach((tx: any) => {
+    if(tx.type === 'transfer') {
 
-    // Token:
-    if(tokenPrices[tx.token.address].length > 0) {
-      let txDate = Math.max(...(tokenPrices[tx.token.address].filter(entry => entry.time < tx.time).map(i => i.time)));
-      let foundEntry = tokenPrices[tx.token.address].find(entry => entry.time === txDate);
-      foundEntry ? tx.token.price = foundEntry.price : tx.token.price = 0;
-    } else {
-      tx.token.price = 0;
-    }
-
-    // Native Token:
-    if(tokenPrices[defaultAddress].length > 0) {
-      let txDate = Math.max(...(tokenPrices[defaultAddress].filter(entry => entry.time < tx.time).map(i => i.time)));
-      let foundEntry = tokenPrices[defaultAddress].find(entry => entry.time === txDate);
-      foundEntry ? tx.nativeTokenPrice = foundEntry.price : tx.nativeTokenPrice = 0;
-    } else {
-      tx.nativeTokenPrice = 0;
+      // Token:
+      if(tokenPrices[tx.token.address].length > 0) {
+        let txDate = Math.max(...(tokenPrices[tx.token.address].filter(entry => entry.time < tx.time).map(i => i.time)));
+        let foundEntry = tokenPrices[tx.token.address].find(entry => entry.time === txDate);
+        foundEntry ? tx.token.price = foundEntry.price : tx.token.price = 0;
+      } else {
+        tx.token.price = 0;
+      }
+  
+      // Native Token:
+      if(tokenPrices[defaultAddress].length > 0) {
+        let txDate = Math.max(...(tokenPrices[defaultAddress].filter(entry => entry.time < tx.time).map(i => i.time)));
+        let foundEntry = tokenPrices[defaultAddress].find(entry => entry.time === txDate);
+        foundEntry ? tx.nativeTokenPrice = foundEntry.price : tx.nativeTokenPrice = 0;
+      } else {
+        tx.nativeTokenPrice = 0;
+      }
     }
 
     taxTXs.push(tx);
   });
 
   return taxTXs;
+}
+
+/* ========================================================================================================================================================================= */
+
+// Function to check if an address is a contract:
+export const isContract = async (chain: Chain, address: Address) => {
+  try {
+    let ethers_provider = new ethers.providers.JsonRpcProvider(rpcs[chain][0]);
+    let bytecode = await ethers_provider.getCode(address);
+    return bytecode === '0x' ? false : true;
+  } catch {
+    let ethers_provider = new ethers.providers.JsonRpcProvider(rpcs[chain][1]);
+    let bytecode = await ethers_provider.getCode(address);
+    return bytecode === '0x' ? false : true;
+  }
 }
 
 /* ========================================================================================================================================================================= */
