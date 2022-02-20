@@ -5,7 +5,7 @@ import axios from 'axios';
 
 // Importing Types:
 import type { Request } from 'express';
-import type { APIResponse, Chain, ChainData, Address, Hash, ABI, URL, Token, NativeToken, LPToken, PricedToken, DebtToken, XToken, TokenType, TokenStatus, TransferTX, ApprovalTX, SimpleTX } from 'cookietrack-types';
+import type { APIResponse, Chain, ChainData, Address, Hash, ABI, URL, Token, NativeToken, LPToken, PricedToken, DebtToken, XToken, TokenType, TokenStatus, TransferTX, ApprovalTX, SimpleTX, TaxTransferTX, TaxApprovalTX } from 'cookietrack-types';
 
 // Fetching Required JSON Files:
 const chains: Record<Chain, ChainData> = require('../static/chains.json');
@@ -648,6 +648,63 @@ export const getSimpleTXs = async (chain: Chain, address: Address) => {
   } while(hasNextPage);
 
   return txs;
+}
+
+/* ========================================================================================================================================================================= */
+
+// Function to get TXs for tax reporting:
+export const getTaxTXs = async (chain: Chain, wallet: Address) => {
+
+  // Initializations:
+  let taxTXs: (TaxTransferTX | TaxApprovalTX)[] = [];
+  let tokens: Set<Address> = new Set();
+  let dates = { start: 9999999999, end: 0 }
+
+  // Fetching TXs:
+  let txs = await getTXs(chain, wallet);
+
+  // Collecting Data From TXs:
+  let promises = txs.map(tx => (async () => {
+    if(!tokens.has(tx.token.address)) {
+      tokens.add(tx.token.address);
+    }
+    if(tx.time < dates.start) {
+      dates.start = tx.time;
+    }
+    if(tx.time > dates.end) {
+      dates.end = tx.time;
+    }
+  })());
+  await Promise.all(promises);
+
+  // Fetching Token Price Histories:
+  let tokenPrices = await getTokenPriceHistories(chain, tokens, dates);
+
+  // Adding TX Token Prices:
+  txs.forEach((tx: any) => {
+
+    // Token:
+    if(tokenPrices[tx.token.address].length > 0) {
+      let txDate = Math.max(...(tokenPrices[tx.token.address].filter(entry => entry.time < tx.time).map(i => i.time)));
+      let foundEntry = tokenPrices[tx.token.address].find(entry => entry.time === txDate);
+      foundEntry ? tx.token.price = foundEntry.price : tx.token.price = 0;
+    } else {
+      tx.token.price = 0;
+    }
+
+    // Native Token:
+    if(tokenPrices[defaultAddress].length > 0) {
+      let txDate = Math.max(...(tokenPrices[defaultAddress].filter(entry => entry.time < tx.time).map(i => i.time)));
+      let foundEntry = tokenPrices[defaultAddress].find(entry => entry.time === txDate);
+      foundEntry ? tx.nativeTokenPrice = foundEntry.price : tx.nativeTokenPrice = 0;
+    } else {
+      tx.nativeTokenPrice = 0;
+    }
+
+    taxTXs.push(tx);
+  });
+
+  return taxTXs;
 }
 
 /* ========================================================================================================================================================================= */
