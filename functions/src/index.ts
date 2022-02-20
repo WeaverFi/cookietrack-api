@@ -26,7 +26,7 @@ app.use(cors());
 admin.initializeApp();
 
 // Initializing Rate Limits:
-const rateLimited = false;
+const rateLimited = true;
 const maxQueries = 200;
 const rateLimitTimer = 21600000;
 
@@ -65,7 +65,7 @@ app.get('/routes', (req: Request, res: Response) => {
     let rateLimitExceeded = false;
     if(rateLimited) {
       let rateLimits = admin.firestore().collection('rateLimits');
-      let userID = 'u_' + req.socket.remoteAddress;
+      let userID = 'u_' + req.headers['x-forwarded-for'];
       let userDoc = rateLimits.doc(userID);
       let doc = await userDoc.get();
       if(doc.exists) {
