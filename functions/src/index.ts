@@ -68,14 +68,15 @@ app.get('/routes', (req: Request, res: Response) => {
       let doc = await userDoc.get();
       if(doc.exists) {
         if(doc.data().lastTimestamp.toMillis() < (Date.now() - rateLimitTimer)) {
-          await userDoc.update({ lastTimestamp: admin.firestore.FieldValue.serverTimestamp(), queries: 1 });
+          let usageHistory = { timestamp: doc.data().lastTimestamp, queries: doc.data().queries };
+          await userDoc.update({ usage: admin.firestore.FieldValue.arrayUnion(usageHistory), lastTimestamp: admin.firestore.FieldValue.serverTimestamp(), queries: 1 });
         } else if(doc.data().queries >= maxQueries) {
           rateLimitExceeded = true;
         } else {
           await userDoc.update({ queries: admin.firestore.FieldValue.increment(1) });
         }
       } else {
-        await userDoc.set({ lastTimestamp: admin.firestore.FieldValue.serverTimestamp(), queries: 1 });
+        await userDoc.set({ lastTimestamp: admin.firestore.FieldValue.serverTimestamp(), queries: 1, usage: [] });
       }
     }
     if(!rateLimitExceeded) {
