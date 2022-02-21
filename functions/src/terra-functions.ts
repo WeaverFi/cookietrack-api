@@ -15,7 +15,7 @@ import { terra_data } from './tokens';
 const chain: Chain = 'terra';
 const defaultTokenLogo: URL = 'https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@d5c68edec1f5eaec59ac77ff2b48144679cebca1/32/icon/generic.png';
 const defaultAddress: Address = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
-const nativeTokenSymbols: string[] = ['aud', 'cad', 'chf', 'cny', 'dkk', 'eur', 'gbp', 'hkd', 'idr', 'inr', 'jpy', 'krw', 'mnt', 'php', 'sdr', 'sek', 'sgd', 'thb', 'usd'];
+const nativeTokenSymbols: string[] = ['aud', 'cad', 'chf', 'cny', 'dkk', 'eur', 'gbp', 'hkd', 'idr', 'inr', 'jpy', 'krw', 'mnt', 'php', 'sdr', 'sek', 'sgd', 'thb', 'usd', 'myr', 'twd'];
 let terraTokenPrices: Map<Address | TerraAddress, number> = new Map();
 let tokenPricesPromise: any;
 
