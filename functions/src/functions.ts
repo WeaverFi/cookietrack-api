@@ -38,18 +38,16 @@ export const query = async (chain: Chain, address: Address, abi: ABI[], method: 
       let contract = new ethers.Contract(address, abi, ethers_provider);
       result = await contract[method](...args);
     } catch {
-      if(!ignoreErrors.find(i => i.chain === chain && i.address === address.toLowerCase())) {
-        try {
-          let ethers_provider = new ethers.providers.JsonRpcProvider(rpcs[chain][1]);
-          let contract = new ethers.Contract(address, abi, ethers_provider);
-          result = await contract[method](...args);
-        } catch {
-          if(++errors > 2) {
+      try {
+        let ethers_provider = new ethers.providers.JsonRpcProvider(rpcs[chain][1]);
+        let contract = new ethers.Contract(address, abi, ethers_provider);
+        result = await contract[method](...args);
+      } catch {
+        if(++errors > 2) {
+          if(!ignoreErrors.find(i => i.chain === chain && i.address === address.toLowerCase())) {
             console.error(`Calling ${method}(${args}) on ${address} (Chain: ${chain.toUpperCase()})`);
           }
         }
-      } else {
-        errors = 3;
       }
     }
   }
