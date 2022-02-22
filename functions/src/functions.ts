@@ -724,9 +724,18 @@ export const getTaxTXs = async (chain: Chain, wallet: Address) => {
 
   // Adding TX Token Prices:
   txs.forEach((tx: any) => {
-    if(tx.type === 'transfer') {
 
-      // Token:
+    // Native Token:
+    if(tokenPrices[defaultAddress].length > 0) {
+      let txDate = Math.max(...(tokenPrices[defaultAddress].filter(entry => entry.time < tx.time).map(i => i.time)));
+      let foundEntry = tokenPrices[defaultAddress].find(entry => entry.time === txDate);
+      foundEntry ? tx.nativeTokenPrice = foundEntry.price : tx.nativeTokenPrice = 0;
+    } else {
+      tx.nativeTokenPrice = 0;
+    }
+
+    // Other Tokens:
+    if(tx.type === 'transfer') {
       if(tokenPrices[tx.token.address].length > 0) {
         let txDate = Math.max(...(tokenPrices[tx.token.address].filter(entry => entry.time < tx.time).map(i => i.time)));
         let foundEntry = tokenPrices[tx.token.address].find(entry => entry.time === txDate);
@@ -734,17 +743,8 @@ export const getTaxTXs = async (chain: Chain, wallet: Address) => {
       } else {
         tx.token.price = 0;
       }
-  
-      // Native Token:
-      if(tokenPrices[defaultAddress].length > 0) {
-        let txDate = Math.max(...(tokenPrices[defaultAddress].filter(entry => entry.time < tx.time).map(i => i.time)));
-        let foundEntry = tokenPrices[defaultAddress].find(entry => entry.time === txDate);
-        foundEntry ? tx.nativeTokenPrice = foundEntry.price : tx.nativeTokenPrice = 0;
-      } else {
-        tx.nativeTokenPrice = 0;
-      }
     }
-
+    
     taxTXs.push(tx);
   });
 
