@@ -644,7 +644,7 @@ export const getTXs = async (chain: Chain, address: Address, last50?: boolean) =
     }
   } while(hasNextPage);
 
-  return txs;
+  return txs.sort((a, b) => b.time - a.time);
 }
 
 /* ========================================================================================================================================================================= */
@@ -689,7 +689,7 @@ export const getSimpleTXs = async (chain: Chain, address: Address) => {
     }
   } while(hasNextPage);
 
-  return txs;
+  return txs.sort((a, b) => b.time - a.time);
 }
 
 /* ========================================================================================================================================================================= */
@@ -748,7 +748,7 @@ export const getTaxTXs = async (chain: Chain, wallet: Address) => {
     taxTXs.push(tx);
   });
 
-  return taxTXs;
+  return taxTXs.sort((a, b) => b.time - a.time);
 }
 
 /* ========================================================================================================================================================================= */
