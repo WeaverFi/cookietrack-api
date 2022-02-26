@@ -25,6 +25,15 @@ let beethovenxPools: Record<'pools', string[]> = { pools: [] };
 let beethovenPoolPromises: Promise<void>[] = [];
 let apiRoutes: Record<string, string[]> = {};
 
+// Setting Up Optional Args:
+let quickUpdate = false;
+const args = process.argv.slice(2);
+if(args.length > 0) {
+  if(args[0] === 'quick') {
+    quickUpdate = true;
+  }
+}
+
 /* ========================================================================================================================================================================= */
 
 // Function to update 'routes.json' file:
@@ -90,7 +99,6 @@ const updateBeethovenxPools = async () => {
           }
         })());
       });
-      beethovenxPools.pools.sort();
     } catch(err) {
       console.error(err);
     }
@@ -98,6 +106,7 @@ const updateBeethovenxPools = async () => {
   await Promise.all(beethovenPoolPromises);
 
   // Writing File:
+  beethovenxPools.pools.sort();
   fs.writeFile(`./functions/static/${beethovenFile}`, JSON.stringify(beethovenxPools, null, ' '), 'utf8', (err: any) => {
     if(err) {
       console.error(err);
@@ -109,6 +118,10 @@ const updateBeethovenxPools = async () => {
 
 /* ========================================================================================================================================================================= */
 
-// Performing Updates:
+// Performing Quick Updates:
 updateRoutes();
-updateBeethovenxPools();
+
+// Other Updates To Run Through 'npm run update':
+if(!quickUpdate) {
+  updateBeethovenxPools();
+}

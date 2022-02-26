@@ -41,7 +41,7 @@
     "usdc": "0x04068da6c83afcfa0e13ba15a6696662335d5b75",
     "usdcDecimals": 6,
     "inch": false,
-    "paraswap": false
+    "paraswap": true
   },
   "avax": {
     "id": 43114,

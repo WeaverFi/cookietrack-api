@@ -1,13 +1,13 @@
 {
   "name": "cookietrack-api",
   "description": "The API that powers CookieTrack.",
-  "version": "2.8.0",
+  "version": "2.8.1",
   "scripts": {
     "build": "cd functions && npm run build",
     "start": "npm run build && node functions/dist/index.js",
     "emulator": "npm run build && firebase emulators:start",
     "update": "npm run build && node functions/dist/updates.js",
-    "deploy": "npm run update && firebase deploy"
+    "deploy": "npm run update quick && firebase deploy"
   },
   "dependencies": {}
 }
