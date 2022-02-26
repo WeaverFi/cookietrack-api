@@ -1,5 +1,5 @@
 
-// Required Packages:
+// Imports:
 import { Coin, LCDClient, AccPubKey } from '@terra-money/terra.js';
 import axios from 'axios';
 

@@ -63,7 +63,7 @@ const getVaultBalances = async (wallet: Address, vaults: any[]) => {
       } else if(vault.platform === 'Beethoven X') {
         let poolId = await query(chain, vault.tokenAddress, beethovenx.poolABI, 'getPoolId', []);
         let newToken = await addBalancerLikeToken(chain, project, 'staked', vault.tokenAddress, underlyingBalance, wallet, poolId, beethovenxVault);
-        if (isToken(newToken)) {
+        if(isToken(newToken)) {
           newToken.logo = fBeetLogo;
         }
         balances.push(newToken);
