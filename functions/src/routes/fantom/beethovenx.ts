@@ -50,14 +50,15 @@ const getPoolBalances = async (wallet: Address) => {
     let balance = parseInt(await query(chain, address, minABI, 'balanceOf', [wallet]));
     if(balance > 0) {
       let newToken = await addBalancerLikeToken(chain, project, 'liquidity', address, balance, wallet, id, vault);
+      if(isToken(newToken)) {
+        newToken.logo = fBeetLogo;
+      }
       balances.push(newToken);
     }
   })());
   await Promise.all(promises);
   return balances;
 }
-
-/* ========================================================================================================================================================================= */
 
 // Function to get all staked pool balances:
 const getStakedBalances = async (wallet: Address) => {
