@@ -1,7 +1,6 @@
 
-// Required Packages:
-const { AccPubKey } = require('@terra-money/terra.js');
-import { Coin, LCDClient } from '@terra-money/terra.js';
+// Imports:
+import { Coin, LCDClient, AccPubKey } from '@terra-money/terra.js';
 import axios from 'axios';
 
 // Importing Types:
