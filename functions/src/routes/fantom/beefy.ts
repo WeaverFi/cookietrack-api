@@ -1,10 +1,11 @@
 
 // Imports:
 import axios from 'axios';
-import { minABI, beefy } from '../../ABIs';
-import { initResponse, query, addToken, addLPToken, addCurveToken } from '../../functions';
+import { minABI, beefy, beethovenx } from '../../ABIs';
+import { initResponse, query, addToken, addLPToken, addCurveToken, addBalancerLikeToken } from '../../functions';
 import type { Request } from 'express';
-import type { Chain, Address, Token, LPToken } from 'cookietrack-types';
+import { Chain, Address, Token, LPToken, isToken } from 'cookietrack-types';
+import { fBeetLogo, vault as beethovenxVault } from './beethovenx';
 
 // Initializations:
 const chain: Chain = 'ftm';
@@ -58,12 +59,21 @@ const getVaultBalances = async (wallet: Address, vaults: any[]) => {
         let newToken = await addCurveToken(chain, project, 'staked', vault.tokenAddress, underlyingBalance, wallet);
         balances.push(newToken);
 
+      // Beethoven X Vaults:
+      } else if(vault.platform === 'Beethoven X') {
+        let poolId = await query(chain, vault.tokenAddress, beethovenx.poolABI, 'getPoolId', []);
+        let newToken = await addBalancerLikeToken(chain, project, 'staked', vault.tokenAddress, underlyingBalance, wallet, poolId, beethovenxVault);
+        if (isToken(newToken)) {
+          newToken.logo = fBeetLogo;
+        }
+        balances.push(newToken);
+
       // Unique Vaults (3+ Assets):
       } else if(vault.assets.length > 2) {
         // None relevant / supported yet.
 
       // LP Token Vaults:
-      } else if(vault.assets.length === 2 && vault.platform != 'StakeSteak' && vault.platform != 'Beethoven X') {
+      } else if(vault.assets.length === 2 && vault.platform !== 'StakeSteak' && vault.platform !== 'Beethoven X') {
         let newToken = await addLPToken(chain, project, 'staked', vault.tokenAddress, underlyingBalance, wallet);
         balances.push(newToken);
 

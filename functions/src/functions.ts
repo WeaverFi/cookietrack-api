@@ -1,6 +1,6 @@
 
 // Required Packages:
-const { ethers } = require('ethers');
+import { ethers } from 'ethers';
 import axios from 'axios';
 
 // Importing Types:
@@ -1509,10 +1509,14 @@ export const addBZXToken = async (chain: Chain, location: string, status: TokenS
 /* ========================================================================================================================================================================= */
 
 // Function to get Balancer LP token info:
-export const addBalancerToken = async (chain: Chain, location: string, status: TokenStatus, address: Address, rawBalance: number, owner: Address, id: string): Promise<Token | LPToken> => {
+export const addBalancerToken = async (chain: Chain, location: string, status: TokenStatus, address: Address, rawBalance: number, owner: Address, id: Address) => {
+  return await addBalancerLikeToken(chain, location, status, address, rawBalance, owner, id, '0xBA12222222228d8Ba445958a75a0704d566BF2C8');
+}
+
+// Function to get Balancer-like LP token info:
+export const addBalancerLikeToken = async (chain: Chain, location: string, status: TokenStatus, address: Address, rawBalance: number, owner: Address, id: Address, vault: Address): Promise<Token | LPToken> => {
 
   // Generic Token Values:
-  let vault: Address = '0xBA12222222228d8Ba445958a75a0704d566BF2C8';
   let poolInfo = await query(chain, vault, balancer.vaultABI, 'getPoolTokens', [id]);
   let symbol = await query(chain, address, minABI, 'symbol', []);
   let decimals = parseInt(await query(chain, address, minABI, 'decimals', []));
