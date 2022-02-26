@@ -486,6 +486,29 @@ export const getTXs = async (chain: Chain, address: Address, last50?: boolean) =
                   fee: (tx.gas_spent * tx.gas_price) / (10 ** 18),
                   nativeToken: chains[chain].token
                 });
+
+                // Wrapping TXs:
+                if(tx.to_address.toLowerCase() === chains[chain].wrappedToken) {
+                  txs.push({
+                    wallet: address,
+                    chain: chain,
+                    type: 'transfer',
+                    hash: tx.tx_hash,
+                    contract: true,
+                    time: (new Date(tx.block_signed_at)).getTime() / 1000,
+                    direction: 'in',
+                    from: tx.to_address,
+                    to: tx.from_address,
+                    token: {
+                      address: chains[chain].wrappedToken,
+                      symbol: 'W' + chains[chain].token,
+                      logo: getTokenLogo(chain, 'W' + chains[chain].token)
+                    },
+                    value: parseInt(tx.value) / (10 ** 18),
+                    fee: (tx.gas_spent * tx.gas_price) / (10 ** 18),
+                    nativeToken: chains[chain].token
+                  });
+                }
     
               // Approval TXs:
               } else if(tx.log_events.length < 3) {
