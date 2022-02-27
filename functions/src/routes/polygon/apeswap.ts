@@ -15,7 +15,7 @@ const banana: Address = '0x5d47baba0d66083c52009271faf3f50dcc01023c';
 /* ========================================================================================================================================================================= */
 
 // GET Function:
-exports.get = async (req: Request): Promise<string> => {
+export const get = async (req: Request) => {
 
   // Initializing Response:
   let response = initResponse(req);

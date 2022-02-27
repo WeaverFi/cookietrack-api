@@ -16,7 +16,7 @@ const xava: Address = '0xd1c3f94de7e5b45fa4edbba472491a9f4b166fc4';
 /* ========================================================================================================================================================================= */
 
 // GET Function:
-exports.get = async (req: Request): Promise<string> => {
+export const get = async (req: Request) => {
 
   // Initializing Response:
   let response = initResponse(req);

@@ -16,7 +16,7 @@ const ice: Address = '0x4A81f8796e0c6Ad4877A51C86693B0dE8093F2ef';
 /* ========================================================================================================================================================================= */
 
 // GET Function:
-exports.get = async (req: Request): Promise<string> => {
+export const get = async (req: Request) => {
 
   // Initializing Response:
   let response = initResponse(req);

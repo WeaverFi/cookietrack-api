@@ -13,7 +13,7 @@ const terra = new LCDClient({ URL: "https://lcd.terra.dev", chainID: "columbus-5
 /* ========================================================================================================================================================================= */
 
 // GET Function:
-exports.get = async (req: Request): Promise<string> => {
+export const get = async (req: Request) => {
 
   // Initializing Response:
   let response = initResponse(req);

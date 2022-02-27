@@ -14,7 +14,7 @@ const png: Address = '0x60781c2586d68229fde47564546784ab3faca982';
 /* ========================================================================================================================================================================= */
 
 // GET Function:
-exports.get = async (req: Request): Promise<string> => {
+export const get = async (req: Request) => {
 
   // Initializing Response:
   let response = initResponse(req);

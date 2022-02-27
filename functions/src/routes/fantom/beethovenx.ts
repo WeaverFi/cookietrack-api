@@ -18,7 +18,7 @@ export const fBeetLogo = 'https://beets.fi/img/fBEETS.d7f7145f.png';
 /* ========================================================================================================================================================================= */
 
 // GET Function:
-exports.get = async (req: Request): Promise<string> => {
+export const get = async (req: Request) => {
 
   // Initializing Response:
   let response = initResponse(req);

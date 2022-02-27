@@ -15,7 +15,7 @@ const xboo: Address = '0xa48d959AE2E88f1dAA7D5F611E01908106dE7598';
 /* ========================================================================================================================================================================= */
 
 // GET Function:
-exports.get = async (req: Request): Promise<string> => {
+export const get = async (req: Request) => {
 
   // Initializing Response:
   let response = initResponse(req);

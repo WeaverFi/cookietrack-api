@@ -15,7 +15,7 @@ const xscream: Address = '0xe3D17C7e840ec140a7A51ACA351a482231760824';
 /* ========================================================================================================================================================================= */
 
 // GET Function:
-exports.get = async (req: Request): Promise<string> => {
+export const get = async (req: Request) => {
 
   // Initializing Response:
   let response = initResponse(req);

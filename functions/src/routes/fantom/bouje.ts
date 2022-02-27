@@ -14,7 +14,7 @@ const vive: Address = '0xe509db88b3c26d45f1fff45b48e7c36a8399b45a';
 /* ========================================================================================================================================================================= */
 
 // GET Function:
-exports.get = async (req: Request): Promise<string> => {
+export const get = async (req: Request) => {
 
   // Initializing Response:
   let response = initResponse(req);

@@ -14,7 +14,7 @@ const rewardToken: Address = '0xE0e514c71282b6f4e823703a39374Cf58dc3eA4f';
 /* ========================================================================================================================================================================= */
 
 // GET Function:
-exports.get = async (req: Request): Promise<string> => {
+export const get = async (req: Request) => {
 
   // Initializing Response:
   let response = initResponse(req);

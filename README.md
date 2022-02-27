@@ -37,13 +37,13 @@ This repository is already setup for Firebase hosting, but could easily be adapt
 
 3. Deploying to Firebase can be done through `npm run deploy`. The script is already setup to compile from Typescript, update the `routes.json` file, etc.
 
-If you wish to test endpoints locally, take the following steps:
+If you wish to test endpoints locally, you have the following options in the `index.ts` file:
 
-- Turn off rate limiting by setting `rateLimited` to `false` in `index.ts`.
+- Test locally by setting `localTesting` to `true` and running `npm start`.
 
-- Enable the local server by uncommenting the `Starting Local Server` lines in `index.ts`.
+- Alternatively, you could test through Firebase's emulators by setting `emulatorTesting` to `true` instead and running `npm run emulator`.
 
-- Run `npm start` to start your local server.
+- Be sure to turn off rate limiting by setting `rateLimited` to `false`!
 
 The `cookietrack-types` npm package includes common typings for the API. Check out its repository [here](https://github.com/CookieTrack-io/cookietrack-types).
 

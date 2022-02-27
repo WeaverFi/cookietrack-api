@@ -15,7 +15,7 @@ const cake: Address = '0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82';
 /* ========================================================================================================================================================================= */
 
 // GET Function:
-exports.get = async (req: Request): Promise<string> => {
+export const get = async (req: Request) => {
 
   // Initializing Response:
   let response = initResponse(req);

@@ -13,7 +13,7 @@ const controller: Address = '0x20CA53E2395FA571798623F1cFBD11Fe2C114c24';
 /* ========================================================================================================================================================================= */
 
 // GET Function:
-exports.get = async (req: Request): Promise<string> => {
+export const get = async (req: Request) => {
 
   // Initializing Response:
   let response = initResponse(req);

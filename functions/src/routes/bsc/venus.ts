@@ -17,7 +17,7 @@ const xvs: Address = '0xcF6BB5389c92Bdda8a3747Ddb454cB7a64626C63';
 /* ========================================================================================================================================================================= */
 
 // GET Function:
-exports.get = async (req: Request): Promise<string> => {
+export const get = async (req: Request) => {
 
   // Initializing Response:
   let response = initResponse(req);

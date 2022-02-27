@@ -15,7 +15,7 @@ const xsnob: Address = '0x83952E7ab4aca74ca96217D6F8f7591BEaD6D64E';
 /* ========================================================================================================================================================================= */
 
 // GET Function:
-exports.get = async (req: Request): Promise<string> => {
+export const get = async (req: Request) => {
 
   // Initializing Response:
   let response = initResponse(req);

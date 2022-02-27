@@ -17,7 +17,7 @@ const xjoe: Address = '0x57319d41F71E81F3c65F2a47CA4e001EbAFd4F33';
 /* ========================================================================================================================================================================= */
 
 // GET Function:
-exports.get = async (req: Request): Promise<string> => {
+export const get = async (req: Request) => {
 
   // Initializing Response:
   let response = initResponse(req);

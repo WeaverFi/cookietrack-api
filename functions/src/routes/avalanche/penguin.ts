@@ -16,7 +16,7 @@ const pefi: Address = '0xe896CDeaAC9615145c0cA09C8Cd5C25bced6384c';
 /* ========================================================================================================================================================================= */
 
 // GET Function:
-exports.get = async (req: Request): Promise<string> => {
+export const get = async (req: Request) => {
 
   // Initializing Response:
   let response = initResponse(req);

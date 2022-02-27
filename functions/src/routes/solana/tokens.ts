@@ -1,12 +1,11 @@
 
 // Imports:
 import { getTokens } from '../../sol-functions';
-import type { Request } from 'express';
 
 /* ========================================================================================================================================================================= */
 
 // GET Function:
-exports.get = async (req: Request): Promise<string> => {
+export const get = async () => {
 
   // Fetching Tokens:
   let response = await getTokens();
