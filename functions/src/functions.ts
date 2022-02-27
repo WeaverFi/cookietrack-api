@@ -252,7 +252,7 @@ export const addXToken = async (chain: Chain, location: string, status: TokenSta
 /* ========================================================================================================================================================================= */
 
 // Function to get tracked tokens:
-export const getTokens = async (chain: Chain) => {
+export const getTokens = (chain: Chain) => {
 
   // Initializing Token Array:
   let tokens: { symbol: string, address: Address, logo: URL }[] = [];
@@ -279,7 +279,7 @@ export const getTokens = async (chain: Chain) => {
   data.tokens.forEach(token => {
     tokens.push({
       symbol: token.symbol,
-      address: token.address,
+      address: token.address.toLowerCase() as Address,
       logo: getTokenLogo(chain, token.symbol)
     });
   });
@@ -349,7 +349,7 @@ export const getTokenPrice = async (chain: Chain, address: Address, decimals: nu
 
   // Fetching 1Inch Price:
   if(!priceFound && chains[chain].inch) {
-    if(address.toLowerCase() === chains[chain].usdc.toLowerCase()) {
+    if(address.toLowerCase() === chains[chain].usdc) {
       return 1;
     } else {
       apiQuery = `https://api.1inch.exchange/v4.0/${chains[chain].id}/quote?fromTokenAddress=${address}&toTokenAddress=${chains[chain].usdc}&amount=${10 ** decimals}`;
@@ -365,7 +365,7 @@ export const getTokenPrice = async (chain: Chain, address: Address, decimals: nu
 
   // Fetching ParaSwap Price:
   if(!priceFound && chains[chain].paraswap) {
-    if(address.toLowerCase() === chains[chain].usdc.toLowerCase()) {
+    if(address.toLowerCase() === chains[chain].usdc) {
       return 1;
     } else {
       apiQuery = `https://apiv5.paraswap.io/prices?srcToken=${address}&srcDecimals=${decimals}&destToken=${chains[chain].usdc}&destDecimals=${chains[chain].usdcDecimals}&amount=${10 ** decimals}&side=SELL&network=${chains[chain].id}`;

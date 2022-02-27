@@ -113,7 +113,7 @@ export const addToken = async (location: string, status: TokenStatus, address: T
 /* ========================================================================================================================================================================= */
 
 // Function to get tracked tokens:
-export const getTokens = async () => {
+export const getTokens = () => {
 
   // Initializing Token Array:
   let tokens: { symbol: string, address: TerraAddress, logo: URL }[] = [];

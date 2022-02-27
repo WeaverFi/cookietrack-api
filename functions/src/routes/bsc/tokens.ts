@@ -9,10 +9,10 @@ const chain: Chain = 'bsc';
 /* ========================================================================================================================================================================= */
 
 // GET Function:
-export const get = async () => {
+export const get = () => {
 
   // Fetching Tokens:
-  let response = await getTokens(chain);
+  let response = getTokens(chain);
 
   // Returning Response:
   return JSON.stringify(response, null, ' ');

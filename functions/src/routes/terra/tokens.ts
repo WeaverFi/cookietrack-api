@@ -5,10 +5,10 @@ import { getTokens } from '../../terra-functions';
 /* ========================================================================================================================================================================= */
 
 // GET Function:
-export const get = async () => {
+export const get = () => {
 
   // Fetching Tokens:
-  let response = await getTokens();
+  let response = getTokens();
 
   // Returning Response:
   return JSON.stringify(response, null, ' ');
