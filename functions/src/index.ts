@@ -34,9 +34,9 @@ const rateLimitedResponse: string = `<p>Rate limit reached. Contact us through <
 const filter: RegExp = /[^a-zA-Z0-9]/;
 
 // Settings:
-const localTesting = true;
+const localTesting = false;
 const emulatorTesting = false;
-const rateLimited = false;
+const rateLimited = true;
 const localTestingPort = 3000;
 const maxQueries = 200;
 const rateLimitTimer = 21600000;
