@@ -1121,7 +1121,9 @@ export const terra_data: TerraChainTokenData = {
   tokens: [
     { address: 'terra14z56l0fp2lsf86zy3hty2z47ezkhnthtr9yq76', symbol: 'ANC' },
     { address: 'terra1kcthelkax4j9x8d3ny6sdag0qmxxynl3qtcrpy', symbol: 'MINE' },
-    { address: 'terra13xujxcrc9dqft4p9a8ls0w3j0xnzm6y2uvve8n', symbol: 'STT' }
+    { address: 'terra13xujxcrc9dqft4p9a8ls0w3j0xnzm6y2uvve8n', symbol: 'STT' },
+    { address: 'terra1dzhzukyezv0etz22ud940z7adyv7xgcjkahuun', symbol: 'bETH' },
+    { address: 'terra1kc87mu460fwkqte29rquh4hc20m54fxwtsx7gp', symbol: 'bLUNA' }
   ],
   logos: [
     { symbol: 'LUNA', logo: 'https://github.com/terra-money/assets/blob/master/icon/60/Luna.png?raw=true' },
@@ -1146,7 +1148,9 @@ export const terra_data: TerraChainTokenData = {
     { symbol: 'THT', logo: 'https://github.com/terra-money/assets/blob/master/icon/60/THT.png?raw=true' },
     { symbol: 'ANC', logo: 'https://assets.coingecko.com/coins/images/14420/small/anchor_protocol_logo.jpg?1615965420' },
     { symbol: 'MINE', logo: 'https://assets.coingecko.com/coins/images/16859/small/pylon_logo.png?1625466331' },
-    { symbol: 'STT', logo: 'https://assets.coingecko.com/coins/images/17715/small/starterra-logo.png?1629084125' }
+    { symbol: 'STT', logo: 'https://assets.coingecko.com/coins/images/17715/small/starterra-logo.png?1629084125' },
+    { symbol: 'bETH', logo: 'https://finder.extraterrestrial.money/images/bETH100.png' },
+    { symbol: 'bLUNA', logo: 'https://finder.extraterrestrial.money/images/bLUNA100.png' }
   ],
   blacklist: []
 }
