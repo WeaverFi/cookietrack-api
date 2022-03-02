@@ -16,7 +16,7 @@ const xgtr: Address = '0x32A948F018870548bEd7e888Cd97a257b700D4c6';
 /* ========================================================================================================================================================================= */
 
 // GET Function:
-exports.get = async (req: Request): Promise<string> => {
+export const get = async (req: Request) => {
 
   // Initializing Response:
   let response = initResponse(req);

@@ -14,7 +14,7 @@ const sushi: Address = '0x0b3f868e0be5597d5db7feb59e1cadbb0fdda50a';
 /* ========================================================================================================================================================================= */
 
 // GET Function:
-exports.get = async (req: Request): Promise<string> => {
+export const get = async (req: Request) => {
 
   // Initializing Response:
   let response = initResponse(req);

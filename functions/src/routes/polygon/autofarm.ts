@@ -13,7 +13,7 @@ const registry: Address = '0x89d065572136814230a55ddeeddec9df34eb0b76';
 /* ========================================================================================================================================================================= */
 
 // GET Function:
-exports.get = async (req: Request): Promise<string> => {
+export const get = async (req: Request) => {
 
   // Initializing Response:
   let response = initResponse(req);

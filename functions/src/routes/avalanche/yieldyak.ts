@@ -18,7 +18,7 @@ const lpAxialSymbols: string[] = ['AS4D', 'AC4D', 'AM3D', 'AA3D'];
 /* ========================================================================================================================================================================= */
 
 // GET Function:
-exports.get = async (req: Request): Promise<string> => {
+export const get = async (req: Request) => {
 
   // Initializing Response:
   let response = initResponse(req);

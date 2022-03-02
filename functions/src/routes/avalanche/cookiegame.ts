@@ -15,7 +15,7 @@ const cookie: Address = '0xeb5c8484a5e3866cf9ac0a3e01ca19c3fbe9bd93';
 /* ========================================================================================================================================================================= */
 
 // GET Function:
-exports.get = async (req: Request): Promise<string> => {
+export const get = async (req: Request) => {
 
   // Initializing Response:
   let response = initResponse(req);

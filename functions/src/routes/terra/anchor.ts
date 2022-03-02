@@ -29,7 +29,7 @@ const astroGenerator: TerraAddress = 'terra1zgrx9jjqrfye8swykfgmd6hpde60j0nszzup
 /* ========================================================================================================================================================================= */
 
 // GET Function:
-exports.get = async (req: Request): Promise<string> => {
+export const get = async (req: Request) => {
 
   // Initializing Response:
   let response = initResponse(req);

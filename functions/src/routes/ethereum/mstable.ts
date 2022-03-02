@@ -37,7 +37,7 @@ const mta: Address = '0xa3bed4e1c75d00fa6f4e5e6922db7261b5e9acd2';
 /* ========================================================================================================================================================================= */
 
 // GET Function:
-exports.get = async (req: Request): Promise<string> => {
+export const get = async (req: Request) => {
 
   // Initializing Response:
   let response = initResponse(req);

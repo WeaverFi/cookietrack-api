@@ -21,7 +21,7 @@ const creamToken: Address = '0x2ba592f78db6436527729929aaf6c908497cb200';
 /* ========================================================================================================================================================================= */
 
 // GET Function:
-exports.get = async (req: Request): Promise<string> => {
+export const get = async (req: Request) => {
 
   // Initializing Response:
   let response = initResponse(req);

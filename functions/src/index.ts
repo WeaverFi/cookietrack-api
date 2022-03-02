@@ -18,27 +18,28 @@ const swaggerDocs: JSON = require('../static/swagger.json');
 // Fetching Firebase Logger Compatibility Patch:
 require("firebase-functions/lib/logger/compat");
 
+// Initializing Firebase App:
+admin.initializeApp();
+
 // Initializing Express Server:
 const app: Application = express();
 app.use(cors());
 
-// Initializing Firebase App:
-admin.initializeApp();
-
-// Initializing Rate Limits:
-const rateLimited = true;
-const maxQueries = 200;
-const rateLimitTimer = 21600000;
-
-// Initializing Text Reponses:
+// Initializations:
 const repository: string = 'https://github.com/CookieTrack-io/cookietrack-api';
 const discord: string = 'https://discord.com/invite/DzADcq7y75';
 const rootResponse: string = `<title>CookieTrack API</title><p>Click <a href="${repository}">here</a> to see the API's repository, or <a href="/docs">here</a> to see its OpenAPI documentation.</p>`;
 const errorResponse: string = `<p>Invalid route.</p>`;
 const rateLimitedResponse: string = `<p>Rate limit reached. Contact us through <a href="${discord}">Discord</a> if you believe this is not working as intended.</p>`;
-
-// Initializing Regex Query Filter:
 const filter: RegExp = /[^a-zA-Z0-9]/;
+
+// Settings:
+const localTesting = false;
+const emulatorTesting = false;
+const rateLimited = true;
+const localTestingPort = 3000;
+const maxQueries = 200;
+const rateLimitTimer = 21600000;
 
 /* ========================================================================================================================================================================= */
 
@@ -61,7 +62,7 @@ app.get('/routes', (req: Request, res: Response) => {
 (Object.keys(ChainEndpoint) as Chain[]).forEach(chain => {
   app.get(`/${ChainEndpoint[chain]}/*`, async (req: Request, res: Response) => {
     let rateLimitExceeded = false;
-    if(rateLimited) {
+    if(!localTesting && rateLimited) {
       let rateLimits = admin.firestore().collection('rateLimits');
       let userID = 'u_' + (req.headers['x-forwarded-for'] as String).split(',')[0];
       let userDoc = rateLimits.doc(userID);
@@ -113,9 +114,15 @@ app.all('*', async (req: Request, res: Response) => {
 
 /* ========================================================================================================================================================================= */
 
-// Starting Local Server:
-// const port = 3000;
-// app.listen(port, () => { console.info(`API Up on http://127.0.0.1:${port}`); });
+// Local Testing:
+if(localTesting) {
+  app.listen(localTestingPort, () => { console.info(`API Up on http://127.0.0.1:${localTestingPort}`); });
 
-// Exporting Express App:
-exports.app = functions.runWith({ memory: '1GB', timeoutSeconds: 120 }).https.onRequest(app);
+// Emulator Testing:
+} else if(emulatorTesting) {
+  exports.app = functions.https.onRequest(app);
+
+// Exporting Firebase Functions:
+} else {
+  exports.app = functions.runWith({ memory: '1GB', timeoutSeconds: 120 }).https.onRequest(app);
+}

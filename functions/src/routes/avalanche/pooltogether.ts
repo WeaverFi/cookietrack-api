@@ -14,7 +14,7 @@ const usdc: Address = '0xa7d7079b0fead91f3e65f86e8915cb59c1a4c664';
 /* ========================================================================================================================================================================= */
 
 // GET Function:
-exports.get = async (req: Request): Promise<string> => {
+export const get = async (req: Request) => {
 
   // Initializing Response:
   let response = initResponse(req);

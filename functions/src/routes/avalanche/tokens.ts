@@ -1,7 +1,6 @@
 
 // Imports:
 import { getTokens } from '../../functions';
-import type { Request } from 'express';
 import type { Chain } from 'cookietrack-types';
 
 // Initializations:
@@ -10,7 +9,7 @@ const chain: Chain = 'avax';
 /* ========================================================================================================================================================================= */
 
 // GET Function:
-exports.get = async (req: Request): Promise<string> => {
+export const get = async () => {
 
   // Fetching Tokens:
   let response = await getTokens(chain);
