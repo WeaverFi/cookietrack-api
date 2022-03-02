@@ -8,8 +8,8 @@ import type { Chain, Address, Token, LPToken } from 'cookietrack-types';
 // Initializations:
 const chain: Chain = 'ftm';
 const project = 'bouje';
-const masterChef: Address = '0x1277dd1dCbe60d597aAcA80738e1dE6cB95dCB54';
-const vive: Address = '0xe509db88b3c26d45f1fff45b48e7c36a8399b45a';
+const masterChef: Address = '0x51839D39C4Fa187E3A084a4eD34a4007eae66238';
+const bastille: Address = '0xcef2b88d5599d578c8d92E7a6e6235FBfaD01eF4';
 
 /* ========================================================================================================================================================================= */
 
@@ -54,9 +54,9 @@ const getPoolBalances = async (wallet: Address) => {
         let newToken = await addToken(chain, project, 'staked', token, balance, wallet);
         balances.push(newToken);
       }
-      let rewards = parseInt(await query(chain, masterChef, bouje.masterChefABI, 'pendingVive', [poolID, wallet]));
+      let rewards = parseInt(await query(chain, masterChef, bouje.masterChefABI, 'pendingBastille', [poolID, wallet]));
       if(rewards > 0) {
-        let newToken = await addToken(chain, project, 'unclaimed', vive, rewards, wallet);
+        let newToken = await addToken(chain, project, 'unclaimed', bastille, rewards, wallet);
         balances.push(newToken);
       }
     }
