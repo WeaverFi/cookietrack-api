@@ -504,13 +504,16 @@
       "items": {
         "type": "object",
         "properties": {
-          "symbol": {
-            "type": "string"
-          },
           "address": {
             "type": "string"
           },
+          "symbol": {
+            "type": "string"
+          },
           "logo": {
+            "type": "string"
+          },
+          "decimals": {
             "type": "string"
           }
         }

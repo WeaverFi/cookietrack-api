@@ -8,7 +8,7 @@ const swagger = require('swagger-ui-express');
 
 // Imports:
 import { ChainEndpoint } from 'cookietrack-types';
-import { fetchPrices, testFetchPrices } from './price-fetcher';
+// import { fetchPrices, testFetchPrices } from './price-fetcher';
 import type { Request, Response, Application } from 'express';
 import type { Chain } from 'cookietrack-types';
 
@@ -36,8 +36,8 @@ const filter: RegExp = /[^a-zA-Z0-9]/;
 
 // Settings:
 const localTesting = false;
-const emulatorTesting = true;
-const rateLimited = false;
+const emulatorTesting = false;
+const rateLimited = true;
 const localTestingPort = 3000;
 const maxQueries = 200;
 const rateLimitTimer = 21600000;
@@ -122,10 +122,10 @@ if(localTesting) {
 // Emulator Testing:
 } else if(emulatorTesting) {
   exports.app = functions.https.onRequest(app);
-  exports.priceFetcher = functions.https.onRequest(async (req: Request, res: Response) => { res.end(testFetchPrices()); });
+  // exports.priceFetcher = functions.https.onRequest(async (req: Request, res: Response) => { res.end(testFetchPrices()); });
 
 // Exporting Firebase Functions:
 } else {
   exports.app = functions.runWith({ memory: '1GB', timeoutSeconds: 120 }).https.onRequest(app);
-  exports.priceFetcher = functions.pubsub.schedule('every 15 minutes').onRun(() => { fetchPrices(); return null; });
+  // exports.priceFetcher = functions.pubsub.schedule('every 15 minutes').onRun(() => { fetchPrices(); return null; });
 }
