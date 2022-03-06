@@ -5,7 +5,7 @@ import axios from 'axios';
 
 // Importing Types:
 import type { Request } from 'express';
-import type { APIResponse, Chain, TerraAddress, Address, URL, Token, NativeToken, TokenType, TokenStatus } from 'cookietrack-types';
+import type { APIResponse, Chain, TerraAddress, Address, URL, Token, NativeToken, TokenType, TokenStatus, DebtToken, LPToken, PricedToken } from 'cookietrack-types';
 
 // Importing Variables:
 import { terra_data } from './tokens';
@@ -29,7 +29,7 @@ export const query = async (address: TerraAddress, query: any): Promise<any> => 
     let result = await terra.wasm.contractQuery(address, query);
     return result;
   } catch {
-    console.error(`Calling ${query} on ${address} (Chain: TERRA)`);
+    console.error(`Calling ${JSON.stringify(query)} on ${address} (Chain: TERRA)`);
   }
 };
 
@@ -98,6 +98,25 @@ export const addNativeToken = async (location: string, status: TokenStatus, rawB
 
 /* ========================================================================================================================================================================= */
 
+// Function to get native debt token info:
+export const addNativeDebtToken = async (location: string, status: TokenStatus, rawBalance: number, owner: TerraAddress, rawSymbol: string): Promise<DebtToken> => {
+
+  // Initializing Token Values:
+  let nativeToken = await addNativeToken(location, status, rawBalance, owner, rawSymbol);
+  let symbol = nativeToken.symbol;
+  let address = nativeToken.address;
+  let balance = nativeToken.balance;
+  let price = nativeToken.price;
+  let logo = nativeToken.logo;
+
+  // Setting Token Type:
+  let type: TokenType = 'debt';
+
+  return { type, chain, location, status, owner, symbol, address, balance, price, logo };
+};
+
+/* ========================================================================================================================================================================= */
+
 // Function to get token info:
 export const addToken = async (location: string, status: TokenStatus, address: TerraAddress, symbol: string, decimals: number, rawBalance: number, owner: TerraAddress): Promise<Token> => {
 
@@ -108,6 +127,68 @@ export const addToken = async (location: string, status: TokenStatus, address: T
   let logo = getTokenLogo(symbol);
 
   return { type, chain, location, status, owner, symbol, address, balance, price, logo };
+}
+
+/* ========================================================================================================================================================================= */
+
+// Function to get LP token info:
+export const addLPToken = async (location: string, status: TokenStatus, address: TerraAddress, rawBalance: number, owner: TerraAddress, symbol?: string): Promise<LPToken> => {
+  
+  // Initializing Token Values:
+  let type: TokenType = 'lpToken';
+  let pairInfo = await query(address, { pair: {} });
+  let poolInfo = await query(address, { pool: {} });
+  let lpTokenInfo = await query(pairInfo.liquidity_token, { token_info: {} });
+  let decimals = parseInt(lpTokenInfo.decimals);
+  let balance = rawBalance / (10 ** decimals);
+  let totalShares = parseInt(poolInfo.total_share);
+
+  // First Paired Token:
+  let type0: TokenType = pairInfo.asset_infos[0].hasOwnProperty('token') ? 'token' : 'nativeToken';
+  let rawBalance0: number = rawBalance * parseInt(poolInfo.assets[0].amount) / totalShares;
+  let token0 = await (type0 === 'token' ? addPricedToken(pairInfo.asset_infos[0].token.contract_addr, rawBalance0) : addNativePricedToken(rawBalance0, pairInfo.asset_infos[0].native_token.denom));
+
+  // Second Paired Token:
+  let type1: TokenType = pairInfo.asset_infos[1].hasOwnProperty('token') ? 'token' : 'nativeToken';
+  let rawBalance1: number = rawBalance * parseInt(poolInfo.assets[1].amount) / totalShares;
+  let token1 = await (type1 === 'token' ? addPricedToken(pairInfo.asset_infos[1].token.contract_addr, rawBalance1) : addNativePricedToken(rawBalance1, pairInfo.asset_infos[1].native_token.denom));
+
+  // Finding LP Symbol If Necessary:
+  if(!symbol) {
+    symbol = `${token0.symbol}-${token1.symbol} LP`;
+  }
+
+  return { type, chain, location, status, owner, symbol, address, balance, token0, token1 };
+}
+
+/* ========================================================================================================================================================================= */
+
+// Underlying LP Token Helper Function:
+const addPricedToken = async (address: TerraAddress, rawBalance: number): Promise<PricedToken> => {
+
+  // Finding Underlying Token Info:
+  let { symbol, decimals } = await query(address, { token_info: {} });
+  let balance = rawBalance / (10 ** decimals);
+  let price = await getTokenPrice(address);
+  let logo = getTokenLogo(symbol);
+
+  return { symbol, address, balance, price, logo }
+}
+
+/* ========================================================================================================================================================================= */
+
+// Underlying LP Token Helper Function:
+const addNativePricedToken = async (rawBalance: number, denom: string): Promise<PricedToken> => {
+
+  // Finding Underlying Token Info:
+  let nativeToken = await addNativeToken('', 'none', rawBalance, 'terra1', denom.slice(1));
+  let symbol = nativeToken.symbol;
+  let address = defaultAddress;
+  let balance = nativeToken.balance;
+  let price = nativeToken.price;
+  let logo = nativeToken.logo;
+
+  return { symbol, address, balance, price, logo }
 }
 
 /* ========================================================================================================================================================================= */

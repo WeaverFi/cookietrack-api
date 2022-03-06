@@ -759,10 +759,14 @@ export const getTaxTXs = async (chain: Chain, wallet: Address) => {
 
     // Other Tokens:
     if(tx.type === 'transfer') {
-      if(tokenPrices[tx.token.address].length > 0) {
-        let txDate = Math.max(...(tokenPrices[tx.token.address].filter(entry => entry.time < tx.time).map(i => i.time)));
-        let foundEntry = tokenPrices[tx.token.address].find(entry => entry.time === txDate);
-        foundEntry ? tx.token.price = foundEntry.price : tx.token.price = 0;
+      if(tokenPrices[tx.token.address]) {
+        if(tokenPrices[tx.token.address].length > 0) {
+          let txDate = Math.max(...(tokenPrices[tx.token.address].filter(entry => entry.time < tx.time).map(i => i.time)));
+          let foundEntry = tokenPrices[tx.token.address].find(entry => entry.time === txDate);
+          foundEntry ? tx.token.price = foundEntry.price : tx.token.price = 0;
+        } else {
+          tx.token.price = 0;
+        }
       } else {
         tx.token.price = 0;
       }
