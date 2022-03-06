@@ -9,7 +9,7 @@ import type { Chain, Address, Token, LPToken } from 'cookietrack-types';
 const chain: Chain = 'ftm';
 const project = 'autofarm';
 const registry: Address = '0x76b8c3ECdF99483335239e66F34191f11534cbAA';
-const ignoreVaults: number[] = [75, 76];
+const ignoreVaults: number[] = [75, 76, 87, 89, 93];
 
 /* ========================================================================================================================================================================= */
 
