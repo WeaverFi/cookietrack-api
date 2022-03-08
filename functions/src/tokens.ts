@@ -620,7 +620,9 @@ export const avax_data: ChainTokenData = {
     { symbol: 'PTavUSDCe', logo: 'https://snowtrace.io/token/images/usdc_32.png' },
     { symbol: 'xGTR', logo: 'https://snowtrace.io/token/images/alligatorexchange_32.png' },
     { symbol: 'DAI', logo: 'https://snowtrace.io/token/images/MCDDai_32.png' },
-    { symbol: 's3D', logo: 'https://snowtrace.io/token/images/snowball_32.png' }
+    { symbol: 's3D', logo: 'https://snowtrace.io/token/images/snowball_32.png' },
+    { symbol: 'ETH', logo: 'https://snowtrace.io/token/images/ethereum_32.png' },
+    { symbol: 'YRT', logo: 'https://snowtrace.io/token/images/yieldyak_32.png' }
   ],
   blacklist: [
     '0xd17584633bc8d190e5a14502976dad9640456d6d'
