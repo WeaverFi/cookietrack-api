@@ -14,7 +14,7 @@ import { vault as beethovenxVault } from './routes/fantom/beethovenx';
 const routesFile = 'routes.json';
 const beethovenFile = 'beethovenx-pools.json';
 const beethovenMaxInactiveBlocks = 30000;
-const beethovenFactoryAddresses = [
+const beethovenFactoryAddresses: Address[] = [
   '0x60467cb225092cE0c989361934311175f437Cf53',
   '0x92b377187bcCC6556FceD2f1e6DAd65850C20630',
   '0x55df810876354Fc3e249f701Dd78DeDE57991F8D',
@@ -22,7 +22,6 @@ const beethovenFactoryAddresses = [
   '0x70b55Af71B29c5Ca7e67bD1995250364C4bE5554'
 ];
 let beethovenxPools: Record<'pools', string[]> = { pools: [] };
-let beethovenPoolPromises: Promise<void>[] = [];
 let apiRoutes: Record<string, string[]> = {};
 
 // Setting Up Optional Args:
@@ -75,35 +74,11 @@ const updateBeethovenxPools = async () => {
   let currentBlock = await ftm.getBlockNumber();
 
   // Fetching Data:
-  for(const factory of beethovenFactoryAddresses) {
-    try {
-      let factoryEvents = new ethers.Contract(factory, ['event PoolCreated(address indexed pool)'], ftm);
-      let factoryEventsBackup = new ethers.Contract(factory, ['event PoolCreated(address indexed pool)'], ftmBackup);
-      let creationEvents;
-      while(!creationEvents) {
-        try {
-          creationEvents = await factoryEvents.queryFilter(factoryEvents.filters.PoolCreated());
-        } catch {
-          console.warn(`Retrying Event Query: ${factory}...`);
-          creationEvents = await factoryEventsBackup.queryFilter(factoryEventsBackup.filters.PoolCreated());
-        }
-      }
-      creationEvents.forEach(event => {
-        if(!event.args) throw new Error(`Missing Event Args: ${event.event}`);
-        let address: Address = event.args[0];
-        beethovenPoolPromises.push((async () => {
-          let poolId = await query('ftm', address, beethovenx.poolABI, 'getPoolId', []);
-          let lastChangeBlock = (<BigNumber>(await query('ftm', beethovenxVault, beethovenx.vaultABI, 'getPoolTokens', [poolId])).lastChangeBlock).toNumber();
-          if(lastChangeBlock > currentBlock - beethovenMaxInactiveBlocks) {
-            beethovenxPools.pools.push(poolId);
-          }
-        })());
-      });
-    } catch(err) {
-      console.error(err);
-    }
-  }
-  await Promise.all(beethovenPoolPromises);
+  await fetchPoolIDsFromFactory(beethovenFactoryAddresses[0], currentBlock, ftm, ftmBackup);
+  await fetchPoolIDsFromFactory(beethovenFactoryAddresses[1], currentBlock, ftm, ftmBackup);
+  await fetchPoolIDsFromFactory(beethovenFactoryAddresses[2], currentBlock, ftm, ftmBackup);
+  await fetchPoolIDsFromFactory(beethovenFactoryAddresses[3], currentBlock, ftm, ftmBackup);
+  await fetchPoolIDsFromFactory(beethovenFactoryAddresses[4], currentBlock, ftm, ftmBackup);
 
   // Writing File:
   beethovenxPools.pools.sort();
@@ -116,12 +91,70 @@ const updateBeethovenxPools = async () => {
   });
 }
 
+// Helper function to fetch pool IDs from factory addresses:
+const fetchPoolIDsFromFactory = async (factory: Address, currentBlock: number, ftm: ethers.providers.JsonRpcProvider, ftmBackup: ethers.providers.JsonRpcProvider) => {
+
+  // Initializations:
+  let creationEvents;
+  let batchSize = 50;
+  let startBatch = 0;
+  let endBatch = batchSize;
+
+  // Events Setup:
+  let factoryEvents = new ethers.Contract(factory, ['event PoolCreated(address indexed pool)'], ftm);
+  let factoryEventsBackup = new ethers.Contract(factory, ['event PoolCreated(address indexed pool)'], ftmBackup);
+
+  // Fetching Pool IDs:
+  try {
+    while(!creationEvents) {
+      try {
+        creationEvents = await factoryEvents.queryFilter(factoryEvents.filters.PoolCreated());
+      } catch {
+        console.warn(`Retrying Pool Creation Query: ${factory}...`);
+        creationEvents = await factoryEventsBackup.queryFilter(factoryEventsBackup.filters.PoolCreated());
+      }
+    }
+    if(creationEvents.length <= batchSize) {
+      let promises = creationEvents.map(event => (async () => {
+        if(event.args) {
+          let address: Address = event.args[0];
+          let poolID = await query('ftm', address, beethovenx.poolABI, 'getPoolId', []);
+          let lastChangeBlock = (<BigNumber>(await query('ftm', beethovenxVault, beethovenx.vaultABI, 'getPoolTokens', [poolID])).lastChangeBlock).toNumber();
+          if(lastChangeBlock > currentBlock - beethovenMaxInactiveBlocks) {
+            beethovenxPools.pools.push(poolID);
+          }
+        }
+      })());
+      await Promise.all(promises);
+    } else {
+      while(endBatch < creationEvents.length + batchSize) {
+        let promises = creationEvents.slice(startBatch, endBatch).map(event => (async () => {
+          if(event.args) {
+            let address: Address = event.args[0];
+            let poolID = await query('ftm', address, beethovenx.poolABI, 'getPoolId', []);
+            let lastChangeBlock = (<BigNumber>(await query('ftm', beethovenxVault, beethovenx.vaultABI, 'getPoolTokens', [poolID])).lastChangeBlock).toNumber();
+            if(lastChangeBlock > currentBlock - beethovenMaxInactiveBlocks) {
+              beethovenxPools.pools.push(poolID);
+            }
+          }
+        })());
+        await Promise.all(promises);
+        startBatch += batchSize;
+        endBatch += batchSize;
+      }
+    }
+    console.info(`Successfully fetched pool IDs for factory: ${factory}`);
+  } catch(err) {
+    console.error(err);
+  }
+}
+
 /* ========================================================================================================================================================================= */
 
-// Performing Quick Updates:
+// Performing quick updates when deploying:
 updateRoutes();
 
-// Other Updates To Run Through 'npm run update':
+// Other updates to run through 'npm run update':
 if(!quickUpdate) {
   updateBeethovenxPools();
 }
