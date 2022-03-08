@@ -25,6 +25,14 @@ const ignoreErrors: { chain: Chain, address: Address }[] = [
   {chain: 'poly', address: '0x8aaa5e259f74c8114e0a471d9f2adfc66bfe09ed'}, // QuickSwap Registry
   {chain: 'poly', address: '0x9dd12421c637689c3fc6e661c9e2f02c2f61b3eb'}  // QuickSwap Dual Rewards Registry
 ];
+const ignoreTokenPrices: Record<string, string[]> = {
+  eth: [],
+  bsc: [],
+  poly: [],
+  ftm: [],
+  avax: ['PGL', 'sPGL', 's3D', 's4D', 'sDAI.e', 'sUSDT.e', 'sUSDC.e', 'sLINK.e', 'sWETH.e', 'sWBTC.e', 'sWAVAX', 'YRT', 'AS4D', 'AC4D', 'AA3D', 'AM3D', 'sAS4D', 'sAC4D', 'sAA3D', 'sAM3D'],
+  one: []
+}
 
 /* ========================================================================================================================================================================= */
 
@@ -730,14 +738,16 @@ export const getTaxTXs = async (chain: Chain, wallet: Address) => {
 
   // Collecting Data From TXs:
   let promises = txs.map(tx => (async () => {
-    if(!tokens.has(tx.token.address)) {
-      tokens.add(tx.token.address);
-    }
-    if(tx.time < dates.start) {
-      dates.start = tx.time;
-    }
-    if(tx.time > dates.end) {
-      dates.end = tx.time;
+    if(tx.type === 'transfer') {
+      if(!tx.token.symbol.includes('LP') && !ignoreTokenPrices[chain].includes(tx.token.symbol) && !tokens.has(tx.token.address)) {
+        tokens.add(tx.token.address);
+      }
+      if(tx.time < dates.start) {
+        dates.start = tx.time;
+      }
+      if(tx.time > dates.end) {
+        dates.end = tx.time;
+      }
     }
   })());
   await Promise.all(promises);
