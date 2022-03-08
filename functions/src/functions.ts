@@ -30,7 +30,7 @@ const ignoreTokenPrices: Record<string, string[]> = {
   bsc: [],
   poly: [],
   ftm: [],
-  avax: ['PGL', 'sPGL', 's3D', 's4D', 'sDAI.e', 'sUSDT.e', 'sUSDC.e', 'sLINK.e', 'sWETH.e', 'sWBTC.e', 'sWAVAX', 'YRT', 'AS4D', 'AC4D', 'AA3D', 'AM3D', 'sAS4D', 'sAC4D', 'sAA3D', 'sAM3D'],
+  avax: ['PGL', 'sPGL', 's3D', 's4D', 'sDAI.e', 'sUSDT.e', 'sUSDC.e', 'sLINK.e', 'sWETH.e', 'sWBTC.e', 'sWAVAX', 'YRT', 'AS4D', 'AC4D', 'AA3D', 'AM3D', 'sAS4D', 'sAC4D', 'sAA3D', 'sAM3D', 'sPNG'],
   one: []
 }
 
