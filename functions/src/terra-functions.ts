@@ -194,39 +194,30 @@ const addNativePricedToken = async (rawBalance: number, denom: string): Promise<
 /* ========================================================================================================================================================================= */
 
 // Function to get tracked tokens:
-export const getTokens = async () => {
-
-  // Initializing Token Array:
-  let tokens: { symbol: string, address: TerraAddress, logo: URL }[] = [];
-
-  // Adding Tokens:
-  terra_data.tokens.forEach(token => {
-    tokens.push({
-      symbol: token.symbol,
-      address: token.address,
-      logo: getTokenLogo(token.symbol)
-    });
-  });
-
-  return tokens;
+export const getTokens = () => {
+  return terra_data.tokens;
 }
 
 /* ========================================================================================================================================================================= */
 
 // Function to get a token's logo:
-export const getTokenLogo = (symbol: string): URL => {
+const getTokenLogo = (symbol: string) => {
 
-  // Initializing Token Logo Interface:
-  interface TokenLogo { symbol: String, logo: URL };
-  
-  // Initializating Default Token Logo:
-  let token: TokenLogo = { symbol: '', logo: defaultTokenLogo };
+  // Initializing Default Token Logo:
+  let logo = defaultTokenLogo;
 
   // Finding Token Logo:
-  let foundToken: TokenLogo | undefined = terra_data.logos.find((token: TokenLogo) => token.symbol === symbol);
-  if(foundToken) { token = foundToken; }
+  let trackedToken = terra_data.tokens.find(token => token.symbol === symbol);
+  if(trackedToken) {
+    logo = trackedToken.logo;
+  } else {
+    let token = terra_data.logos.find(i => i.symbol === symbol);
+    if(token) {
+      logo = token.logo;
+    }
+  }
 
-  return token.logo;
+  return logo;
 }
 
 /* ========================================================================================================================================================================= */

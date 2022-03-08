@@ -3,7 +3,7 @@
 const { ethers } = require('ethers');
 import { minABI } from '../../ABIs';
 import { bsc_data } from '../../tokens';
-import { initResponse, query, addNativeToken, addToken } from '../../functions';
+import { initResponse, query, addNativeToken, addTrackedToken } from '../../functions';
 import type { Request } from 'express';
 import type { Chain, Address, Token } from 'cookietrack-types';
 const rpcs: Record<Chain, URL[]> = require('../../../static/rpcs.json');
@@ -64,10 +64,10 @@ const getBNB = async (wallet: Address) => {
 // Function to get token balances:
 const getTokenBalances = async (wallet: Address) => {
   let tokens: Token[] = [];
-  let promises = bsc_data.tokens.map((token: { address: Address, symbol: string }) => (async () => {
+  let promises = bsc_data.tokens.map(token => (async () => {
     let balance = parseInt(await query(chain, token.address, minABI, 'balanceOf', [wallet]));
     if(balance > 0) {
-      let newToken = await addToken(chain, 'wallet', 'none', token.address, balance, wallet);
+      let newToken = await addTrackedToken(chain, 'wallet', 'none', token, balance, wallet);
       tokens.push(newToken);
     }
   })());

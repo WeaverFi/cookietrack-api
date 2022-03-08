@@ -74,7 +74,7 @@ const getTokenBalances = async (wallet: SolAddress) => {
       apiTokens = (await axios.get(apiQuery, { headers: { 'Authorization': `Bearer ${keys.beachKey}` }})).data;
       let promises = apiTokens.map((token: any) => (async () => {
         if(token.amount > 0) {
-          let sol_token = sol_data.tokens.find((i: { address: SolAddress, symbol: string }) => i.address.toLowerCase() === token.mint.address.toLowerCase());
+          let sol_token = sol_data.tokens.find(i => i.address.toLowerCase() === token.mint.address.toLowerCase());
           if(sol_token) {
             let newToken = await addToken('wallet', 'none', sol_token.address, sol_token.symbol, token.decimals, token.amount, wallet);
             tokens.push(newToken);

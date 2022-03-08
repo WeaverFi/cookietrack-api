@@ -88,11 +88,10 @@ const getNativeBalances = async (wallet: TerraAddress) => {
 // Function to get token balances:
 const getTokenBalances = async (wallet: TerraAddress) => {
   let tokens: Token[] = [];
-  let promises = terra_data.tokens.map((token: { address: TerraAddress, symbol: string }) => (async () => {
+  let promises = terra_data.tokens.map(token => (async () => {
     let balance = parseInt((await query(token.address, { balance: { address: wallet } })).balance);
     if(balance > 0) {
-      let decimals = (await query(token.address, { token_info: {} })).decimals;
-      let newToken = await addToken('wallet', 'none', token.address, token.symbol, decimals, balance, wallet);
+      let newToken = await addToken('wallet', 'none', token.address, token.symbol, token.decimals, balance, wallet);
       tokens.push(newToken);
     }
   })());

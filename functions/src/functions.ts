@@ -5,7 +5,7 @@ import axios from 'axios';
 
 // Importing Types:
 import type { Request } from 'express';
-import type { APIResponse, Chain, ChainData, Address, Hash, ABI, URL, Token, NativeToken, LPToken, PricedToken, DebtToken, XToken, TokenType, TokenStatus, TransferTX, ApprovalTX, SimpleTX, TaxTransferTX, TaxApprovalTX, ChainTokenData } from 'cookietrack-types';
+import type { APIResponse, Chain, ChainData, Address, Hash, ABI, URL, Token, NativeToken, LPToken, PricedToken, DebtToken, XToken, TokenType, TokenStatus, TransferTX, ApprovalTX, SimpleTX, TaxTransferTX, TaxApprovalTX, ChainTokenData, TokenData } from 'cookietrack-types';
 
 // Fetching Required JSON Files:
 const chains: Record<Chain, ChainData> = require('../static/chains.json');
@@ -99,8 +99,9 @@ export const addNativeToken = async (chain: Chain, rawBalance: number, owner: Ad
   let location = 'wallet';
   let status: TokenStatus = 'none';
   let address = defaultAddress;
-  let balance = rawBalance / (10 ** 18);
-  let price = await getTokenPrice(chain, defaultAddress, 18);
+  let decimals = 18;
+  let balance = rawBalance / (10 ** decimals);
+  let price = await getTokenPrice(chain, defaultAddress, decimals);
   let symbol = '';
 
   // Finding Token Symbol:
@@ -120,6 +121,23 @@ export const addNativeToken = async (chain: Chain, rawBalance: number, owner: Ad
 
 /* ========================================================================================================================================================================= */
 
+// Function to get tracked token info:
+export const addTrackedToken = async (chain: Chain, location: string, status: TokenStatus, token: TokenData, rawBalance: number, owner: Address): Promise<Token> => {
+
+  // Initializing Token Values:
+  let type: TokenType = 'token';
+  let address = token.address;
+  let symbol = token.symbol;
+  let logo = token.logo;
+  let decimals = token.decimals;
+  let balance = rawBalance / (10 ** decimals);
+  let price = await getTokenPrice(chain, address, decimals);
+
+  return { type, chain, location, status, owner, symbol, address, balance, price, logo };
+}
+
+/* ========================================================================================================================================================================= */
+
 // Function to get token info:
 export const addToken = async (chain: Chain, location: string, status: TokenStatus, address: Address, rawBalance: number, owner: Address): Promise<Token> => {
 
@@ -127,8 +145,9 @@ export const addToken = async (chain: Chain, location: string, status: TokenStat
   let type: TokenType = 'token';
   let symbol = '';
   let decimals = 18;
+  let logo: URL;
 
-  // Finding Token Symbol:
+  // Finding Token Info:
   if(address.toLowerCase() === defaultAddress) {
     if(chain === 'bsc') {
       symbol = 'BNB';
@@ -137,13 +156,21 @@ export const addToken = async (chain: Chain, location: string, status: TokenStat
     } else {
       symbol = chain.toUpperCase();
     }
+    logo = getTokenLogo(chain, symbol);
   } else {
-    symbol = await query(chain, address, minABI, 'symbol', []);
-    decimals = parseInt(await query(chain, address, minABI, 'decimals', []));
+    let token = getTrackedTokenInfo(chain, address);
+    if(token) {
+      symbol = token.symbol;
+      decimals = token.decimals;
+      logo = token.logo;
+    } else {
+      symbol = await query(chain, address, minABI, 'symbol', []);
+      decimals = parseInt(await query(chain, address, minABI, 'decimals', []));
+      logo = getTokenLogo(chain, symbol);
+    }
   }
 
   // Finding Missing Token Info:
-  let logo = getTokenLogo(chain, symbol);
   let balance = rawBalance / (10 ** decimals);
   let price = await getTokenPrice(chain, address, decimals);
 
@@ -160,18 +187,34 @@ export const addLPToken = async (chain: Chain, location: string, status: TokenSt
   let symbol = await query(chain, address, minABI, 'symbol', []);
   let decimals = parseInt(await query(chain, address, minABI, 'decimals', []));
   let balance = rawBalance / (10 ** decimals);
+  let symbol0 = '';
+  let symbol1 = '';
+  let decimals0 = 18;
+  let decimals1 = 18;
 
   // Finding LP Token Info:
   let lpTokenReserves = await query(chain, address, lpABI, 'getReserves', []);
   let lpTokenSupply = await query(chain, address, lpABI, 'totalSupply', []) / (10 ** decimals);
   let address0 = await query(chain, address, lpABI, 'token0', []);
   let address1 = await query(chain, address, lpABI, 'token1', []);
-  let decimals0 = parseInt(await query(chain, address0, minABI, 'decimals', []));
-  let decimals1 = parseInt(await query(chain, address1, minABI, 'decimals', []));
+  let trackedToken0 = getTrackedTokenInfo(chain, address0);
+  let trackedToken1 = getTrackedTokenInfo(chain, address1);
+  if(trackedToken0) {
+    symbol0 = trackedToken0.symbol;
+    decimals0 = trackedToken0.decimals;
+  } else {
+    symbol0 = await query(chain, address0, minABI, 'symbol', []);
+    decimals0 = parseInt(await query(chain, address0, minABI, 'decimals', []));
+  }
+  if(trackedToken1) {
+    symbol1 = trackedToken1.symbol;
+    decimals1 = trackedToken1.decimals;
+  } else {
+    symbol1 = await query(chain, address1, minABI, 'symbol', []);
+    decimals1 = parseInt(await query(chain, address1, minABI, 'decimals', []));
+  }
   let supply0 = lpTokenReserves[0] / (10 ** decimals0);
   let supply1 = lpTokenReserves[1] / (10 ** decimals1);
-  let symbol0 = await query(chain, address0, minABI, 'symbol', []);
-  let symbol1 = await query(chain, address1, minABI, 'symbol', []);
 
   // First Paired Token:
   let token0: PricedToken = {
@@ -204,8 +247,9 @@ export const addDebtToken = async (chain: Chain, location: string, address: Addr
   let status: TokenStatus = 'borrowed';
   let symbol = '';
   let decimals = 18;
+  let logo: URL;
 
-  // Finding Token Symbol:
+  // Finding Token Info:
   if(address.toLowerCase() === defaultAddress) {
     if(chain === 'bsc') {
       symbol = 'BNB';
@@ -214,13 +258,21 @@ export const addDebtToken = async (chain: Chain, location: string, address: Addr
     } else {
       symbol = chain.toUpperCase();
     }
+    logo = getTokenLogo(chain, symbol);
   } else {
-    symbol = await query(chain, address, minABI, 'symbol', []);
-    decimals = parseInt(await query(chain, address, minABI, 'decimals', []));
+    let token = getTrackedTokenInfo(chain, address);
+    if(token) {
+      symbol = token.symbol;
+      decimals = token.decimals;
+      logo = token.logo;
+    } else {
+      symbol = await query(chain, address, minABI, 'symbol', []);
+      decimals = parseInt(await query(chain, address, minABI, 'decimals', []));
+      logo = getTokenLogo(chain, symbol);
+    }
   }
 
   // Finding Missing Token Info:
-  let logo = getTokenLogo(chain, symbol);
   let balance = rawBalance / (10 ** decimals);
   let price = await getTokenPrice(chain, address, decimals);
 
@@ -237,13 +289,24 @@ export const addXToken = async (chain: Chain, location: string, status: TokenSta
   let symbol = await query(chain, address, minABI, 'symbol', []);
   let decimals = parseInt(await query(chain, address, minABI, 'decimals', []));
   let balance = rawBalance / (10 ** decimals);
+  let underlyingSymbol = '';
+  let underlyingDecimals = 18;
+  let underlyingLogo: URL;
 
   // Finding Token Logo:
   let logo = getTokenLogo(chain, symbol);
 
   // Finding Underlying Token Info:
-  let underlyingSymbol = await query(chain, underlyingAddress, minABI, 'symbol', []);
-  let underlyingDecimals = parseInt(await query(chain, underlyingAddress, minABI, 'decimals', []));
+  let token = getTrackedTokenInfo(chain, address);
+  if(token) {
+    underlyingSymbol = token.symbol;
+    underlyingDecimals = token.decimals;
+    underlyingLogo = token.logo;
+  } else {
+    underlyingSymbol = await query(chain, underlyingAddress, minABI, 'symbol', []);
+    underlyingDecimals = parseInt(await query(chain, underlyingAddress, minABI, 'decimals', []));
+    underlyingLogo = getTokenLogo(chain, underlyingSymbol);
+  }
 
   // Underlying Token:
   let underlyingToken: PricedToken = {
@@ -251,7 +314,7 @@ export const addXToken = async (chain: Chain, location: string, status: TokenSta
     address: underlyingAddress,
     balance: underlyingRawBalance / (10 ** underlyingDecimals),
     price: await getTokenPrice(chain, underlyingAddress, underlyingDecimals),
-    logo: getTokenLogo(chain, underlyingSymbol)
+    logo: underlyingLogo
   }
 
   return { type, chain, location, status, owner, symbol, address, balance, logo, underlyingToken };
@@ -260,10 +323,7 @@ export const addXToken = async (chain: Chain, location: string, status: TokenSta
 /* ========================================================================================================================================================================= */
 
 // Function to get tracked tokens:
-export const getTokens = async (chain: Chain) => {
-
-  // Initializing Token Array:
-  let tokens: { symbol: string, address: Address, logo: URL }[] = [];
+export const getTokens = (chain: Chain) => {
 
   // Selecting Token Data:
   let data: ChainTokenData;
@@ -283,52 +343,79 @@ export const getTokens = async (chain: Chain) => {
     return [];
   }
 
-  // Adding Tokens:
-  data.tokens.forEach(token => {
-    tokens.push({
-      symbol: token.symbol,
-      address: token.address,
-      logo: getTokenLogo(chain, token.symbol)
-    });
-  });
-
-  return tokens;
+  return data.tokens;
 }
 
 /* ========================================================================================================================================================================= */
 
 // Function to get a token's logo:
-export const getTokenLogo = (chain: Chain, symbol: string): URL => {
+const getTokenLogo = (chain: Chain, symbol: string) => {
 
-  // Initializing Token Logo Interface:
-  interface TokenLogo { symbol: string, logo: URL };
+  // Initializing Default Token Logo:
+  let logo = defaultTokenLogo;
 
-  // Initializating Default Token Logo:
-  let token: TokenLogo = { symbol: '', logo: defaultTokenLogo };
-
-  // Finding Token Logo:
-  let foundToken: TokenLogo | undefined;
+  // Selecting Token Data:
+  let data: ChainTokenData;
   if(chain === 'eth') {
-    foundToken = eth_data.logos.find((token: TokenLogo) => token.symbol === symbol);
-    if(foundToken) { token = foundToken; }
+    data = eth_data;
   } else if(chain === 'bsc') {
-    foundToken = bsc_data.logos.find((token: TokenLogo) => token.symbol === symbol);
-    if(foundToken) { token = foundToken; }
+    data = bsc_data;
   } else if(chain === 'poly') {
-    foundToken = poly_data.logos.find((token: TokenLogo) => token.symbol === symbol);
-    if(foundToken) { token = foundToken; }
+    data = poly_data;
   } else if(chain === 'ftm') {
-    foundToken = ftm_data.logos.find((token: TokenLogo) => token.symbol === symbol);
-    if(foundToken) { token = foundToken; }
+    data = ftm_data;
   } else if(chain === 'avax') {
-    foundToken = avax_data.logos.find((token: TokenLogo) => token.symbol === symbol);
-    if(foundToken) { token = foundToken; }
+    data = avax_data;
   } else if(chain === 'one') {
-    foundToken = one_data.logos.find((token: TokenLogo) => token.symbol === symbol);
-    if(foundToken) { token = foundToken; }
+    data = one_data;
+  } else {
+    return logo;
   }
 
-  return token.logo;
+  // Finding Token Logo:
+  let trackedToken = data.tokens.find(token => token.symbol === symbol);
+  if(trackedToken) {
+    logo = trackedToken.logo;
+  } else {
+    let token = data.logos.find(i => i.symbol === symbol);
+    if(token) {
+      logo = token.logo;
+    }
+  }
+
+  return logo;
+}
+
+/* ========================================================================================================================================================================= */
+
+// Function to get tracked token info:
+const getTrackedTokenInfo = (chain: Chain, address: Address) => {
+
+  // Initializations:
+  let foundToken: TokenData | undefined;
+  let data: ChainTokenData;
+
+  // Selecting Token Data:
+  if(chain === 'eth') {
+    data = eth_data;
+  } else if(chain === 'bsc') {
+    data = bsc_data;
+  } else if(chain === 'poly') {
+    data = poly_data;
+  } else if(chain === 'ftm') {
+    data = ftm_data;
+  } else if(chain === 'avax') {
+    data = avax_data;
+  } else if(chain === 'one') {
+    data = one_data;
+  } else {
+    return undefined;
+  }
+
+  // Finding Token:
+  foundToken = data.tokens.find(token => token.address.toLowerCase() === address.toLowerCase());
+
+  return foundToken;
 }
 
 /* ========================================================================================================================================================================= */
@@ -357,7 +444,7 @@ export const getTokenPrice = async (chain: Chain, address: Address, decimals: nu
 
   // Fetching 1Inch Price:
   if(!priceFound && chains[chain].inch) {
-    if(address.toLowerCase() === chains[chain].usdc.toLowerCase()) {
+    if(address.toLowerCase() === chains[chain].usdc) {
       return 1;
     } else {
       apiQuery = `https://api.1inch.exchange/v4.0/${chains[chain].id}/quote?fromTokenAddress=${address}&toTokenAddress=${chains[chain].usdc}&amount=${10 ** decimals}`;
@@ -373,7 +460,7 @@ export const getTokenPrice = async (chain: Chain, address: Address, decimals: nu
 
   // Fetching ParaSwap Price:
   if(!priceFound && chains[chain].paraswap) {
-    if(address.toLowerCase() === chains[chain].usdc.toLowerCase()) {
+    if(address.toLowerCase() === chains[chain].usdc) {
       return 1;
     } else {
       apiQuery = `https://apiv5.paraswap.io/prices?srcToken=${address}&srcDecimals=${decimals}&destToken=${chains[chain].usdc}&destDecimals=${chains[chain].usdcDecimals}&amount=${10 ** decimals}&side=SELL&network=${chains[chain].id}`;
