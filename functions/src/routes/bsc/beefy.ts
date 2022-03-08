@@ -13,7 +13,6 @@ const staking: Address = '0x453d4ba9a2d594314df88564248497f7d74d6b2c';
 const bifi: Address = '0xca3f508b8e4dd382ee878a314789373d80a5190a';
 const wbnb: Address = '0x4BD17003473389A42DAF6a0a729f6Fdb328BbBd7';
 const chars = 'abcdefghijklmnopqrstuvwxyz';
-const randomChar = chars[Math.floor(Math.random() * chars.length)];
 
 /* ========================================================================================================================================================================= */
 
@@ -27,7 +26,13 @@ export const get = async (req: Request) => {
   if(response.status === 'ok') {
     try {
       let wallet = req.query.address as Address;
-      let vaults = ((await axios.get(`https://api.beefy.finance/vaults?${randomChar}`)).data).filter((vault: any) => vault.chain === 'bsc' && vault.status === 'active' && vault.tokenAddress);
+      let result;
+      try {
+        result = await axios.get(`https://api.beefy.finance/vaults?${chars[Math.floor(Math.random() * chars.length)]}`);
+      } catch {
+        result = await axios.get(`https://api.beefy.finance/vaults?${chars[Math.floor(Math.random() * chars.length)]}`);
+      }
+      let vaults = result.data.filter((vault: any) => vault.chain === 'bsc' && vault.status === 'active' && vault.tokenAddress);
       response.data.push(...(await getVaultBalances(wallet, vaults)));
       response.data.push(...(await getStakedBIFI(wallet)));
     } catch(err: any) {
