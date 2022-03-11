@@ -1,9 +1,9 @@
 
 // Imports:
-import { minABI, apwine, paladin, aave, harvest } from '../../ABIs';
-import { initResponse, query, addToken } from '../../functions';
+import { minABI, apwine, paladin, aave, harvest, yearn } from '../../ABIs';
+import { initResponse, query, addToken, addCurveToken } from '../../functions';
 import type { Request } from 'express';
-import type { Chain, Address, Token } from 'cookietrack-types';
+import type { Chain, Address, Token, LPToken } from 'cookietrack-types';
 
 // Initializations:
 const chain: Chain = 'eth';
@@ -41,12 +41,11 @@ export const get = async (req: Request) => {
 
 // Function to get future balances:
 const getFutureBalances = async (wallet: Address) => {
-  let balances: Token[] = [];
+  let balances: (Token | LPToken)[] = [];
   let poolLength = parseInt(await query(chain, registry, apwine.registryABI, 'futureVaultCount', []));
   let futures = [...Array(poolLength).keys()];
   let promises = futures.map(futureID => (async () => {
     let future = await query(chain, registry, apwine.registryABI, 'getFutureVaultAt', [futureID]);
-    let currentPeriod = parseInt(await query(chain, future, apwine.futureABI, 'getCurrentPeriodIndex', []));
 
     // Fetching PT Balance:
     let pt = await query(chain, future, apwine.futureABI, 'getPTAddress', []);
@@ -54,17 +53,17 @@ const getFutureBalances = async (wallet: Address) => {
     if(ptBalance > 0) {
       let platform = await query(chain, future, apwine.futureABI, 'PLATFORM_NAME', []);
       let futureToken = await query(chain, future, apwine.futureABI, 'getIBTAddress', []);
-      let futureTokenDecimals = parseInt(await query(chain, futureToken, minABI, 'decimals', []));
-      let underlyingToken: Address | undefined;
-      let underlyingExchangeRate: number | undefined;
 
       // StakeDAO Futures:
       if(platform === 'StakeDAO') {
         if(futureToken.toLowerCase() === '0xac14864ce5a98af3248ffbf549441b04421247d3') { // xSDT
-          underlyingToken = '0x73968b9a57c6E53d41345FD57a6E6ae27d6CDB2F'; // SDT
+          let underlyingToken: Address = '0x73968b9a57c6E53d41345FD57a6E6ae27d6CDB2F'; // SDT
           let stakedSupply = parseInt(await query(chain, futureToken, minABI, 'totalSupply', []));
           let underlyingTokenStaked = parseInt(await query(chain, underlyingToken, minABI, 'balanceOf', [futureToken]));
-          underlyingExchangeRate = underlyingTokenStaked / stakedSupply;
+          let underlyingExchangeRate = underlyingTokenStaked / stakedSupply;
+          let fytBalance = await fetchFYTBalance(wallet, future, futureToken);
+          let newToken = await addToken(chain, project, 'staked', underlyingToken, (ptBalance + fytBalance) * underlyingExchangeRate, wallet);
+          balances.push(newToken);
         } else {
           console.info(`Unsupported StakeDAO FutureID on APWine: ${futureID}`);
         }
@@ -75,77 +74,98 @@ const getFutureBalances = async (wallet: Address) => {
 
       // Lido Futures:
       } else if(platform === 'Lido') {
-        underlyingToken = futureToken;
-        underlyingExchangeRate = 1;
+        let fytBalance = await fetchFYTBalance(wallet, future, futureToken);
+        let newToken = await addToken(chain, project, 'staked', futureToken, ptBalance + fytBalance, wallet);
+        balances.push(newToken);
 
       // Yearn Futures:
       } else if(platform === 'Yearn') {
-        console.info(`Unsupported Yearn FutureID on APWine: ${futureID}`);
+        if(futureToken.toLowerCase() === '0xe537b5cc158eb71037d4125bdd7538421981e6aa') { // yvCurve-3Crypto
+          let underlyingToken = await query(chain, futureToken, yearn.vaultABI, 'token', []);
+          let underlyingExchangeRate = parseInt(await query(chain, futureToken, yearn.vaultABI, 'pricePerShare', [])) / (10 ** 18);
+          let fytBalance = await fetchFYTBalance(wallet, future, futureToken);
+          let newToken = await addCurveToken(chain, project, 'staked', underlyingToken, (ptBalance + fytBalance) * underlyingExchangeRate, wallet);
+          balances.push(newToken);
+        } else {
+          console.info(`Unsupported Yearn FutureID on APWine: ${futureID}`);
+        }
 
       // Harvest Futures:
       } else if(platform === 'Harvest') {
-        underlyingToken = await query(chain, futureToken, harvest.stakingABI, 'underlying', []);
-        underlyingExchangeRate = parseInt(await query(chain, futureToken, harvest.stakingABI, 'getPricePerFullShare', [])) / (10 ** 18);
+        let underlyingToken = await query(chain, futureToken, harvest.stakingABI, 'underlying', []);
+        let underlyingExchangeRate = parseInt(await query(chain, futureToken, harvest.stakingABI, 'getPricePerFullShare', [])) / (10 ** 18);
+        let fytBalance = await fetchFYTBalance(wallet, future, futureToken);
+        let newToken = await addToken(chain, project, 'staked', underlyingToken, (ptBalance + fytBalance) * underlyingExchangeRate, wallet);
+        balances.push(newToken);
 
       // TrueFi Futures:
       } else if(platform === 'TrueFi') {
-        console.info(`Unsupported TrueFi FutureID on APWine: ${futureID}`);
+        console.info(`Unsupported TrueFi FutureID on APWine: ${futureID}`); // Asked TrueFi team for clarifications - no response yet.
 
       // Aave Futures:
       } else if(platform === 'Aave') {
-        underlyingToken = await query(chain, futureToken, aave.lendingABI, 'UNDERLYING_ASSET_ADDRESS', []);
-        underlyingExchangeRate = 1;
+        let underlyingToken = await query(chain, futureToken, aave.lendingABI, 'UNDERLYING_ASSET_ADDRESS', []);
+        let fytBalance = await fetchFYTBalance(wallet, future, futureToken);
+        let newToken = await addToken(chain, project, 'staked', underlyingToken, ptBalance + fytBalance, wallet);
+        balances.push(newToken);
 
       // Olympus Futures:
       } else if(platform === 'Olympus') {
-        underlyingToken = futureToken;
-        underlyingExchangeRate = 1;
+        let fytBalance = await fetchFYTBalance(wallet, future, futureToken);
+        let newToken = await addToken(chain, project, 'staked', futureToken, ptBalance + fytBalance, wallet);
+        balances.push(newToken);
 
       // Sushi Futures:
       } else if(platform === 'Sushi') {
-        underlyingToken = futureToken;
-        underlyingExchangeRate = 1;
+        let fytBalance = await fetchFYTBalance(wallet, future, futureToken);
+        let newToken = await addToken(chain, project, 'staked', futureToken, ptBalance + fytBalance, wallet);
+        balances.push(newToken);
 
       // Paladin Futures:
       } else if(platform === 'Paladin') {
         let pool = await query(chain, futureToken, paladin.tokenABI, 'palPool', []);
         let poolToken = await query(chain, pool, paladin.poolABI, 'underlying', []);
-        underlyingToken = await query(chain, poolToken, aave.stakingABI, 'STAKED_TOKEN', []);
-        underlyingExchangeRate = parseInt(await query(chain, pool, paladin.poolABI, 'exchangeRateStored', [])) / (10 ** 18);
+        let underlyingToken = await query(chain, poolToken, aave.stakingABI, 'STAKED_TOKEN', []);
+        let underlyingExchangeRate = parseInt(await query(chain, pool, paladin.poolABI, 'exchangeRateStored', [])) / (10 ** 18);
+        let fytBalance = await fetchFYTBalance(wallet, future, futureToken);
+        let newToken = await addToken(chain, project, 'staked', underlyingToken, (ptBalance + fytBalance) * underlyingExchangeRate, wallet);
+        balances.push(newToken);
 
       // ParaSwap Futures:
       } else if(platform === 'ParaSwap') {
-        underlyingToken = '0xcAfE001067cDEF266AfB7Eb5A286dCFD277f3dE5'; // PSP
-        underlyingExchangeRate = parseInt(await query(chain, futureToken, apwine.futureTokenABI, 'PSPForSPSP', [10 ** 6])) / (10 ** 6);
+        let underlyingToken: Address = '0xcAfE001067cDEF266AfB7Eb5A286dCFD277f3dE5'; // PSP
+        let underlyingExchangeRate = parseInt(await query(chain, futureToken, apwine.futureTokenABI, 'PSPForSPSP', [10 ** 6])) / (10 ** 6);
+        let fytBalance = await fetchFYTBalance(wallet, future, futureToken);
+        let newToken = await addToken(chain, project, 'staked', underlyingToken, (ptBalance + fytBalance) * underlyingExchangeRate, wallet);
+        balances.push(newToken);
       } else {
         console.warn(`Unidentified APWine Future Platform: ${platform}`);
-      }
-
-      // Adding Underlying Token:
-      if(underlyingToken && underlyingExchangeRate) {
-        let newToken = await addToken(chain, project, 'staked', underlyingToken, ptBalance * underlyingExchangeRate, wallet);
-        balances.push(newToken);
-  
-        // Fetching FYT Balances:
-        for(let period = 1; period <= currentPeriod; period++) {
-          let fyt = await query(chain, future, apwine.futureABI, 'getFYTofPeriod', [period]);
-          let fytBalance = parseInt(await query(chain, fyt, minABI, 'balanceOf', [wallet]));
-          if(fytBalance > 0) {
-            let unrealisedYield = parseInt(await query(chain, future, apwine.futureABI, 'getUnrealisedYieldPerPT', [])) / (10 ** futureTokenDecimals);
-            if(unrealisedYield > 0) {
-              let intermediateRate = parseInt(await query(chain, future, apwine.futureABI, 'getIBTRate', [])) / (10 ** futureTokenDecimals);
-              let exchangeRate = unrealisedYield * intermediateRate;
-              let actualFytBalance = fytBalance * exchangeRate;
-              let newToken = await addToken(chain, project, 'unclaimed', underlyingToken, actualFytBalance * underlyingExchangeRate, wallet);
-              balances.push(newToken);
-            }
-          }
-        }
       }
     }
   })());
   await Promise.all(promises);
   return balances;
+}
+
+// Function to fetch FYT Balances for any future:
+const fetchFYTBalance = async (wallet: Address, future: Address, futureToken: Address) => {
+  let balance = 0;
+  let currentPeriod = parseInt(await query(chain, future, apwine.futureABI, 'getCurrentPeriodIndex', []));
+  for(let period = 1; period <= currentPeriod; period++) {
+    let fyt = await query(chain, future, apwine.futureABI, 'getFYTofPeriod', [period]);
+    let fytBalance = parseInt(await query(chain, fyt, minABI, 'balanceOf', [wallet]));
+    if(fytBalance > 0) {
+      let futureTokenDecimals = parseInt(await query(chain, futureToken, minABI, 'decimals', []));
+      let unrealisedYield = parseInt(await query(chain, future, apwine.futureABI, 'getUnrealisedYieldPerPT', [])) / (10 ** futureTokenDecimals);
+      if(unrealisedYield > 0) {
+        let intermediateRate = parseInt(await query(chain, future, apwine.futureABI, 'getIBTRate', [])) / (10 ** futureTokenDecimals);
+        let exchangeRate = unrealisedYield * intermediateRate;
+        let actualFytBalance = fytBalance * exchangeRate;
+        balance += actualFytBalance;
+      }
+    }
+  }
+  return balance;
 }
 
 // Function to get staked APW balance:

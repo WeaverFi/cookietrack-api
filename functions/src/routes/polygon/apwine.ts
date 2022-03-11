@@ -53,7 +53,7 @@ const getFutureBalances = async (wallet: Address) => {
 
       // Aave Futures:
       if(platform === 'Aave') {
-        let underlyingToken = await query(chain, futureToken, aave.lendingABI, 'UNDERLYING_ASSET_ADDRESS', []) as Address;
+        let underlyingToken = await query(chain, futureToken, aave.lendingABI, 'UNDERLYING_ASSET_ADDRESS', []);
         let fytBalance = await fetchFYTBalance(wallet, future, futureToken);
         let newToken = await addToken(chain, project, 'staked', underlyingToken, ptBalance + fytBalance, wallet);
         balances.push(newToken);
