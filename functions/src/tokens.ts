@@ -86,7 +86,11 @@ export const eth_data: ChainTokenData = {
     { address: '0x5A98FcBEA516Cf06857215779Fd812CA3beF1B32', symbol: 'LDO', logo: 'https://etherscan.io/token/images/lido-dao_32.png', decimals: 18 },
     { address: '0x4c1C4957D22D8F373aeD54d0853b090666F6F9De', symbol: 'SLV', logo: 'https://etherscan.io/token/images/silverway_32.png', decimals: 18 },
     { address: '0x58b6A8A3302369DAEc383334672404Ee733aB239', symbol: 'LPT', logo: 'https://etherscan.io/token/images/livepeer_28.png', decimals: 18 },
-    { address: '0xD533a949740bb3306d119CC777fa900bA034cd52', symbol: 'CRV', logo: 'https://etherscan.io/token/images/Curvefi_32.png', decimals: 18 }
+    { address: '0xD533a949740bb3306d119CC777fa900bA034cd52', symbol: 'CRV', logo: 'https://etherscan.io/token/images/Curvefi_32.png', decimals: 18 },
+    { address: '0x4104b135DBC9609Fc1A9490E61369036497660c8', symbol: 'APW', logo: 'https://etherscan.io/token/images/APWine_32.png', decimals: 18 },
+    { address: '0x73968b9a57c6E53d41345FD57a6E6ae27d6CDB2F', symbol: 'SDT', logo: 'https://etherscan.io/token/images/stakedao_32.png', decimals: 18 },
+    { address: '0xcAfE001067cDEF266AfB7Eb5A286dCFD277f3dE5', symbol: 'PSP', logo: 'https://etherscan.io/token/images/paraswaptoken_32.png', decimals: 18 },
+    { address: '0xa0246c9032bC3A600820415aE600c6388619A14D', symbol: 'FARM', logo: 'https://etherscan.io/token/images/harvestfinance2_32.png', decimals: 18 }
   ],
   logos: [
     { symbol: 'ETH', logo: 'https://bscscan.com/token/images/ethereum_32.png' },
@@ -248,7 +252,8 @@ export const bsc_data: ChainTokenData = {
     { address: '0x7979F6C54ebA05E18Ded44C4F986F49a5De551c2', symbol: 'KEBAB', logo: 'https://bscscan.com/token/images/kebabfinance_32.png', decimals: 18 },
     { address: '0xB0B924C4a31b7d4581a7F78F57ceE1E65736Be1D', symbol: 'HAPPY', logo: 'https://bscscan.com/token/images/happycoin_32.png', decimals: 9 },
     { address: '0xdF1F0026374d4BCc490BE5E316963Cf6Df2FfF19', symbol: 'INNBC', logo: 'https://bscscan.com/token/images/innbc_32-1.png', decimals: 6 },
-    { address: '0x009cF7bC57584b7998236eff51b98A168DceA9B0', symbol: 'SYRUP', logo: 'https://bscscan.com/token/images/syrup_32.png?=v1', decimals: 18 }
+    { address: '0x009cF7bC57584b7998236eff51b98A168DceA9B0', symbol: 'SYRUP', logo: 'https://bscscan.com/token/images/syrup_32.png?=v1', decimals: 18 },
+    { address: '0xcAfE001067cDEF266AfB7Eb5A286dCFD277f3dE5', symbol: 'PSP', logo: 'https://bscscan.com/token/images/paraswaptoken_32.png', decimals: 18 }
   ],
   logos: [
     { symbol: 'BNB', logo: 'https://etherscan.io/token/images/bnb_28_2.png' },
@@ -396,7 +401,9 @@ export const poly_data: ChainTokenData = {
     { address: '0x8a0e8b4b0903929f47c3ea30973940d4a9702067', symbol: 'INSUR', logo: 'https://polygonscan.com/token/images/insurace2_32.png', decimals: 18 },
     { address: '0xd8ca34fd379d9ca3c6ee3b3905678320f5b45195', symbol: 'gOHM', logo: 'https://polygonscan.com/token/images/ohmgovernance_32.png', decimals: 18 },
     { address: '0x7BDF330f423Ea880FF95fC41A280fD5eCFD3D09f', symbol: 'EURT', logo: 'https://assets.coingecko.com/coins/images/17385/small/Tether_full_logo_dm.png?1627537298', decimals: 6 },
-    { address: '0xC168E40227E4ebD8C1caE80F7a55a4F0e6D66C97', symbol: 'DFYN', logo: 'https://polygonscan.com/token/images/dfyn_32.png', decimals: 18 }
+    { address: '0xC168E40227E4ebD8C1caE80F7a55a4F0e6D66C97', symbol: 'DFYN', logo: 'https://polygonscan.com/token/images/dfyn_32.png', decimals: 18 },
+    { address: '0x6C0AB120dBd11BA701AFF6748568311668F63FE0', symbol: 'APW', logo: 'https://etherscan.io/token/images/APWine_32.png', decimals: 18 },
+    { address: '0x42d61D766B85431666B39B89C43011f24451bFf6', symbol: 'PSP', logo: 'https://polygonscan.com/token/images/paraswaptoken_32.png', decimals: 18 }
   ],
   logos: [
     { symbol: 'MATIC', logo: 'https://bscscan.com/token/images/matic_32.png' },

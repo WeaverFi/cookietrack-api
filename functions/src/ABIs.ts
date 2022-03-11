@@ -35,6 +35,9 @@ export const aave: Record<string, ABI[]> = {
   ],
   registryABI: [
     { constant: true, inputs: [{ name: "asset", type: "address" }], name: "getReserveTokensAddresses", outputs: [{ name: "aTokenAddress", type: "address" }, { name: "stableDebtTokenAddress", type: "address" }, { name: "variableDebtTokenAddress", type: "address" }], type: "function" }
+  ],
+  lendingABI: [
+    { constant: true, inputs: [], name: "UNDERLYING_ASSET_ADDRESS", outputs: [{ name: "", type: "address" }], type: "function" }
   ]
 }
 
@@ -655,5 +658,47 @@ export const alligator: Record<string, ABI[]> = {
     { constant: true, inputs: [{ name: "<input>", type: "uint256" }, { name: "<input>", type: "address" }], name: "userInfo", outputs: [{ name: "amount", type: "uint256" }, { name: "rewardDebt", type: "uint256" }], type: "function" },
     { constant: true, inputs: [{ name: "<input>", type: "uint256" }], name: "poolInfo", outputs: [{ name: "lpToken", type: "address" }, { name: "allocPoint", type: "uint256" }, { name: "lastRewardTimestamp", type: "uint256" }, { name: "accGtrPerShare", type: "uint256" }, { name: "rewarder", type: "address" }], type: "function" },
     { constant: true, inputs: [{ name: "_pid", type: "uint256" }, { name: "_user", type: "address" }], name: "pendingTokens", outputs: [{ name: "pendingGtr", type: "uint256" }], type: "function" }
+  ]
+}
+
+// APWine ABIs:
+export const apwine: Record<string, ABI[]> = {
+  registryABI: [
+    { constant: true, inputs: [], name: "futureVaultCount", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [{ name: "_index", type: "uint256" }], name: "getFutureVaultAt", outputs: [{ name: "", type: "address" }], type: "function" }
+  ],
+  futureABI: [
+    { constant: true, inputs: [], name: "PLATFORM_NAME", outputs: [{ name: "", type: "string" }], type: "function" },
+    { constant: true, inputs: [], name: "getCurrentPeriodIndex", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [], name: "getPTAddress", outputs: [{ name: "", type: "address" }], type: "function" },
+    { constant: true, inputs: [{ name: "_periodIndex", type: "uint256" }], name: "getFYTofPeriod", outputs: [{ name: "", type: "address" }], type: "function" },
+    { constant: true, inputs: [], name: "getIBTAddress", outputs: [{ name: "", type: "address" }], type: "function" },
+    { constant: true, inputs: [], name: "getUnrealisedYieldPerPT", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [], name: "getIBTRate", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ],
+  futureTokenABI: [
+    { constant: true, inputs: [{ name: "_sPSPAmount", type: "uint256" }], name: "PSPForSPSP", outputs: [{ name: "pspAmount", type: "uint256" }], type: "function" }
+  ],
+  stakingABI: [
+    { constant: true, inputs: [{ name: "arg0", type: "address" }], name: "locked", outputs: [{ name: "amount", type: "uint128" }, { name: "end", type: "uint256" }], type: "function" }
+  ]
+}
+
+// Paladin ABIs:
+export const paladin: Record<string, ABI[]> = {
+  tokenABI: [
+    { constant: true, inputs: [], name: "palPool", outputs: [{ name: "", type: "address" }], type: "function" }
+  ],
+  poolABI: [
+    { constant: true, inputs: [], name: "underlying", outputs: [{ name: "", type: "address" }], type: "function" },
+    { constant: true, inputs: [], name: "exchangeRateStored", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ]
+}
+
+// Harvest ABIs:
+export const harvest: Record<string, ABI[]> = {
+  stakingABI: [
+    { constant: true, inputs: [], name: "underlying", outputs: [{ name: "", type: "address" }], type: "function" },
+    { constant: true, inputs: [], name: "getPricePerFullShare", outputs: [{ name: "", type: "uint256" }], type: "function" }
   ]
 }
