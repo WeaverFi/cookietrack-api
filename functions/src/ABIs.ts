@@ -50,6 +50,9 @@ export const balancer: Record<string, ABI[]> = {
   vaultABI: [
     { constant: true, inputs: [{ name: "poolId", type: "bytes32" }], name: "getPool", outputs: [{ name: "", type: "address" }, { name: "", type: "uint8" }], type: "function" },
     { constant: true, inputs: [{ name: "poolId", type: "bytes32" }], name: "getPoolTokens", outputs: [{ name: "tokens", type: "address[]" }, { name: "balances", type: "uint256[]" }], type: "function" }
+  ],
+  poolABI: [
+    { constant: true, inputs: [], name: "getPoolId", outputs: [{ name: "", type: "bytes32" }], type: "function" }
   ]
 }
 
@@ -325,7 +328,8 @@ export const spookyswap: Record<string, ABI[]> = {
 // Beefy ABIs:
 export const beefy: Record<string, ABI[]> = {
   vaultABI: [
-		{ constant: true, inputs: [], name: "getPricePerFullShare", outputs: [{ name: "", type: "uint256" }], type: "function" }
+		{ constant: true, inputs: [], name: "getPricePerFullShare", outputs: [{ name: "", type: "uint256" }], type: "function" },
+    { constant: true, inputs: [], name: "want", outputs: [{ name: "", type: "address" }], type: "function" }
   ],
   stakingABI: [
     { constant: true, inputs: [{ name: "account", type: "address" }], name: "earned", outputs: [{ name: "", type: "uint256" }], type: "function" }

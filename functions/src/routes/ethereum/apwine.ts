@@ -66,13 +66,12 @@ const getFutureBalances = async (wallet: Address) => {
           let underlyingTokenStaked = parseInt(await query(chain, underlyingToken, minABI, 'balanceOf', [futureToken]));
           underlyingExchangeRate = underlyingTokenStaked / stakedSupply;
         } else {
-          // Future 5 not supported yet.
-          console.error(`Unidentified StakeDAO Future on APWine: ${futureToken}`);
+          console.info(`Unsupported StakeDAO FutureID on APWine: ${futureID}`);
         }
 
       // IDLE Finance Futures:
       } else if(platform === 'IDLE Finance') {
-        // Future 13 not supported yet.
+        console.info(`Unsupported IDLE Finance FutureID on APWine: ${futureID}`);
 
       // Lido Futures:
       } else if(platform === 'Lido') {
@@ -81,7 +80,7 @@ const getFutureBalances = async (wallet: Address) => {
 
       // Yearn Futures:
       } else if(platform === 'Yearn') {
-        // Futures 9, 12 & 14 not supported yet.
+        console.info(`Unsupported Yearn FutureID on APWine: ${futureID}`);
 
       // Harvest Futures:
       } else if(platform === 'Harvest') {
@@ -90,7 +89,7 @@ const getFutureBalances = async (wallet: Address) => {
 
       // TrueFi Futures:
       } else if(platform === 'TrueFi') {
-        // Future 4 not supported yet.
+        console.info(`Unsupported TrueFi FutureID on APWine: ${futureID}`);
 
       // Aave Futures:
       } else if(platform === 'Aave') {
@@ -119,7 +118,7 @@ const getFutureBalances = async (wallet: Address) => {
         underlyingToken = '0xcAfE001067cDEF266AfB7Eb5A286dCFD277f3dE5'; // PSP
         underlyingExchangeRate = parseInt(await query(chain, futureToken, apwine.futureTokenABI, 'PSPForSPSP', [10 ** 6])) / (10 ** 6);
       } else {
-        console.error(`Unidentified APWine Future Platform: ${platform}`);
+        console.warn(`Unidentified APWine Future Platform: ${platform}`);
       }
 
       // Adding Underlying Token:
