@@ -680,11 +680,15 @@ export const apwine: Record<string, ABI[]> = {
     { constant: true, inputs: [], name: "getUnrealisedYieldPerPT", outputs: [{ name: "", type: "uint256" }], type: "function" },
     { constant: true, inputs: [], name: "getIBTRate", outputs: [{ name: "", type: "uint256" }], type: "function" }
   ],
-  futureTokenABI: [
-    { constant: true, inputs: [{ name: "_sPSPAmount", type: "uint256" }], name: "PSPForSPSP", outputs: [{ name: "pspAmount", type: "uint256" }], type: "function" }
-  ],
   stakingABI: [
     { constant: true, inputs: [{ name: "arg0", type: "address" }], name: "locked", outputs: [{ name: "amount", type: "uint128" }, { name: "end", type: "uint256" }], type: "function" }
+  ]
+}
+
+// ParaSwap ABIs:
+export const paraswap: Record<string, ABI[]> = {
+  stakingABI: [
+    { constant: true, inputs: [{ name: "_sPSPAmount", type: "uint256" }], name: "PSPForSPSP", outputs: [{ name: "pspAmount", type: "uint256" }], type: "function" }
   ]
 }
 

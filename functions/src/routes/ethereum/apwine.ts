@@ -1,6 +1,6 @@
 
 // Imports:
-import { minABI, apwine, paladin, aave, harvest, yearn } from '../../ABIs';
+import { minABI, apwine, paladin, aave, harvest, yearn, paraswap } from '../../ABIs';
 import { initResponse, query, addToken, addCurveToken } from '../../functions';
 import type { Request } from 'express';
 import type { Chain, Address, Token, LPToken } from 'cookietrack-types';
@@ -134,7 +134,7 @@ const getFutureBalances = async (wallet: Address) => {
       // ParaSwap Futures:
       } else if(platform === 'ParaSwap') {
         let underlyingToken: Address = '0xcAfE001067cDEF266AfB7Eb5A286dCFD277f3dE5'; // PSP
-        let underlyingExchangeRate = parseInt(await query(chain, futureToken, apwine.futureTokenABI, 'PSPForSPSP', [10 ** 6])) / (10 ** 6);
+        let underlyingExchangeRate = parseInt(await query(chain, futureToken, paraswap.stakingABI, 'PSPForSPSP', [10 ** 6])) / (10 ** 6);
         let fytBalance = await fetchFYTBalance(wallet, future, futureToken);
         let newToken = await addToken(chain, project, 'staked', underlyingToken, (ptBalance + fytBalance) * underlyingExchangeRate, wallet);
         balances.push(newToken);
