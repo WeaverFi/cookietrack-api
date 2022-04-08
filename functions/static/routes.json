@@ -110,5 +110,8 @@
   "anchor",
   "tokens",
   "wallet"
+ ],
+ "cronos": [
+   "wallet"
  ]
 }

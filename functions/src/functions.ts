@@ -15,7 +15,7 @@ const blacklist: string[] = require('../static/blacklist.json');
 
 // Importing Variables:
 import { minABI, lpABI, aave, balancer, snowball, traderjoe, belt, alpaca, curve, bzx, iron, axial, mstable, cookiegame } from './ABIs';
-import { eth_data, bsc_data, poly_data, ftm_data, avax_data, one_data } from './tokens';
+import { eth_data, bsc_data, poly_data, ftm_data, avax_data, one_data, cronos_data } from './tokens';
 
 // Initializations:
 const defaultTokenLogo: URL = 'https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@d5c68edec1f5eaec59ac77ff2b48144679cebca1/32/icon/generic.png';
@@ -109,6 +109,8 @@ export const addNativeToken = async (chain: Chain, rawBalance: number, owner: Ad
     symbol = 'BNB';
   } else if(chain === 'poly') {
     symbol = 'MATIC';
+  } else if(chain == 'cronos') {
+    symbol = 'CRO'
   } else {
     symbol = chain.toUpperCase();
   }
@@ -368,6 +370,8 @@ const getTokenLogo = (chain: Chain, symbol: string) => {
     data = avax_data;
   } else if(chain === 'one') {
     data = one_data;
+  } else if(chain === 'cronos') {
+    data = cronos_data;
   } else {
     return logo;
   }
@@ -531,6 +535,13 @@ export const getTokenPrice = async (chain: Chain, address: Address, decimals: nu
     }
   }
 
+  // Cronos Redirections:
+  if(chain === 'cronos') {
+    if(address.toLowerCase() === '0xbed48612bc69fa1cab67052b42a95fB30c1bcfee'.toLowerCase()) { // SHIB
+      return getTokenPrice('eth', '0x95aD61b0a150d79219dCF64E1E6Cc01f0B64C4cE', 18);
+    }
+  }
+  
   // Logging tokens with no working price feed for debugging purposes:
   console.error(`${chain.toUpperCase()}: Token Price Not Found - ${address}`);
 
