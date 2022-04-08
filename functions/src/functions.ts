@@ -341,6 +341,8 @@ export const getTokens = (chain: Chain) => {
     data = avax_data;
   } else if(chain === 'one') {
     data = one_data;
+  } else if(chain === 'cronos') {
+    data = cronos_data;
   } else {
     return [];
   }

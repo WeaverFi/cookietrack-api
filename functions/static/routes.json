@@ -112,6 +112,7 @@
   "wallet"
  ],
  "cronos": [
-   "wallet"
+   "wallet",
+   "tokens"
  ]
 }
