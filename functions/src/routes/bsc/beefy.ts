@@ -9,7 +9,7 @@ import type { Chain, Address, Token, LPToken } from 'cookietrack-types';
 // Initializations:
 const chain: Chain = 'bsc';
 const project = 'beefy';
-const staking: Address = '0x453d4ba9a2d594314df88564248497f7d74d6b2c';
+const staking: Address = '0x0d5761D9181C7745855FC985f646a842EB254eB9';
 const bifi: Address = '0xca3f508b8e4dd382ee878a314789373d80a5190a';
 const wbnb: Address = '0x4BD17003473389A42DAF6a0a729f6Fdb328BbBd7';
 const chars = 'abcdefghijklmnopqrstuvwxyz';
