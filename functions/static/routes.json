@@ -113,6 +113,7 @@
  ],
  "cronos": [
    "wallet",
-   "tokens"
+   "tokens",
+   "fees"
  ]
 }
