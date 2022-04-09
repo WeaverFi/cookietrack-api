@@ -804,7 +804,8 @@ export const getSimpleTXs = async (chain: Chain, address: Address) => {
               hash: tx.tx_hash,
               time: (new Date(tx.block_signed_at)).getTime() / 1000,
               direction: tx.from_address === address.toLowerCase() ? 'out' : 'in',
-              fee: tx.gas_price < 1000000000000 ? (tx.gas_spent * tx.gas_price) / (10 ** 18) : tx.gas_price / (10 ** 18)
+              // Covalent workaround to handle huge gas prices in random responses, increased value for cronos as tx.gas_price is 5000000000000
+              fee: tx.gas_price < 10000000000000 ? (tx.gas_spent * tx.gas_price) / (10 ** 18) : tx.gas_price / (10 ** 18)
             });
           })());
           await Promise.all(promises);
