@@ -70,8 +70,8 @@
     "token": "CRO",
     "cgID": "cronos",
     "nativeID": "crypto-com-chain",
-    "wrappedToken": "0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23",
-    "usdc": "0xc21223249CA28397B4B6541dfFaEcC539BfF0c59",
+    "wrappedToken": "0x5c7f8a570d578ed84e63fdfa7b1ee72deae1ae23",
+    "usdc": "0xc21223249ca28397b4b6541dffaecc539bff0c59",
     "usdcDecimals": 6,
     "inch": false,
     "paraswap": false

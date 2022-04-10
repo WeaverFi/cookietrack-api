@@ -31,7 +31,8 @@ const ignoreTokenPrices: Record<string, string[]> = {
   poly: [],
   ftm: [],
   avax: ['PGL', 'sPGL', 's3D', 's4D', 'sDAI.e', 'sUSDT.e', 'sUSDC.e', 'sLINK.e', 'sWETH.e', 'sWBTC.e', 'sWAVAX', 'YRT', 'AS4D', 'AC4D', 'AA3D', 'AM3D', 'sAS4D', 'sAC4D', 'sAA3D', 'sAM3D', 'sPNG'],
-  one: []
+  one: [],
+  cronos: []
 }
 
 /* ========================================================================================================================================================================= */
@@ -109,8 +110,8 @@ export const addNativeToken = async (chain: Chain, rawBalance: number, owner: Ad
     symbol = 'BNB';
   } else if(chain === 'poly') {
     symbol = 'MATIC';
-  } else if(chain == 'cronos') {
-    symbol = 'CRO'
+  } else if(chain === 'cronos') {
+    symbol = 'CRO';
   } else {
     symbol = chain.toUpperCase();
   }
@@ -155,6 +156,8 @@ export const addToken = async (chain: Chain, location: string, status: TokenStat
       symbol = 'BNB';
     } else if(chain === 'poly') {
       symbol = 'MATIC';
+    } else if(chain === 'cronos') {
+      symbol = 'CRO';
     } else {
       symbol = chain.toUpperCase();
     }
@@ -257,6 +260,8 @@ export const addDebtToken = async (chain: Chain, location: string, address: Addr
       symbol = 'BNB';
     } else if(chain === 'poly') {
       symbol = 'MATIC';
+    } else if(chain === 'cronos') {
+      symbol = 'CRO';
     } else {
       symbol = chain.toUpperCase();
     }
@@ -414,6 +419,8 @@ const getTrackedTokenInfo = (chain: Chain, address: Address) => {
     data = avax_data;
   } else if(chain === 'one') {
     data = one_data;
+  } else if(chain === 'cronos') {
+    data = cronos_data;
   } else {
     return undefined;
   }
@@ -804,8 +811,7 @@ export const getSimpleTXs = async (chain: Chain, address: Address) => {
               hash: tx.tx_hash,
               time: (new Date(tx.block_signed_at)).getTime() / 1000,
               direction: tx.from_address === address.toLowerCase() ? 'out' : 'in',
-              // Covalent workaround to handle huge gas prices in random responses, increased value for cronos as tx.gas_price is 5000000000000
-              fee: tx.gas_price < 10000000000000 ? (tx.gas_spent * tx.gas_price) / (10 ** 18) : tx.gas_price / (10 ** 18)
+              fee: tx.gas_price < 10000000000000 ? (tx.gas_spent * tx.gas_price) / (10 ** 18) : tx.gas_price / (10 ** 18) // Workaround regarding Covalent gas pricing bugs - remove at a later date.
             });
           })());
           await Promise.all(promises);
@@ -932,6 +938,10 @@ export const isBlacklisted = (chain: Chain, address: Address) => {
     }
   } else if(chain === 'one') {
     if(one_data.blacklist.includes(address.toLowerCase() as Address)) {
+      return true;
+    }
+  } else if(chain === 'cronos') {
+    if(cronos_data.blacklist.includes(address.toLowerCase() as Address)) {
       return true;
     }
   }

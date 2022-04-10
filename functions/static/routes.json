@@ -43,6 +43,12 @@
   "venus",
   "wallet"
  ],
+ "cronos": [
+  "fees",
+  "tokens",
+  "txs",
+  "wallet"
+ ],
  "ethereum": [
   "aave",
   "apwine",
@@ -110,11 +116,5 @@
   "anchor",
   "tokens",
   "wallet"
- ],
- "cronos": [
-   "wallet",
-   "tokens",
-   "fees",
-   "txs"
  ]
 }
