@@ -22,5 +22,8 @@
   "one": [
     "https://api.harmony.one",
     "https://harmony-0-rpc.gateway.pokt.network"
+  ],
+  "cronos": [
+    "https://evm.cronos.org"
   ]
 }
