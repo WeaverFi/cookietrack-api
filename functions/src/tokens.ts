@@ -449,7 +449,8 @@ export const poly_data: ChainTokenData = {
     '0x2744861accb5bd435017c1cfee789b6ebab42082',
     '0xd7f1d4f5a1b44d827a7c3cc5dd46a80fade55558',
     '0x22e51bae3f545255e115090202a23c7ede0b00b9',
-    '0x0b91b07beb67333225a5ba0259d55aee10e3a578'
+    '0x0b91b07beb67333225a5ba0259d55aee10e3a578',
+    '0xfae400bf04f88e47d899cfe7e7c16bf8c8ae919b'
   ]
 }
 
@@ -514,7 +515,9 @@ export const ftm_data: ChainTokenData = {
   ],
   blacklist: [
     '0x95ce7b991cfc7e3ad8466ac20746b9bed7713b0a',
-    '0x8e4a2fa6e651df75f7f4e9e9ac81f8f9347a4add'
+    '0x8e4a2fa6e651df75f7f4e9e9ac81f8f9347a4add',
+    '0xe52a9eb2505a072324984c818c0f49c19c8b6abb',
+    '0xe4517100ae62cbeefc363e59d0f8df5754dc7e40'
   ]
 }
 
