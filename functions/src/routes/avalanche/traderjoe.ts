@@ -10,6 +10,7 @@ const chain: Chain = 'avax';
 const project = 'traderjoe';
 const masterChefV2: Address = '0xd6a4F121CA35509aF06A0Be99093d08462f53052';
 const masterChefV3: Address = '0x188bED1968b795d5c9022F6a0bb5931Ac4c18F00';
+const masterChefBoosted: Address = '0x4483f0b6e2F5486D06958C20f8C39A7aBe87bf8F';
 const bankController: Address = '0xdc13687554205E5b89Ac783db14bb5bba4A1eDaC';
 const joe: Address = '0x6e84a6216ea6dacc71ee8e6b0a5b7322eebc0fdd';
 const xjoe: Address = '0x57319d41F71E81F3c65F2a47CA4e001EbAFd4F33';
@@ -58,8 +59,10 @@ const getFarmBalances = async (wallet: Address) => {
   let balances: (Token | LPToken)[] = [];
   let farmCountV2 = parseInt(await query(chain, masterChefV2, traderjoe.masterChefABI, 'poolLength', []));
   let farmCountV3 = parseInt(await query(chain, masterChefV3, traderjoe.masterChefABI, 'poolLength', []));
+  let farmCountBoosted = parseInt(await query(chain, masterChefBoosted, traderjoe.masterChefABI, 'poolLength', []));
   let farmsV2 = [...Array(farmCountV2).keys()];
   let farmsV3 = [...Array(farmCountV3).keys()];
+  let farmsBoosted = [...Array(farmCountBoosted).keys()];
   let joeRewards = 0;
 
   // Farms V2:
@@ -113,6 +116,32 @@ const getFarmBalances = async (wallet: Address) => {
     }
   })());
   await Promise.all(promisesV3);
+
+  // Boosted Farms:
+  let promisesBoosted = farmsBoosted.map(farmID => (async () => {
+    let balance = parseInt((await query(chain, masterChefBoosted, traderjoe.masterChefABI, 'userInfo', [farmID, wallet])).amount);
+    if(balance > 0) {
+      let token = (await query(chain, masterChefBoosted, traderjoe.masterChefABI, 'poolInfo', [farmID])).lpToken;
+      if(token === xjoe) {
+        let newToken = await addTraderJoeToken(chain, project, 'staked', xjoe, balance, wallet);
+        balances.push(newToken);
+      } else {
+        let newToken = await addLPToken(chain, project, 'staked', token, balance, wallet);
+        balances.push(newToken);
+      }
+      let rewards = await query(chain, masterChefBoosted, traderjoe.masterChefABI, 'pendingTokens', [farmID, wallet]);
+      let pendingJoe = parseInt(rewards.pendingJoe);
+      if(pendingJoe > 0) {
+        joeRewards += pendingJoe;
+      }
+      let pendingBonus = parseInt(rewards.pendingBonusToken);
+      if(pendingBonus > 0) {
+        let newToken = await addToken(chain, project, 'unclaimed', rewards.bonusTokenAddress, pendingBonus, wallet);
+        balances.push(newToken);
+      }
+    }
+  })());
+  await Promise.all(promisesBoosted);
   if(joeRewards > 0) {
     let newToken = await addToken(chain, project, 'unclaimed', joe, joeRewards, wallet);
     balances.push(newToken);
