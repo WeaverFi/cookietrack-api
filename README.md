@@ -27,6 +27,16 @@ Contribution guidelines can be found [here](CONTRIBUTING.md).
 
 ---
 
+## Rate Limits
+
+The API endpoint at `https://api.cookietrack.io` currently has a rate limit of 200 calls every 6 hours.
+
+This is so that everyone can enjoy the API without overloading it for others.
+
+If you'd like to host it yourself to use without restrictions, refer to the `Self-Hosting` section below.
+
+---
+
 ## Self-Hosting
 
 This repository is already setup for Firebase hosting, but could easily be adapted to be deployed on AWS or any other cloud deployment service.
