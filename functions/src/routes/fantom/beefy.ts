@@ -34,7 +34,12 @@ export const get = async (req: Request) => {
         result = await axios.get(`https://api.beefy.finance/vaults?${chars[Math.floor(Math.random() * chars.length)]}`);
       }
       let vaults = result.data.filter((vault: any) => vault.chain === 'fantom' && vault.status === 'active' && vault.tokenAddress);
-      response.data.push(...(await getVaultBalances(wallet, vaults)));
+      if(vaults && vaults.length > 0) {
+        response.data.push(...(await getVaultBalances(wallet, vaults)));
+      } else {
+        console.error(`Beefy (${chain.toUpperCase()}) API query returned 0 vaults.`);
+        response.status = 'missingData';
+      }
       response.data.push(...(await getStakedBIFI(wallet)));
     } catch(err: any) {
       console.error(err);
