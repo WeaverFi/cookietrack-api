@@ -1,6 +1,6 @@
 
 // Imports:
-import { minABI, apwine, paladin, aave, harvest, yearn, paraswap, truefi } from '../../ABIs';
+import { minABI, apwine, paladin, aave, harvest, yearn, paraswap, truefi, stakedao } from '../../ABIs';
 import { initResponse, query, addToken, addCurveToken } from '../../functions';
 import type { Request } from 'express';
 import type { Chain, Address, Token, LPToken } from 'cookietrack-types';
@@ -63,6 +63,12 @@ const getFutureBalances = async (wallet: Address) => {
           let underlyingExchangeRate = underlyingTokenStaked / stakedSupply;
           let fytBalance = await fetchFYTBalance(wallet, future, futureToken);
           let newToken = await addToken(chain, project, 'staked', underlyingToken, (ptBalance + fytBalance) * underlyingExchangeRate, wallet);
+          balances.push(newToken);
+        } else if(futureToken.toLowerCase() === '0x5af15da84a4a6edf2d9fa6720de921e1026e37b7') { // sdFRAX3CRV-f
+          let underlyingToken = await query(chain, futureToken, stakedao.poolABI, 'token', []);
+          let underlyingExchangeRate = parseInt(await query(chain, futureToken, stakedao.poolABI, 'getPricePerFullShare', [])) / (10 ** 18);
+          let fytBalance = await fetchFYTBalance(wallet, future, futureToken);
+          let newToken = await addCurveToken(chain, project, 'staked', underlyingToken, (ptBalance + fytBalance) * underlyingExchangeRate, wallet);
           balances.push(newToken);
         } else {
           console.info(`Unsupported StakeDAO FutureID on APWine: ${futureID}`);
@@ -162,7 +168,12 @@ const fetchFYTBalance = async (wallet: Address, future: Address, futureToken: Ad
     let fytBalance = parseInt(await query(chain, fyt, minABI, 'balanceOf', [wallet]));
     if(fytBalance > 0) {
       let futureTokenDecimals = parseInt(await query(chain, futureToken, minABI, 'decimals', []));
-      let unrealisedYield = parseInt(await query(chain, future, apwine.futureABI, 'getUnrealisedYieldPerPT', [])) / (10 ** futureTokenDecimals);
+      let unrealisedYield;
+      if(futureToken.toLowerCase() === '0x5af15da84a4a6edf2d9fa6720de921e1026e37b7') { // sdFRAX3CRV-f
+        unrealisedYield = parseInt(await query(chain, future, apwine.futureABI, 'getUnrealisedYieldPerPT', []));
+      } else {
+        unrealisedYield = parseInt(await query(chain, future, apwine.futureABI, 'getUnrealisedYieldPerPT', [])) / (10 ** futureTokenDecimals);
+      }
       if(unrealisedYield > 0) {
         let intermediateRate = parseInt(await query(chain, future, apwine.futureABI, 'getIBTRate', [])) / (10 ** futureTokenDecimals);
         let exchangeRate = unrealisedYield * intermediateRate;

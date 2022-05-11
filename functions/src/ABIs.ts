@@ -726,4 +726,12 @@ export const truefi: Record<string, ABI[]> = {
     { constant: true, inputs: [], name: "token", outputs: [{ name: "", type: "address" }], type: "function" },
     { constant: true, inputs: [], name: "poolValue", outputs: [{ name: "", type: "uint256" }], type: "function" }
   ]
-} 
+}
+
+// StakeDAO ABIs:
+export const stakedao: Record<string, ABI[]> = {
+  poolABI: [
+    { constant: true, inputs: [], name: "token", outputs: [{ name: "", type: "address" }], type: "function" },
+    { constant: true, inputs: [], name: "getPricePerFullShare", outputs: [{ name: "", type: "uint256" }], type: "function" }
+  ]
+}
