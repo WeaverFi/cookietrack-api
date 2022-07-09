@@ -27,7 +27,7 @@ const app: Application = express();
 app.use(cors());
 
 // Initializations:
-const repository: string = 'https://github.com/CookieTrack-io/cookietrack-api';
+const repository: string = 'https://github.com/WeaverFi/cookietrack-api';
 const discord: string = 'https://discord.com/invite/DzADcq7y75';
 const rootResponse: string = `<title>CookieTrack API</title><p>Click <a href="${repository}">here</a> to see the API's repository, or <a href="/docs">here</a> to see its OpenAPI documentation.</p>`;
 const errorResponse: string = `<p>Invalid route.</p>`;
